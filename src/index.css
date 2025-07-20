@@ -1,1 +1,8 @@
 @import "tailwindcss";
+.question-content img,
+.option-content img {
+  max-width: 100px;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+}
