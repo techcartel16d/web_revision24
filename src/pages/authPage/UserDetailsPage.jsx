@@ -43,13 +43,13 @@ const UserDetailsPage = () => {
     try {
       const res = await dispatch(updateProfileSlice(formData)).unwrap();
       if (res.status_code == 200) {
-        console.log("res", res)
+        // console.log("res", res)
         // return
         localStorage.setItem("user", JSON.stringify(res.data))
         nav('/', { replace: true })
       }
     } catch (error) {
-      console.log("error in update profile", error)
+      // console.log("error in update profile", error)
     }
 
   };
@@ -135,7 +135,7 @@ const UserDetailsPage = () => {
           <label className="block mb-1">Country</label>
           <CountrySelect
             onChange={(val) => {
-              console.log("vale", val)
+              // console.log("vale", val)
               setSelectedCountryId(val.id);
               setFormData(prev => ({
                 ...prev,

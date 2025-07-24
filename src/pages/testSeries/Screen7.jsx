@@ -11,7 +11,7 @@ const Screen7 = () => {
   const nav = useNavigate()
   const dispatch = useDispatch()
   const { state } = useLocation()
-  console.log("state==>", state)
+  // console.log("state==>", state)
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [questionsState, setQuestionsState] = useState([]);
   const [loading, setLoading] = useState(false)
@@ -35,12 +35,12 @@ const Screen7 = () => {
       setLoading(true)
       const res = await dispatch(getSingleCategoryPackageTestseriesQuestionSlice(state?.testData?.my_detail?.test_id)).unwrap()
       if (res.status_code == 200) {
-        console.log("question data fetching", res)
+        // console.log("question data fetching", res)
         setQuestionsState(res.data)
         setLoading(false)
         // setRefreshing(false)
       } else {
-        console.log("response", res)
+        // console.log("response", res)
       }
 
     } catch (error) {
@@ -58,7 +58,7 @@ const Screen7 = () => {
 
   const getUser = () => {
     const user = JSON.parse(localStorage.getItem('user')) || {}
-    console.log("user", user)
+    // console.log("user", user)
     setUserInfo(user)
   }
 
@@ -116,11 +116,11 @@ const Screen7 = () => {
           return userAns && userAns !== correctAns;
         }).map(q => q.id); // NOTE: changed from q.question_id to q.id as per your object
 
-        console.log("wrong questions:", wrong);
+        // console.log("wrong questions:", wrong);
         setWrongQuestions(wrong);
       }
     } catch (error) {
-      console.log("error ", error);
+      // console.log("error ", error);
     }
   };
 
@@ -186,7 +186,7 @@ const Screen7 = () => {
 
 
   const current = questionsState[currentQuestion];
-  console.log("cureree====>", current)
+  // console.log("cureree====>", current)
   if (!current) return <div className="p-4-400 text-red-500 w-full h-full flex items-center justify-center">
     <div className="fading-spinner">
       {[...Array(12)].map((_, i) => (
@@ -218,7 +218,7 @@ const Screen7 = () => {
   const handleConfirmPause = () => {
     setShowPauseModal(false);
     // ✅ Pause test logic here
-    console.log("Test paused and state saved.");
+    // console.log("Test paused and state saved.");
     localStorage.setItem('isPuase', 'true')
     nav('/testpakages', { replace: true, state: { testId: state?.testId } })
   };
@@ -381,7 +381,7 @@ const Screen7 = () => {
           skippedQuestions={skippedQuestions}
           setCurrentQuestion={(index) => setCurrentQuestion(index)}
           onClose={() => setShowModal(false)}
-          onProceed={() => console.log('Proceed to summary')}
+          onProceed={() => {}}
         />
 
         {/* Right Side - Question Panel */}

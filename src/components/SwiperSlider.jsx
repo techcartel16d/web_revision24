@@ -6,14 +6,14 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const SwiperSlider = ({ banner }) => {
-  console.log("banner", banner)
+  // console.log("banner", banner)
   return (
     <div className="w-full">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}
         slidesPerView={1}
-        navigation
+        // navigation
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000 }}
         loop={true}

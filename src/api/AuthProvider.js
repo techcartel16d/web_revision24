@@ -1,281 +1,119 @@
-import axios from "axios";
+import api from "./axiosConfig";
 
-const API_BASE_URL = "https://revision24.com/api";
 
 const UserApiProvider = {
+  register: async (userData) => {
+    const res = await api.post("/user_register", userData);
+    return res.data;
+  },
 
+  login: async (credentials) => {
+    const res = await api.post("/user_login", credentials);
+    return res.data;
+  },
 
+  getWallet: async () => {
+    const res = await api.get("/get-wallet");
+    return res.data;
+  },
 
+  sendOtp: async (otpData) => {
+    const res = await api.post("/verify_register_otp", otpData);
+    return res.data;
+  },
 
-    register: async (userData) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/user_register`, userData)
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  resendOtp: async (phoneNumber) => {
+    const res = await api.post("/auth/resend-otp", { phoneNumber });
+    return res.data;
+  },
 
-    login: async (credentials) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/user_login`, credentials);
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
-    getWallet: async () => {
-        try {
-            const token = storage.getString('token');
-            const response = await axios.get(`${API_BASE_URL}/get-wallet`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  forgot_for_otp_Password: async (mobile) => {
+    const res = await api.post("/otp-forget-password", { mobile });
+    return res.data;
+  },
 
-    sendOtp: async (otpData) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/verify_register_otp`, otpData);
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  verify_otp_for_forgot_password: async (verifyOtpData) => {
+    const res = await api.post("/otp-forget-password", verifyOtpData);
+    return res.data;
+  },
 
-    resendOtp: async (phoneNumber) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/auth/resend-otp`, { phoneNumber });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  update_for_forgot_password: async (forgotPassData) => {
+    const res = await api.post("/otp-forget-password", forgotPassData);
+    return res.data;
+  },
 
-    forgot_for_otp_Password: async (mobile) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/otp-forget-password`, { mobile });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  setPin: async (pinData) => {
+    const res = await api.post("/set-password", pinData);
+    return res.data;
+  },
 
-    verify_otp_for_forgot_password: async (verifyOtpData) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/otp-forget-password`, verifyOtpData);
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  updatePassword: async (passwordData) => {
+    const res = await api.post("/auth/update-password", passwordData);
+    return res.data;
+  },
 
-    update_for_forgot_password: async (forgotPassData) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/otp-forget-password`, forgotPassData);
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  updateProfile: async (profileData) => {
+    const res = await api.post("/profile-update", profileData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  },
 
-    setPin: async (pinData) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/set-password`, pinData);
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  userProfileGet: async () => {
+    const res = await api.post("/profile-get", "", {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  },
 
-    updatePassword: async (passwordData) => {
-        try {
-            const token = storage.getString('token');
-            const response = await axios.post(`${API_BASE_URL}/auth/update-password`, passwordData, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  logout: async () => {
+    const res = await api.post("/logout");
+    return res.data;
+  },
 
-    updateProfile: async (profileData) => {
-        try {
-            const token = storage.getString('token');
-            if (!token) throw new Error('No token found');
+  getReportQuetion: async () => {
+    const res = await api.get("/user-reported-question-get");
+    return res.data;
+  },
 
-            const response = await axios.post(`${API_BASE_URL}/profile-update`, profileData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  reportQuestionSubmit: async (quetionReportData) => {
+    const res = await api.post("/question-report", quetionReportData);
+    return res.data;
+  },
 
+  getUserCollectionDetails: async () => {
+    const res = await api.get("/user-collection-detail-get");
+    return res.data;
+  },
 
-    userProfileGet: async () => {
-        try {
-            const token = storage.getString('token');
-            console.log("token", token)
-            if (!token) throw new Error('No token found');
+  addUserCollection: async (collection) => {
+    const res = await api.post("/user-collection", { collection });
+    return res.data;
+  },
 
-            const response = await axios.post(`${API_BASE_URL}/profile-get`, "", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+  removeUserCollection: async (collection) => {
+    const res = await api.post("/user-collection-remove", { collection });
+    return res.data;
+  },
 
-    logout: async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const res = await axios.post(`${API_BASE_URL}/logout`, {}, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
-            return res.data;
-        } catch (error) {
-            console.log("ERROR IN LOGOUT ", error)
-        }
-    },
+  reportQuestion: async (reportedQuetion) => {
+    const res = await api.post("/question-report", reportedQuetion);
+    return res.data;
+  },
 
+  reportQuestionGet: async () => {
+    const res = await api.get("/user-reported-question-get");
+    return res.data;
+  },
 
-    // // REPORT QUETION GET API
-    getReportQuetion: async () => {
-        try {
-            const token = storage.getString('token');
-            const res = await axios.get(`${API_BASE_URL}/user-reported-question-get`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return res.data;
-        } catch (error) {
-            console.log("ERROR IN REPORT QUETION GET API ", error)
-        }
-    },
-    // REPORT QUETION  SUBMIT API
-    reportQuestionSubmit: async (quetionReportData) => {
-        try {
-            const token = storage.getString('token');
-            const res = await axios.post(`${API_BASE_URL}/question-report`, quetionReportData, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return res.data;
-        } catch (error) {
-            console.log("ERROR IN  REPORT QUETION  SUBMIT API ", error)
-        }
-    },
-
-    // GET USER COLLECTION DETAILS API
-    getUserCollectionDetails: async () => {
-        try {
-            const token = storage.getString('token');
-            const res = await axios.get(`${API_BASE_URL}/user-collection-detail-get`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return res.data;
-        } catch (error) {
-            console.log("ERROR IN USER COLLECTION DETAILS API ", error)
-        }
-    },
-    // USER COLLECTION ADD API
-    addUserCollection: async (collection) => {
-        try {
-            const token = storage.getString('token');
-            const res = await axios.post(`${API_BASE_URL}/user-collection`, { collection }, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            console.log("response in add collection", res)
-            return res.data;
-        } catch (error) {
-            console.log("ERROR IN USER COLLECTION ADD API ", error)
-        }
-    },
-    removeUserCollection: async (collection) => {
-        console.log("collection in user Provider========>", { collection })
-        try {
-            const token = storage.getString('token');
-            const res = await axios.post(`${API_BASE_URL}/user-collection-remove`, { collection }, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            console.log("response in add collection", res)
-            return res.data;
-        } catch (error) {
-            console.log("ERROR IN USER COLLECTION ADD API ", error)
-        }
-    },
-    // // REPORTED QUESTION ADD API
-    reportQuestion: async (reportedQuetion) => {
-        try {
-            const token = storage.getString('token');
-            const res = await axios.post(`${API_BASE_URL}/question-report`, reportedQuetion, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return res.data;
-        } catch (error) {
-            console.log("ERROR IN USER COLLECTION ADD API ", error)
-        }
-    },
-    reportQuestionGet: async () => {
-        try {
-            const token = storage.getString('token');
-            const res = await axios.get(`${API_BASE_URL}/user-reported-question-get`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return res.data;
-        } catch (error) {
-            console.log("ERROR IN USER COLLECTION ADD API ", error)
-        }
-    },
-    getNotification: async () => {
-        try {
-            const token = storage.getString('token');
-            const res = await axios.get(`${API_BASE_URL}/notification-get`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return res.data;
-        } catch (error) {
-            console.log("ERROR IN NOTIFICATION GET ", error)
-        }
-    },
-    updateProfile: async (profileData) => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) throw new Error('No token found');
-
-            const response = await axios.post(`${API_BASE_URL}/profile-update`, profileData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
-
-
-
-
-
-
-
-
-
-
+  getNotification: async () => {
+    const res = await api.get("/notification-get");
+    return res.data;
+  },
 };
 
 export default UserApiProvider;

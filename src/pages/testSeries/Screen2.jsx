@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { saveTestLoginInfo } from '../../helpers/userStorage';
+import AlertModal from '../../components/AlertModal';
+import SuccessModal from '../../components/SuccessModal';
 
 const Screen2 = () => {
     const nav = useNavigate();
     const { state } = useLocation();
-    console.log("state", state);
+    const [showAlert, setShowAlert] = useState(false);
+    const [message, setMessage] = useState('')
+
+    const [showSuccess, setShowSuccess] = useState(false);
+    // // console.log("state", state);
 
     const [userInfo, setUserInfo] = useState(state?.userInfo || {});
     const [systemNumber, setSystemNumber] = useState(`R24${state?.userInfo?.mobile?.slice(0, 5)}`);
@@ -18,34 +25,38 @@ const Screen2 = () => {
     }
 
     const formattedDOB = formatDateToDDMMYYYY(userInfo?.dob); // Expected password
-    console.log("Expected DOB (Password):", formattedDOB);
+    // console.log("Expected DOB (Password):", formattedDOB);
 
-    const handleLogin = () => {
+    const handleLogin = async (e) => {
+        e.preventDefault()
         const enteredDob = dob.trim();
         if (enteredDob === '') {
-            return alert("Please enter your Date of Birth in DDMMYYYY format.");
+            // return alert("Please enter your Date of Birth in DDMMYYYY format.");
+            setMessage("Please enter your Date of Birth in DDMMYYYY format.")
+            setShowAlert(true)
         }
 
         if (enteredDob !== formattedDOB) {
-            return alert("Invalid DOB. Please enter the correct Date of Birth to login.");
+
+            setMessage("Please enter the correct Date of Birth to login.")
+            setShowAlert(true)
+
+            return
+
+            // alert("");
         }
 
         // Save login info and redirect to Screen3
-        const user = { systemNumber, dob: enteredDob };
+        // const user = { systemNumber, dob: enteredDob };
         const userData = {
             candidateName: userInfo.name,
             systemNumber,
         };
 
-        localStorage.setItem('userLogin', JSON.stringify(user));
-        alert('Login Successfully');
-        nav('/instructions', {
-            state: {
-                userData,
-                testInfo: state?.testInfo,
-                testId: state?.testId
-            }
-        });
+        // localStorage.setItem('userLogin', JSON.stringify(user));
+        await saveTestLoginInfo(userData)
+        setShowSuccess(true)
+
     };
 
     return (
@@ -64,7 +75,7 @@ const Screen2 = () => {
                     Your password is your Date of Birth (e.g. DDMMYYYY. 01062001)
                 </p>
 
-                <div className="border border-gray-300 rounded-md">
+                <form onSubmit={handleLogin} className="border border-gray-300 rounded-md">
                     <div className="bg-gray-200 px-4 py-2 border-b border-gray-300 text-sm font-semibold text-gray-700">
                         Candidate Login
                     </div>
@@ -94,15 +105,39 @@ const Screen2 = () => {
 
                         <div className="flex justify-end">
                             <button
-                                onClick={handleLogin}
+                                type='submit'
                                 className="bg-gray-200 text-gray-800 px-4 py-1 border border-gray-400 hover:bg-gray-300 text-sm"
                             >
                                 Login
                             </button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
+            <AlertModal
+                isOpen={showAlert}
+                onClose={() => setShowAlert(false)}
+                title="DOB ERROR"
+                message={message}
+
+            />
+            <SuccessModal
+                isOpen={showSuccess}
+                onClose={() => {
+                    setShowSuccess(false)
+                    nav('/instructions', {
+                        state: {
+                            userData: {
+                                candidateName: userInfo?.name,
+                                systemNumber,
+                            },
+                            testInfo: state?.testInfo,
+                            testId: state?.testId
+                        }
+                    });
+                }}
+                message={message}
+            />
         </div>
     );
 };

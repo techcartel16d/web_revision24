@@ -7,7 +7,7 @@ const RegisterSetPasswordPage = () => {
     const nav = useNavigate()
     const dispatch = useDispatch()
     const {state} = useLocation()
-    console.log("state", state)
+    // console.log("state", state)
     const [formData, setFormData] = useState({
         password: '',
         confirmPassword: ''
@@ -49,15 +49,15 @@ const RegisterSetPasswordPage = () => {
         try {
             const res = await dispatch(setPin(pinData)).unwrap()
             if(res.status_code == 200){
-                console.log("register response", res)
+                // console.log("register response", res)
                 localStorage.setItem("token", res.token)
                 
-                console.log(res.message)
+                // console.log(res.message)
                 nav("/user-details")
             }
         } catch (error) {
 
-            console.log("error in set pasword", error)
+            // console.log("error in set pasword", error)
 
         }
 
@@ -65,7 +65,7 @@ const RegisterSetPasswordPage = () => {
 
 
         setError('');
-        console.log('Password Set Successfully:', password);
+        // console.log('Password Set Successfully:', password);
         // Submit password to API here
     };
 

@@ -8,7 +8,7 @@ const PaymentResponse = () => {
   const paymentId = searchParams.get("payment_id");
   const reason = searchParams.get("reason");
 
-  const isSuccess = status === "SUCCESS";
+  const isSuccess = status === "success";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50 p-4">

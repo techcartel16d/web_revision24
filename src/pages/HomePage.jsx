@@ -11,6 +11,8 @@ import AboutUs from '../components/AboutUs';
 import SubscriptionPlans from '../components/SubscriptionPlans';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { checkAllEncryptedTestData } from '../helpers/testStorage';
+import { getUserDataDecrypted } from '../helpers/userStorage';
 
 const HomePage = () => {
 
@@ -19,18 +21,20 @@ const HomePage = () => {
   const [bannerData, setBannerData] = useState([])
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
 
 
   const getHomeData = async (id) => {
     try {
       setLoading(true)
       const res = await dispatch(homePageSlice()).unwrap()
+      // console.log("response", res)
 
 
       setHomeData(res.data)
-      console.log("home data in home screen", res.data)
+      // console.log("home data in home screen", res.data)
       // storage.set('home_category', JSON.stringify(res.data.exam_category))
-      console.log("home data in home screen", res.data.exam_category)
+      // console.log("home data in home screen", res.data.exam_category)
       setBannerData(res.data.banner)
       setLoading(false)
       setRefreshing(false)
@@ -46,13 +50,27 @@ const HomePage = () => {
 
 
 
-  
+
 
   useEffect(() => {
     getHomeData()
+    // Call this from a dev tool, admin page, or `useEffect`
+    checkAllEncryptedTestData();
   }, [])
 
 
+
+
+
+  const loadUserData = async () => {
+    const user = await getUserDataDecrypted();
+    setUserInfo(user);
+    // console.log("user", user)
+  };
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
 
 
 
@@ -87,8 +105,13 @@ const HomePage = () => {
       }
 
 
-          <SubscriptionPlans  />
-        
+{
+  userInfo && !userInfo?.subscription_status&&(
+
+    <SubscriptionPlans />
+  )
+}
+
 
 
 

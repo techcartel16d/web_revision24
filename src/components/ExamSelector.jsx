@@ -27,7 +27,7 @@ const categories = [
 ];
 
 export default function ExamSelector({ category }) {
-    console.log("category", category)
+    // console.log("category", category)
     const [activeCategory, setActiveCategory] = useState("UPSC");
     const [showAll, setShowAll] = useState(false);
     const data = exams[activeCategory] || [];

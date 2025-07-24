@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { MdArrowBackIos } from 'react-icons/md';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getUserDataDecrypted } from '../../helpers/userStorage';
 
 const Screen1 = () => {
   const { state } = useLocation()
-  console.log("state====>", state)
+  // // console.log("state====>", state)
   const [userInfo, setUserInfo] = useState({});
   const nav = useNavigate()
 
-  const getUserInfo = () => {
-    const strUser = localStorage.getItem("user") || "{}";
-    const parsedUser = JSON.parse(strUser);
-    setUserInfo(parsedUser);
+  const getUserInfo = async() => {
+   const user = await getUserDataDecrypted()
+  //  // console.log("user info", user)
+    setUserInfo(user);
   };
 
   useEffect(() => {
@@ -19,7 +20,7 @@ const Screen1 = () => {
   }, []);
 
   const systemNumber = `R24${userInfo?.mobile?.slice(0, 5) || '00000'}`;
-  const examName = userInfo?.exam || 'Mock Test';
+  const examName = state && state?.testInfo?.title|| 'Mock Test';
 
   return (
     <div className="min-h-screen bg-white px-6 py-8 text-center">
@@ -80,7 +81,7 @@ const Screen1 = () => {
               className="bg-blue-700 text-white px-6 py-2 cursor-pointer rounded hover:bg-blue-800"
               onClick={() => {
                 // Replace this with your exam start logic
-                console.log('Start Exam');
+                // console.log('Start Exam');
                 nav("/test-login", { state: { userInfo, testInfo: state?.testInfo, testId: state?.testId } })
               }}
             >

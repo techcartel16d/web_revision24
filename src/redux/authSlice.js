@@ -17,7 +17,7 @@ const initialState = {
 export const register = createAsyncThunk(
   'user/register',
   async (userData, { rejectWithValue }) => {
-    console.log("userData", userData)
+    // console.log("userData", userData)
     try {
       const response = await UserApiProvider.register(userData);
       return response;
@@ -223,7 +223,7 @@ export const getUserCollectionDetailSlice = createAsyncThunk(
 export const addUserCollectionSlice = createAsyncThunk(
   'user/addUserCollectionSlice',
   async (collection, { rejectWithValue }) => {
-    console.log('collectionData', collection);
+    // console.log('collectionData', collection);
     try {
       const res = await UserApiProvider.addUserCollection(collection);
       return res;
@@ -237,7 +237,7 @@ export const addUserCollectionSlice = createAsyncThunk(
 export const removeUserCollectionSlice = createAsyncThunk(
   'user/removeUserCollectionSlice',
   async (collection, { rejectWithValue }) => {
-    console.log('collectionData in userSlice ======>', collection);
+    // console.log('collectionData in userSlice ======>', collection);
     try {
       const res = await UserApiProvider.removeUserCollection(collection);
       return res;
@@ -250,7 +250,7 @@ export const removeUserCollectionSlice = createAsyncThunk(
 export const reportedQuestionSlice = createAsyncThunk(
   'user/reportedQuestionSlice',
   async (reportedQuetion, { rejectWithValue }) => {
-    console.log('collectionData', reportedQuetion);
+    // console.log('collectionData', reportedQuetion);
     try {
       const res = await UserApiProvider.reportQuestion(reportedQuetion);
       return res;
@@ -263,7 +263,7 @@ export const reportedQuestionSlice = createAsyncThunk(
 export const reportedQuestionGetSlice = createAsyncThunk(
   'user/reportedQuestionGetSlice',
   async (reportedQuetion, { rejectWithValue }) => {
-    console.log('collectionData', reportedQuetion);
+    // console.log('collectionData', reportedQuetion);
     try {
       const res = await UserApiProvider.reportQuestionGet();
       return res;
@@ -302,9 +302,9 @@ const authUser = createSlice({
 
       try {
         storage.set('userInfo', JSON.stringify(userData));
-        console.log('✅ userInfo saved to MMKV:', userData);
+        // console.log('✅ userInfo saved to MMKV:', userData);
       } catch (error) {
-        console.log('❌ Error saving userInfo to MMKV:', error);
+        // console.log('❌ Error saving userInfo to MMKV:', error);
       }
     },
 
@@ -316,13 +316,13 @@ const authUser = createSlice({
         if (userDataString) {
           const userData = JSON.parse(userDataString);
           state.userInfo = userData;
-          console.log('✅ userInfo loaded from MMKV:', userData);
+          // console.log('✅ userInfo loaded from MMKV:', userData);
         } else {
           state.userInfo = null;
           console.warn('⚠️ No userInfo found in MMKV');
         }
       } catch (error) {
-        console.log('❌ Error reading userInfo from MMKV:', error);
+        // console.log('❌ Error reading userInfo from MMKV:', error);
       }
     },
 
@@ -332,9 +332,9 @@ const authUser = createSlice({
 
       try {
         storage.delete('userInfo');
-        console.log('🗑️ userInfo deleted from MMKV');
+        // console.log('🗑️ userInfo deleted from MMKV');
       } catch (error) {
-        console.log('❌ Error deleting userInfo from MMKV:', error);
+        // console.log('❌ Error deleting userInfo from MMKV:', error);
       }
     },
   },
@@ -373,31 +373,7 @@ const authUser = createSlice({
         state.error = action.payload;
       })
 
-      .addCase(login.pending, state => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-
-        if (action.payload.token) {
-          try {
-            localStorage.setItem('token', action.payload.token);
-            localStorage.setItem('user', JSON.stringify(action.payload.data));
-          } catch (error) {
-            console.log('storage mmkv error', error);
-          }
-        }
-
-        state.message = action.payload.message;
-      })
-      .addCase(login.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        state.message = action.payload?.message;
-      })
+      
       .addCase(getUserInfoSlice.pending, state => {
         state.loading = true;
         state.error = null;

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Screen4 = () => {
     const nav = useNavigate()
     const { state } = useLocation();
-    console.log(state)
+    // console.log(state)
     return (
         <div className="px-6 py-3">
             <div className='flex justify-between items-center gap-5 mb-3'>

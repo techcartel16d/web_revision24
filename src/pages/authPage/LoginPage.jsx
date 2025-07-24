@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import InputField from '../../components/InputField';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { saveUserDataEncrypted } from '../../helpers/userStorage';
 
 const LoginPage = () => {
     const dispatch = useDispatch()
@@ -22,6 +23,32 @@ const LoginPage = () => {
         return errs;
     };
 
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const errs = validate();
+    //     setErrors(errs);
+
+    //     try {
+    //         if (Object.keys(errs).length === 0) {
+    //             setLoading(true)
+    //             const res = await dispatch(login(formData)).unwrap();
+    //             // console.log("responsive==>", res);
+    //             setLoading(false)
+    //             nav('/')
+
+    //         }
+
+    //     } catch (error) {
+    //         // console.log("ERROR IN LOGIN PAGE====>", error)
+    //         setLoading(false)
+
+    //     } finally {
+    //         setLoading(false)
+    //     }
+
+    // };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errs = validate();
@@ -29,22 +56,29 @@ const LoginPage = () => {
 
         try {
             if (Object.keys(errs).length === 0) {
-                setLoading(true)
+                setLoading(true);
                 const res = await dispatch(login(formData)).unwrap();
-                console.log("responsive==>", res);
-                setLoading(false)
-                nav('/')
+                // console.log("Login Response ==>", res);
 
+                // ✅ Save user data securely in IndexedDB
+                const userInfo = {
+                    ...res.data, // user info
+                    token: res.token, // add token manually if needed
+                    subscription_status: res.subscription_status,
+                    subscription_details: res.subscription_details
+                };
+
+                await saveUserDataEncrypted(userInfo);
+
+                setLoading(false);
+                nav('/');
             }
-
         } catch (error) {
-            console.log("ERROR IN LOGIN PAGE====>", error)
-            setLoading(false)
-
+            // console.log("ERROR IN LOGIN PAGE====>", error);
+            setLoading(false);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-
     };
 
     return (
@@ -87,9 +121,9 @@ const LoginPage = () => {
                                 <input type="checkbox" className="form-checkbox" />
                                 <span className="text-sm">Remember me</span>
                             </label>
-                            <a href="#" className="text-sm text-blue-600 hover:underline">
+                            {/* <a href="#" className="text-sm text-blue-600 hover:underline">
                                 Forgot password?
-                            </a>
+                            </a> */}
                         </div>
                         <button
                             type="submit"
@@ -104,9 +138,9 @@ const LoginPage = () => {
 
                     <p className="text-sm text-center mt-4">
                         Don’t have an account?{' '}
-                        <a href="/register" className="text-blue-600 hover:underline">
+                        <Link to="/register" className="text-blue-600 hover:underline">
                             Register
-                        </a>
+                        </Link>
                     </p>
 
                     <div className="mt-6 text-center">

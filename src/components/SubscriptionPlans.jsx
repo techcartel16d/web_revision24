@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { checkoutpaySlice, getSubscriptionSlice } from '../redux/HomeSlice';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { isAuthenticated } from '../utils/auth';
 
 const SubscriptionPlans = () => {
     const dispatch = useDispatch();
@@ -9,13 +11,14 @@ const SubscriptionPlans = () => {
     const [subscriptionData, setSubscriptionData] = useState([]);
     const [benefitsHTML, setBenefitsHTML] = useState('');
     const [plainId, setPlanId] = useState('')
-
+    const [auth, setAuth] = useState(false);
+    const nav = useNavigate()
 
     const getSubscription = async () => {
         try {
             setIsLoading(true);
             const res = await dispatch(getSubscriptionSlice()).unwrap();
-            console.log("respose", res)
+            // console.log("respose", res)
             if (res.status_code == 200) {
                 setSubscriptionData(res.data.plus.details);
                 setPlanId(res.data.plus.id)
@@ -29,6 +32,7 @@ const SubscriptionPlans = () => {
             setIsLoading(false);
         }
     };
+
 
     // useEffect में SDK script add करना
     useEffect(() => {
@@ -60,7 +64,7 @@ const SubscriptionPlans = () => {
                     const checkoutOptions = {
                         paymentSessionId: res.payment_session_id,
                         redirectTarget: "_self",
-                        redirectUrl: "/api/payment-success", // 👈 Success Page URL here
+                        redirectUrl: "/api/payment-response", // 👈 Success Page URL here
                     };
 
                     cashfree.checkout(checkoutOptions);
@@ -68,7 +72,7 @@ const SubscriptionPlans = () => {
                     alert("Cashfree SDK not loaded yet. Please try again.");
                 }
             } else {
-                console.log("Error: Payment session not created.");
+                // console.log("Error: Payment session not created.");
             }
         } catch (error) {
             console.error("ERROR IN CHECK OUT PAY API", error);
@@ -77,19 +81,15 @@ const SubscriptionPlans = () => {
 
 
 
-    const paymentPage = async (paymentData) => {
 
+    useEffect(() => {
+        const checkAuth = async () => {
+            const result = await isAuthenticated();
+            setAuth(result);
+        };
+        checkAuth();
+    }, []);
 
-        window.location.href = paymentData
-        // console.log("paymentData", paymentData)
-        // // return
-
-        //         try {
-        //            const res = await axios.post(paymentData)
-        //         } catch (error) {
-
-        //         }
-    }
 
     useEffect(() => {
         getSubscription();
@@ -125,9 +125,18 @@ const SubscriptionPlans = () => {
                                 dangerouslySetInnerHTML={{ __html: benefitsHTML }}
                             />
 
-                            <button onClick={() => checkOutPay(plan)} className="w-full mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200">
-                                Buy Now
-                            </button>
+                            {
+                                auth ? (
+                                    <button onClick={() => checkOutPay(plan)} className="w-full mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200">
+                                        Buy Now
+                                    </button>
+                                ) : (
+                                    <button onClick={() => nav('/login')} className="w-full mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200">
+                                        Buy Now
+                                    </button>
+                                )
+                            }
+
                         </div>
                     ))}
                 </div>

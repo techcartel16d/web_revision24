@@ -1,16 +1,16 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://revision24.com/api";
-
+// const API_BASE_URL = "https://admin.revision24.com/api";
+import api from "./axiosConfig";
 const HomeProvider = {
 
     homeData: async (id) => {
-        console.log("id---->", id)
+        // console.log("id---->", id)
         try {
             const token = localStorage.getItem('token');
             // if (!token) throw new Error('No token found');
 
-            const response = await axios.get(`${API_BASE_URL}/home-page?exam_category_id=${id}`, {
+            const response = await api.get(`/home-page?exam_category_id=${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
@@ -23,11 +23,11 @@ const HomeProvider = {
     },
 
     getSingleCategoryPackageTestseries: async (id, page = 1, search) => {
-        console.log("getSingleCategoryPackageTestseries called with id:", id, "page:", page, "search:", search);
+        // // console.log("getSingleCategoryPackageTestseries called with id:", id, "page:", page, "search:", search);
         // return
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`${API_BASE_URL}/test-course-detail-get`, {
+            const res = await api.get(`/test-course-detail-get`, {
                 headers: { Authorization: `Bearer ${token}` },
                 params: {
                     id,
@@ -46,7 +46,7 @@ const HomeProvider = {
     getSingleCategoryPackageTestseriesDetails: async (id) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`${API_BASE_URL}/test-series-detail/${id}`, {
+            const res = await api.get(`/test-series-detail/${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             return res.data;
@@ -64,7 +64,7 @@ const HomeProvider = {
     getSingleCategoryPackageTestseriesQuestion: async (id) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`${API_BASE_URL}/question-list-get?test_series_id=${id}`, {
+            const res = await api.get(`/question-list-get?test_series_id=${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             return res.data;
@@ -77,8 +77,8 @@ const HomeProvider = {
     submitAttendQuestions: async (attendQuestion) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post(
-                `${API_BASE_URL}/user-attend-test-series`,
+            const res = await api.post(
+                `/user-attend-test-series`,
                 attendQuestion,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -95,7 +95,7 @@ const HomeProvider = {
     getUserTestSeriesRank: async (test_id) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`${API_BASE_URL}/user-attend-test-series-rank-get?test_id=${test_id}`, {
+            const res = await api.get(`/user-attend-test-series-rank-get?test_id=${test_id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             return res.data;
@@ -106,10 +106,10 @@ const HomeProvider = {
     },
 
     getUserTestSeriesSolution: async (test_id) => {
-        console.log("test id ", test_id)
+        // console.log("test id ", test_id)
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`${API_BASE_URL}/user-attend-test-series-question-solution?test_id=${test_id}`, {
+            const res = await api.get(`/user-attend-test-series-question-solution?test_id=${test_id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             return res.data;
@@ -124,7 +124,7 @@ const HomeProvider = {
             const token = localStorage.getItem('token');
             // if (!token) throw new Error('No token found');
 
-            const response = await axios.get(`${API_BASE_URL}/subscriptions`, {
+            const response = await api.get(`/subscriptions`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
@@ -140,7 +140,7 @@ const HomeProvider = {
             const token = localStorage.getItem('token');
             // if (!token) throw new Error('No token found');
 
-            const response = await axios.post(`${API_BASE_URL}/checkout.pay`,planData, {
+            const response = await api.post(`/checkout.pay`,planData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',

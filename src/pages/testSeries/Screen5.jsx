@@ -8,26 +8,25 @@ import CountdownTimer from '../../components/QuestionTimer';
 import Timer from '../../components/QuestionTimer';
 import PauseTestModal from '../../components/PauseTestModal';
 import ConfirmTestSubmitModal from '../../components/ConfirmTestSubmitModal';
-
+import {
+    secureSaveTestData,
+    secureGetTestData,
+    clearAllTestData,
+} from '../../helpers/testStorage'; // path को adjust करें
+import { getUserDataDecrypted } from '../../helpers/userStorage';
 
 
 const Screen5 = () => {
     const nav = useNavigate()
     const dispatch = useDispatch()
     const { state } = useLocation()
-    console.log("state==>", state)
+    const [userInfo, setUserInfo] = useState(null);
+    // console.log("state==>", state)
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [questionsState, setQuestionsState] = useState([]);
     const [loading, setLoading] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
-    const [selectedOptions, setSelectedOptions] = useState({});
-    const [optionSelected, setOptionSelected] = useState(() => JSON.parse(localStorage.getItem("optionSelected")) || []);
-    const [markedForReview, setMarkedForReview] = useState(() => JSON.parse(localStorage.getItem("markedForReview")) || []);
-    const [skippedQuestions, setSkippedQuestions] = useState(() => JSON.parse(localStorage.getItem("skippedQuestions")) || []);
-    const [markedWithAns, setMarkedWithAns] = useState(() => {
-        return JSON.parse(localStorage.getItem("marked_with_ans")) || [];
-    });
     const [isFullScreen, setIsFullScreen] = useState(false)
     const [questionStartTime, setQuestionStartTime] = useState(Date.now());
     const [spentTime, setSpentTime] = useState([]);
@@ -36,25 +35,81 @@ const Screen5 = () => {
     const [showPauseModal, setShowPauseModal] = useState(false);
     const [confirmSubmit, setConfirmSubmit] = useState(false)
 
-    const getKey = (key) => {
-        const testId = state?.testInfo?.test_id;
-        return `test_${testId}_${key}`;
-    };
+    // const [optionSelected, setOptionSelected] = useState(() => JSON.parse(localStorage.getItem("optionSelected")) || []);
+    // const [markedForReview, setMarkedForReview] = useState(() => JSON.parse(localStorage.getItem("markedForReview")) || []);
+    // const [skippedQuestions, setSkippedQuestions] = useState(() => JSON.parse(localStorage.getItem("skippedQuestions")) || []);
+    // const [markedWithAns, setMarkedWithAns] = useState(() => {
+    //     return JSON.parse(localStorage.getItem("marked_with_ans")) || [];
+    // });
+
+    //    const getKey = (key) => {
+    //     const testId = state?.testInfo?.test_id;
+    //     return `test_${testId}_${key}`;
+    // };
+    // const storedOptions = JSON.parse(localStorage.getItem(getKey("selectedOptions"))) || {};
+    // const storedAttempted = JSON.parse(localStorage.getItem(getKey("optionSelected"))) || [];
+    // const storedMarked = JSON.parse(localStorage.getItem(getKey("markedForReview"))) || [];
+    // const storedSkipped = JSON.parse(localStorage.getItem(getKey("skippedQuestions"))) || [];
+    // const storedMarkedWithAns = JSON.parse(localStorage.getItem(getKey("marked_with_ans"))) || [];
+
+    // useEffect(() => {
+    //     setSelectedOptions(storedOptions);
+    //     setOptionSelected(storedAttempted);
+    //     setMarkedForReview(storedMarked);
+    //     setSkippedQuestions(storedSkipped);
+    //     setMarkedWithAns(storedMarkedWithAns);
+    // }, []);
+
+    const [selectedOptions, setSelectedOptions] = useState({});
+    const [optionSelected, setOptionSelected] = useState([]);
+    const [markedForReview, setMarkedForReview] = useState([]);
+    const [skippedQuestions, setSkippedQuestions] = useState([]);
+    const [markedWithAns, setMarkedWithAns] = useState([]);
+
+    const testId = state?.testInfo?.test_id;
 
 
-    const storedOptions = JSON.parse(localStorage.getItem(getKey("selectedOptions"))) || {};
-    const storedAttempted = JSON.parse(localStorage.getItem(getKey("optionSelected"))) || [];
-    const storedMarked = JSON.parse(localStorage.getItem(getKey("markedForReview"))) || [];
-    const storedSkipped = JSON.parse(localStorage.getItem(getKey("skippedQuestions"))) || [];
-    const storedMarkedWithAns = JSON.parse(localStorage.getItem(getKey("marked_with_ans"))) || [];
 
     useEffect(() => {
-        setSelectedOptions(storedOptions);
-        setOptionSelected(storedAttempted);
-        setMarkedForReview(storedMarked);
-        setSkippedQuestions(storedSkipped);
-        setMarkedWithAns(storedMarkedWithAns);
+        const restoreEncryptedTestData = async () => {
+            if (!testId) return;
+
+            const [
+                storedOptions,
+                storedAttempted,
+                storedMarked,
+                storedSkipped,
+                storedMarkedWithAns,
+            ] = await Promise.all([
+                secureGetTestData(testId, "selectedOptions"),
+                secureGetTestData(testId, "optionSelected"),
+                secureGetTestData(testId, "markedForReview"),
+                secureGetTestData(testId, "skippedQuestions"),
+                secureGetTestData(testId, "marked_with_ans"),
+            ]);
+
+            if (storedOptions) setSelectedOptions(storedOptions);
+            if (storedAttempted) setOptionSelected(storedAttempted);
+            if (storedMarked) setMarkedForReview(storedMarked);
+            if (storedSkipped) setSkippedQuestions(storedSkipped);
+            if (storedMarkedWithAns) setMarkedWithAns(storedMarkedWithAns);
+        };
+
+        restoreEncryptedTestData();
+    }, [testId]);
+
+
+    // LOAD. USER INFO
+    const loadUserData = async () => {
+        const user = await getUserDataDecrypted();
+        setUserInfo(user);
+    };
+
+    useEffect(() => {
+        loadUserData();
     }, []);
+
+
 
 
 
@@ -98,12 +153,12 @@ const Screen5 = () => {
             setLoading(true)
             const res = await dispatch(getSingleCategoryPackageTestseriesQuestionSlice(state?.testInfo?.test_id)).unwrap()
             if (res.status_code == 200) {
-                console.log("question data fetching", res)
+                // console.log("question data fetching", res)
                 setQuestionsState(res.data)
                 setLoading(false)
                 // setRefreshing(false)
             } else {
-                console.log("response", res)
+                // console.log("response", res)
             }
 
         } catch (error) {
@@ -122,33 +177,48 @@ const Screen5 = () => {
         getTestSeriesQuestion()
     }, [])
 
+
     // useEffect(() => {
-    //     const storedOptions = JSON.parse(localStorage.getItem("selectedOptions")) || {};
-    //     const storedAttempted = JSON.parse(localStorage.getItem("optionSelected")) || [];
-    //     const storedMarked = JSON.parse(localStorage.getItem("markedForReview")) || [];
-    //     const storedSkipped = JSON.parse(localStorage.getItem("skippedQuestions")) || [];
+    //     localStorage.setItem(getKey("selectedOptions"), JSON.stringify(selectedOptions));
+    //     localStorage.setItem(getKey("optionSelected"), JSON.stringify(optionSelected));
+    // }, [selectedOptions, optionSelected]);
 
-    //     setSelectedOptions(storedOptions);
-    //     setOptionSelected(storedAttempted);
-    //     setMarkedForReview(storedMarked);
-    //     setSkippedQuestions(storedSkipped);
-    // }, []);
+    // useEffect(() => {
+    //     localStorage.setItem(getKey("markedForReview"), JSON.stringify(markedForReview));
+    // }, [markedForReview]);
+
+    // useEffect(() => {
+    //     localStorage.setItem(getKey("skippedQuestions"), JSON.stringify(skippedQuestions));
+    // }, [skippedQuestions]);
+
+    // useEffect(() => {
+    //     localStorage.setItem(getKey("marked_with_ans"), JSON.stringify(markedWithAns));
+    // }, [markedWithAns]);
+
 
     useEffect(() => {
-        localStorage.setItem(getKey("selectedOptions"), JSON.stringify(selectedOptions));
-        localStorage.setItem(getKey("optionSelected"), JSON.stringify(optionSelected));
-    }, [selectedOptions, optionSelected]);
+        if (!testId) return;
+        secureSaveTestData(testId, "selectedOptions", selectedOptions);
+    }, [selectedOptions]);
 
     useEffect(() => {
-        localStorage.setItem(getKey("markedForReview"), JSON.stringify(markedForReview));
+        if (!testId) return;
+        secureSaveTestData(testId, "optionSelected", optionSelected);
+    }, [optionSelected]);
+
+    useEffect(() => {
+        if (!testId) return;
+        secureSaveTestData(testId, "markedForReview", markedForReview);
     }, [markedForReview]);
 
     useEffect(() => {
-        localStorage.setItem(getKey("skippedQuestions"), JSON.stringify(skippedQuestions));
+        if (!testId) return;
+        secureSaveTestData(testId, "skippedQuestions", skippedQuestions);
     }, [skippedQuestions]);
 
     useEffect(() => {
-        localStorage.setItem(getKey("marked_with_ans"), JSON.stringify(markedWithAns));
+        if (!testId) return;
+        secureSaveTestData(testId, "marked_with_ans", markedWithAns);
     }, [markedWithAns]);
 
 
@@ -169,118 +239,243 @@ const Screen5 = () => {
 
 
     // HANDLE OPTION CHANGE
-    const handleOptionChange = (questionId, optionKey) => {
-        // 👉 helper to generate test-specific localStorage key
-        const getKey = (key) => `test_${state?.testInfo?.test_id}_${key}`;
+    // const handleOptionChange = (questionId, optionKey) => {
+    //     // 👉 helper to generate test-specific localStorage key
+    //     const getKey = (key) => `test_${state?.testInfo?.test_id}_${key}`;
 
-        // ✅ Save selected option for this question
+    //     // ✅ Save selected option for this question
+    //     const updated = { ...selectedOptions, [questionId]: optionKey };
+    //     setSelectedOptions(updated);
+    //     localStorage.setItem(getKey("selectedOptions"), JSON.stringify(updated));
+
+    //     // ✅ If marked for review AND not already in marked_with_ans
+    //     if (markedForReview.includes(questionId)) {
+    //         if (!markedWithAns.includes(questionId)) {
+    //             const updatedMarkedWithAns = [...markedWithAns, questionId];
+    //             setMarkedWithAns(updatedMarkedWithAns);
+    //             localStorage.setItem(getKey("marked_with_ans"), JSON.stringify(updatedMarkedWithAns));
+    //         }
+    //     }
+
+    //     // ✅ Remove from skipped if it was there
+    //     if (skippedQuestions.includes(questionId)) {
+    //         const updatedSkipped = skippedQuestions.filter(id => id !== questionId);
+    //         setSkippedQuestions(updatedSkipped);
+    //         localStorage.setItem(getKey("skippedQuestions"), JSON.stringify(updatedSkipped));
+    //     }
+    // };
+
+    // HANDLE OPTION CHANGE NEW=========>
+    const handleOptionChange = async (questionId, optionKey) => {
+        const testId = state?.testInfo?.test_id;
         const updated = { ...selectedOptions, [questionId]: optionKey };
         setSelectedOptions(updated);
-        localStorage.setItem(getKey("selectedOptions"), JSON.stringify(updated));
 
-        // ✅ If marked for review AND not already in marked_with_ans
+        const updatedData = { ...selectedOptions, [questionId]: optionKey };
+        await secureSaveTestData(testId, 'selectedOptions', updatedData);
+
         if (markedForReview.includes(questionId)) {
             if (!markedWithAns.includes(questionId)) {
                 const updatedMarkedWithAns = [...markedWithAns, questionId];
                 setMarkedWithAns(updatedMarkedWithAns);
-                localStorage.setItem(getKey("marked_with_ans"), JSON.stringify(updatedMarkedWithAns));
+                await secureSaveTestData(testId, 'marked_with_ans', updatedMarkedWithAns);
             }
         }
 
-        // ✅ Remove from skipped if it was there
         if (skippedQuestions.includes(questionId)) {
             const updatedSkipped = skippedQuestions.filter(id => id !== questionId);
             setSkippedQuestions(updatedSkipped);
-            localStorage.setItem(getKey("skippedQuestions"), JSON.stringify(updatedSkipped));
+            await secureSaveTestData(testId, 'skippedQuestions', updatedSkipped);
         }
+
+        // await saveUserTestLoginDataEncrypted(testId, {
+        //     selectedOptions: updated,
+        //     markedWithAns,
+        //     markedForReview,
+        //     skippedQuestions,
+        //     testInfo: state?.testInfo,
+        // });
     };
+
+
+
 
 
 
 
 
     // HANDLE NEXT AND SAVE FUNCTION
-    const handleSaveAndNext = () => {
-        // 👉 helper to generate test-specific localStorage key
-        const getKey = (key) => `test_${state?.testInfo?.test_id}_${key}`;
+    // const handleSaveAndNext = () => {
+    //     // 👉 helper to generate test-specific localStorage key
+    //     const getKey = (key) => `test_${state?.testInfo?.test_id}_${key}`;
 
+    //     const currentId = questionsState[currentQuestion]?.id;
+
+    //     // ⏱ Save spent time for current question
+    //     updateSpentTime(currentId);
+
+    //     // ✅ Add to attempted list if selected
+    //     if (selectedOptions[currentId] && !optionSelected.includes(currentId)) {
+    //         const updatedSelected = [...optionSelected, currentId];
+    //         setOptionSelected(updatedSelected);
+    //         localStorage.setItem(getKey("optionSelected"), JSON.stringify(updatedSelected));
+    //     }
+
+    //     // ✅ Remove from skipped if it was skipped earlier
+    //     if (selectedOptions[currentId] && skippedQuestions.includes(currentId)) {
+    //         const updatedSkipped = skippedQuestions.filter(id => id !== currentId);
+    //         setSkippedQuestions(updatedSkipped);
+    //         localStorage.setItem(getKey("skippedQuestions"), JSON.stringify(updatedSkipped));
+    //     }
+
+    //     // 👉 Move to next question
+    //     setCurrentQuestion(prev => prev + 1);
+    // };
+
+
+    // HANDLE SAVE AND NEXT FUNCTION =====> NEW
+    const handleSaveAndNext = async () => {
+        const testId = state?.testInfo?.test_id;
         const currentId = questionsState[currentQuestion]?.id;
 
-        // ⏱ Save spent time for current question
-        updateSpentTime(currentId);
+        await updateSpentTime(currentId);
 
-        // ✅ Add to attempted list if selected
         if (selectedOptions[currentId] && !optionSelected.includes(currentId)) {
             const updatedSelected = [...optionSelected, currentId];
             setOptionSelected(updatedSelected);
-            localStorage.setItem(getKey("optionSelected"), JSON.stringify(updatedSelected));
+            await secureSaveTestData(testId, 'optionSelected', updatedSelected);
         }
 
-        // ✅ Remove from skipped if it was skipped earlier
         if (selectedOptions[currentId] && skippedQuestions.includes(currentId)) {
             const updatedSkipped = skippedQuestions.filter(id => id !== currentId);
             setSkippedQuestions(updatedSkipped);
-            localStorage.setItem(getKey("skippedQuestions"), JSON.stringify(updatedSkipped));
+            await secureSaveTestData(testId, 'skippedQuestions', updatedSkipped);
         }
 
-        // 👉 Move to next question
         setCurrentQuestion(prev => prev + 1);
+
+        // await saveUserTestLoginDataEncrypted(testId, {
+        //     selectedOptions,
+        //     optionSelected,
+        //     skippedQuestions,
+        //     testInfo: state?.testInfo,
+        // });
     };
 
 
 
-    // HANDLE MARK FOR REVIEW FUNCTION
-    const handleMarkForReview = () => {
-        // 🔑 Generate test-specific key
-        const getKey = (key) => `test_${state?.testInfo?.test_id}_${key}`;
 
+    // HANDLE MARK FOR REVIEW FUNCTION
+    // const handleMarkForReview = () => {
+    //     // 🔑 Generate test-specific key
+    //     const getKey = (key) => `test_${state?.testInfo?.test_id}_${key}`;
+
+    //     const currentId = questionsState[currentQuestion]?.id;
+
+    //     const isOptionSelected = !!selectedOptions[currentId];
+    //     const isAlreadyMarked = markedForReview.includes(currentId);
+    //     const isAlreadyMarkedWithAns = markedWithAns.includes(currentId);
+
+    //     // ✅ If option is selected, store only in marked_with_ans
+    //     if (isOptionSelected && !isAlreadyMarkedWithAns) {
+    //         const updatedMarkedWithAns = [...markedWithAns, currentId];
+    //         setMarkedWithAns(updatedMarkedWithAns);
+    //         localStorage.setItem(getKey("marked_with_ans"), JSON.stringify(updatedMarkedWithAns));
+    //     }
+
+    //     // ✅ If option is not selected, store only in markedForReview
+    //     if (!isOptionSelected && !isAlreadyMarked) {
+    //         const updatedMarked = [...markedForReview, currentId];
+    //         setMarkedForReview(updatedMarked);
+    //         localStorage.setItem(getKey("markedForReview"), JSON.stringify(updatedMarked));
+    //     }
+
+    //     // 👉 Move to next question
+    //     setCurrentQuestion(prev => prev + 1);
+    // };
+
+
+    // HANDLE MARK FOR REVIEW FUNCTION ====> NEW
+    const handleMarkForReview = async () => {
+        const testId = state?.testInfo?.test_id;
         const currentId = questionsState[currentQuestion]?.id;
 
         const isOptionSelected = !!selectedOptions[currentId];
         const isAlreadyMarked = markedForReview.includes(currentId);
         const isAlreadyMarkedWithAns = markedWithAns.includes(currentId);
 
-        // ✅ If option is selected, store only in marked_with_ans
         if (isOptionSelected && !isAlreadyMarkedWithAns) {
             const updatedMarkedWithAns = [...markedWithAns, currentId];
             setMarkedWithAns(updatedMarkedWithAns);
-            localStorage.setItem(getKey("marked_with_ans"), JSON.stringify(updatedMarkedWithAns));
+            await secureSaveTestData(testId, 'marked_with_ans', updatedMarkedWithAns);
         }
 
-        // ✅ If option is not selected, store only in markedForReview
         if (!isOptionSelected && !isAlreadyMarked) {
             const updatedMarked = [...markedForReview, currentId];
             setMarkedForReview(updatedMarked);
-            localStorage.setItem(getKey("markedForReview"), JSON.stringify(updatedMarked));
+            await secureSaveTestData(testId, 'markedForReview', updatedMarked);
         }
 
-        // 👉 Move to next question
         setCurrentQuestion(prev => prev + 1);
+
+        // await saveUserTestLoginDataEncrypted(testId, {
+        //     selectedOptions,
+        //     markedForReview,
+        //     markedWithAns,
+        //     testInfo: state?.testInfo,
+        // });
     };
+
 
 
     // HANDLE NEXT QUESTION 
-    const handleNextQuestion = () => {
-        // 🔑 Create dynamic key using test_id
-        // const getKey = (key) => `test_${state?.testInfo?.test_id}_${key}`;
+    // const handleNextQuestion = () => {
+    //     // 🔑 Create dynamic key using test_id
+    //     // const getKey = (key) => `test_${state?.testInfo?.test_id}_${key}`;
 
+    //     const currentId = questionsState[currentQuestion]?.id;
+
+    //     // ⏱ Save spent time for current question
+    //     updateSpentTime(currentId);
+
+    //     // 🚫 If no option selected & not already skipped, then skip
+    //     if (!selectedOptions[currentId] && !skippedQuestions.includes(currentId)) {
+    //         const updatedSkipped = [...skippedQuestions, currentId];
+    //         setSkippedQuestions(updatedSkipped);
+
+    //         // 💾 Save to localStorage using test-specific key
+    //         localStorage.setItem(getKey("skippedQuestions"), JSON.stringify(updatedSkipped));
+    //     }
+
+    //     // 👉 Move to next question
+    //     setCurrentQuestion(prev => prev + 1);
+    // };
+
+
+
+
+    // HANDLE NEXT QUESTION ==== >
+    const handleNextQuestion = async () => {
+        const testId = state?.testInfo?.test_id;
         const currentId = questionsState[currentQuestion]?.id;
 
-        // ⏱ Save spent time for current question
-        updateSpentTime(currentId);
+        await updateSpentTime(currentId);
 
-        // 🚫 If no option selected & not already skipped, then skip
         if (!selectedOptions[currentId] && !skippedQuestions.includes(currentId)) {
             const updatedSkipped = [...skippedQuestions, currentId];
             setSkippedQuestions(updatedSkipped);
-
-            // 💾 Save to localStorage using test-specific key
-            localStorage.setItem(getKey("skippedQuestions"), JSON.stringify(updatedSkipped));
+            await secureSaveTestData(testId, 'skippedQuestions', updatedSkipped);
         }
 
-        // 👉 Move to next question
         setCurrentQuestion(prev => prev + 1);
+
+        // await saveUserTestLoginDataEncrypted(testId, {
+        //     selectedOptions,
+        //     skippedQuestions,
+        //     testInfo: state?.testInfo,
+        // });
     };
+
 
 
     useEffect(() => {
@@ -289,11 +484,39 @@ const Screen5 = () => {
 
 
     // UPDATE SPANT TIME
-    const updateSpentTime = (questionId) => {
+    // const updateSpentTime = (questionId) => {
+    //     const now = Date.now();
+    //     const timeSpentOnQuestion = Math.floor((now - questionStartTime) / 1000); // in seconds
+
+    //     const existing = JSON.parse(localStorage.getItem(getKey('spentTime'))) || [];
+
+    //     const updated = (() => {
+    //         const found = existing.find(item => item.questionId === questionId);
+    //         if (found) {
+    //             return existing.map(item =>
+    //                 item.questionId === questionId
+    //                     ? { ...item, time: item.time + timeSpentOnQuestion }
+    //                     : item
+    //             );
+    //         } else {
+    //             return [...existing, { questionId, time: timeSpentOnQuestion }];
+    //         }
+    //     })();
+
+    //     localStorage.setItem(getKey('spentTime'), JSON.stringify(updated));
+    //     // console.log('✅ Updated Spent Time:', updated);
+    // };
+
+
+
+    // UPDATE SPANT TIME NEW ======>
+    const updateSpentTime = async (questionId) => {
         const now = Date.now();
         const timeSpentOnQuestion = Math.floor((now - questionStartTime) / 1000); // in seconds
+        const testId = state?.testInfo?.test_id;
 
-        const existing = JSON.parse(localStorage.getItem(getKey('spentTime'))) || [];
+        let existing = await secureGetTestData(testId, 'spentTime');
+        existing = existing || [];
 
         const updated = (() => {
             const found = existing.find(item => item.questionId === questionId);
@@ -308,8 +531,8 @@ const Screen5 = () => {
             }
         })();
 
-        localStorage.setItem(getKey('spentTime'), JSON.stringify(updated));
-        console.log('✅ Updated Spent Time:', updated);
+        await secureSaveTestData(testId, 'spentTime', updated);
+        // console.log('✅ Updated Spent Time:', updated);
     };
 
 
@@ -337,7 +560,7 @@ const Screen5 = () => {
 
 
     const current = questionsState[currentQuestion];
-    // console.log("cureree====>", current)
+    // // console.log("cureree====>", current)
     if (!current) return <div className="p-4-400 text-red-500 w-full h-full flex items-center justify-center">
         <div className="fading-spinner">
             {[...Array(12)].map((_, i) => (
@@ -366,30 +589,65 @@ const Screen5 = () => {
         setShowPauseModal(true);
     };
 
-    const handleConfirmPause = () => {
+
+    // OLD CODE
+    // const handleConfirmPause = () => {
+    //     setShowPauseModal(false);
+    //     // console.log("Test paused and state saved.");
+
+    //     const currentTestId = state?.testInfo?.test_id;
+
+    //     // 🔁 Get existing paused status array from localStorage
+    //     const existingStatus = JSON.parse(localStorage.getItem('pause_status_array')) || [];
+
+    //     // 🔄 Check if test already exists
+    //     const updatedStatus = [...existingStatus.filter(item => item.test_id !== currentTestId)];
+
+    //     // ✅ Push new or updated test status
+    //     updatedStatus.push({
+    //         test_id: currentTestId,
+    //         isPaused: true,
+    //     });
+
+    //     // 💾 Save updated array in localStorage
+    //     localStorage.setItem('pause_status_array', JSON.stringify(updatedStatus));
+    //     exitFullScreen()
+    //     // 🔁 Redirect
+    //     nav('/testpakages', { replace: true, state: { testId: state?.testId } });
+    // };
+
+
+    // NEW CODE 
+    const handleConfirmPause = async () => {
         setShowPauseModal(false);
-        console.log("Test paused and state saved.");
+        // console.log("⏸️ Test paused and state saved.");
 
         const currentTestId = state?.testInfo?.test_id;
 
-        // 🔁 Get existing paused status array from localStorage
-        const existingStatus = JSON.parse(localStorage.getItem('pause_status_array')) || [];
+        try {
+            // 🔁 Always use 'pause_status' as key
+            const existingStatus = await secureGetTestData('pause_status', 'pause_status_array') || [];
 
-        // 🔄 Check if test already exists
-        const updatedStatus = [...existingStatus.filter(item => item.test_id !== currentTestId)];
+            // 🧹 Remove old entry for current test if it exists
+            const updatedStatus = existingStatus.filter(item => item.test_id !== currentTestId);
 
-        // ✅ Push new or updated test status
-        updatedStatus.push({
-            test_id: currentTestId,
-            isPaused: true,
-        });
+            // ➕ Push current test pause status
+            updatedStatus.push({
+                test_id: currentTestId,
+                isPaused: true,
+            });
 
-        // 💾 Save updated array in localStorage
-        localStorage.setItem('pause_status_array', JSON.stringify(updatedStatus));
-        exitFullScreen()
-        // 🔁 Redirect
-        nav('/testpakages', { replace: true, state: { testId: state?.testId } });
+            // 💾 Save back to 'pause_status' key
+            await secureSaveTestData('pause_status', 'pause_status_array', updatedStatus);
+
+            exitFullScreen();
+            nav('/testpakages', { replace: true, state: { testId: state?.testId } });
+
+        } catch (error) {
+            console.error("❌ Failed to pause test securely:", error);
+        }
     };
+
 
 
     const handleCancelPause = () => {
@@ -407,86 +665,15 @@ const Screen5 = () => {
 
 
 
-    const handleSubmit = async () => {
-        const testId = state?.testInfo?.test_id;
-
-        // ✅ Use getKey for all localStorage reads
-        const spentTime = JSON.parse(localStorage.getItem(getKey('spentTime'))) || [];
-        const optionSelected = JSON.parse(localStorage.getItem(getKey('optionSelected'))) || [];
-        const selectedOptions = JSON.parse(localStorage.getItem(getKey('selectedOptions'))) || {};
-        const skippedQuestions = JSON.parse(localStorage.getItem(getKey('skippedQuestions'))) || [];
-        const markedForReview = JSON.parse(localStorage.getItem(getKey('markedForReview'))) || [];
-
-        const totalAttendedQuestions = optionSelected.length;
-        const totalNotAnsweredQuestions = questionsState.length - totalAttendedQuestions;
-
-        let correct = 0;
-        let in_correct = 0;
-
-        const allAttendedQuestions = optionSelected.map((questionId) => {
-            const question = questionsState.find(q => q.id === questionId);
-            const selectedAns = selectedOptions[questionId];
-            const rightAns = question?.hindi_ans;
-
-            if (selectedAns === rightAns) {
-                correct++;
-            } else {
-                in_correct++;
-            }
-
-            return {
-                question_id: questionId,
-                user_selected_ans: selectedAns,
-                right_ans: rightAns
-            };
-        });
-
-        const negativeMark = state?.testInfo?.negative_mark;
-        const marksScored = correct - (in_correct * parseFloat(negativeMark));
-
-        const totalTimeSpent = spentTime.reduce((acc, item) => acc + (item.time || 0), 0);
-
-        const submissionData = {
-            test_id: testId,
-            total_attend_question: totalAttendedQuestions,
-            total_not_answer_question: totalNotAnsweredQuestions,
-            correct,
-            in_correct,
-            marks: marksScored,
-            time: totalTimeSpent,
-            negative_mark: negativeMark,
-            all_attend_question: allAttendedQuestions,
-            spent_time: spentTime,
-            skip_question: skippedQuestions,
-            attend_question: optionSelected,
-            mark_for_review: markedForReview
-        };
-
-        console.log("submission data", submissionData);
-
-        try {
-            const res = await dispatch(attendQuestionSubmitSlice(submissionData)).unwrap();
-            console.log("submitted test response", res);
-
-            // ✅ Clear all test-specific data
-            localStorage.removeItem(getKey("spentTime"));
-            localStorage.removeItem(getKey("optionSelected"));
-            localStorage.removeItem(getKey("markedForReview"));
-            localStorage.removeItem(getKey("skippedQuestions"));
-            localStorage.removeItem(getKey("selectedOptions"));
-            localStorage.removeItem(getKey("marked_with_ans"));
-
-            nav('/analysis', { replace: true, state });
-
-        } catch (error) {
-            console.log("ERROR IN SUBMIT TEST", error);
-        }
-    };
-
-
     // const handleSubmit = async () => {
     //     const testId = state?.testInfo?.test_id;
-    //     const spentTime = JSON.parse(localStorage.getItem('spentTime')) || [];
+
+    //     // ✅ Use getKey for all localStorage reads
+    //     const spentTime = JSON.parse(localStorage.getItem(getKey('spentTime'))) || [];
+    //     const optionSelected = JSON.parse(localStorage.getItem(getKey('optionSelected'))) || [];
+    //     const selectedOptions = JSON.parse(localStorage.getItem(getKey('selectedOptions'))) || {};
+    //     const skippedQuestions = JSON.parse(localStorage.getItem(getKey('skippedQuestions'))) || [];
+    //     const markedForReview = JSON.parse(localStorage.getItem(getKey('markedForReview'))) || [];
 
     //     const totalAttendedQuestions = optionSelected.length;
     //     const totalNotAnsweredQuestions = questionsState.length - totalAttendedQuestions;
@@ -515,12 +702,7 @@ const Screen5 = () => {
     //     const negativeMark = state?.testInfo?.negative_mark;
     //     const marksScored = correct - (in_correct * parseFloat(negativeMark));
 
-    //     const timeSpent = Object.entries(spentTime).map(([qid, seconds]) => ({
-    //         questionId: Number(qid),
-    //         time: seconds
-    //     }));
-
-    //     const totalTimeSpent = Object.values(spentTime).reduce((acc, val) => acc + val, 0);
+    //     const totalTimeSpent = spentTime.reduce((acc, item) => acc + (item.time || 0), 0);
 
     //     const submissionData = {
     //         test_id: testId,
@@ -538,55 +720,125 @@ const Screen5 = () => {
     //         mark_for_review: markedForReview
     //     };
 
-    //     console.log("submission data", submissionData);
+    //     // console.log("submission data", submissionData);
 
     //     try {
     //         const res = await dispatch(attendQuestionSubmitSlice(submissionData)).unwrap();
-    //         console.log("submitted test response", res);
+    //         // console.log("submitted test response", res);
 
-    //         // ✅ Clear localStorage after successful submission
-    //         localStorage.removeItem("spentTime");
-    //         localStorage.removeItem("optionSelected");
-    //         localStorage.removeItem("markedForReview");
-    //         localStorage.removeItem("skippedQuestions");
-    //         localStorage.removeItem("selectedOptions");
-    //         localStorage.removeItem("marked_with_ans");
-    //         nav('/screen6', { replace: true, state })
+    //         // ✅ Clear all test-specific data
+    //         localStorage.removeItem(getKey("spentTime"));
+    //         localStorage.removeItem(getKey("optionSelected"));
+    //         localStorage.removeItem(getKey("markedForReview"));
+    //         localStorage.removeItem(getKey("skippedQuestions"));
+    //         localStorage.removeItem(getKey("selectedOptions"));
+    //         localStorage.removeItem(getKey("marked_with_ans"));
+
+    //         nav('/analysis', { replace: true, state });
 
     //     } catch (error) {
-    //         console.log("ERROR IN SUBMIT TEST", error);
+    //         // console.log("ERROR IN SUBMIT TEST", error);
     //     }
     // };
 
+    // HANLDE SUBMIT NEW CODE ====>
+    const handleSubmit = async () => {
+        const testId = state?.testInfo?.test_id;
+
+        // ✅ Use encrypted storage and await the values
+        const spentTime = await secureGetTestData(testId, 'spentTime') || [];
+        const optionSelected = await secureGetTestData(testId, 'optionSelected') || [];
+        const selectedOptions = await secureGetTestData(testId, 'selectedOptions') || {};
+        const skippedQuestions = await secureGetTestData(testId, 'skippedQuestions') || [];
+        const markedForReview = await secureGetTestData(testId, 'markedForReview') || [];
+        const totalAttendedQuestions = optionSelected.length;
+        const totalNotAnsweredQuestions = questionsState.length - totalAttendedQuestions;
+
+        let correct = 0;
+        let in_correct = 0;
+
+        const allAttendedQuestions = optionSelected.map((questionId) => {
+            const question = questionsState.find(q => q.id === questionId);
+            const selectedAns = selectedOptions[questionId];
+            const rightAns = question?.hindi_ans;
+
+            if (selectedAns === rightAns) {
+                correct++;
+            } else {
+                in_correct++;
+            }
+
+            return {
+                question_id: questionId,
+                user_selected_ans: selectedAns,
+                right_ans: rightAns
+            };
+        });
+
+        const negativeMark = parseFloat(state?.testInfo?.negative_mark || 0);
+        const marksScored = correct - (in_correct * negativeMark);
+        const totalTimeSpent = spentTime.reduce((acc, item) => acc + (item.time || 0), 0);
+
+        const submissionData = {
+            test_id: testId,
+            total_attend_question: totalAttendedQuestions,
+            total_not_answer_question: totalNotAnsweredQuestions,
+            correct,
+            in_correct,
+            marks: marksScored,
+            time: totalTimeSpent,
+            negative_mark: negativeMark,
+            all_attend_question: allAttendedQuestions,
+            spent_time: spentTime,
+            skip_question: skippedQuestions,
+            attend_question: optionSelected,
+            mark_for_review: markedForReview
+        };
+
+        // console.log("📤 Submission Data:", submissionData);
+
+        try {
+            const res = await dispatch(attendQuestionSubmitSlice(submissionData)).unwrap();
+            // console.log("✅ Test Submitted Successfully:", res);
+
+            // ✅ Clear all encrypted test data
+            await clearAllTestData(testId);
+
+            nav('/analysis', { replace: true, state });
+
+        } catch (error) {
+            console.error("❌ Error in Submitting Test:", error);
+        }
+    };
 
 
 
     return (
         <div className="flex flex-col p-4 text-sm font-sans overflow-hidden">
-            
+
 
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
                 <div className="text-lg font-bold">{state?.testInfo?.title || 'SSC ONLINE MOCK TEST'}</div>
                 <div className="flex items-center gap-5">
                     {
-                isFullScreen ? (
-                    <div className=''>
-                        <button onClick={() => {
-                            setIsFullScreen(false)
-                            exitFullScreen()
-                        }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Exit Full Screen</button>
-                    </div>
-                ) : (
-                    <div className=''>
-                        <button onClick={() => {
-                            setIsFullScreen(true)
-                            enterFullScreen()
-                        }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Full Screen</button>
-                    </div>
-                )
-            }
-                    <div className="text-sm">Name : <span className="font-semibold"></span>{state?.userData?.candidateName || 'guest'}</div>
+                        isFullScreen ? (
+                            <div className=''>
+                                <button onClick={() => {
+                                    setIsFullScreen(false)
+                                    exitFullScreen()
+                                }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Exit Full Screen</button>
+                            </div>
+                        ) : (
+                            <div className=''>
+                                <button onClick={() => {
+                                    setIsFullScreen(true)
+                                    enterFullScreen()
+                                }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Full Screen</button>
+                            </div>
+                        )
+                    }
+                    <div className="text-sm">Name : <span className="font-semibold"></span>{userInfo.name || 'guest'}</div>
                 </div>
             </div>
 
@@ -601,7 +853,7 @@ const Screen5 = () => {
                         Puase
                     </button>
                     <button
-                        onClick={()=> setConfirmSubmit(true)}
+                        onClick={() => setConfirmSubmit(true)}
                         className="text-white text-sm font-bold bg-green-600 px-4 py-2 rounded"
                     >
                         Submit
@@ -637,7 +889,8 @@ const Screen5 = () => {
                         </div>
                     </div>
                     <div className="text-right">
-                        <TestTimer timeInMinutes={60} onTimeUp={() => alert("Time is up!")} />
+                        {/* <TestTimer timeInMinutes={60} onTimeUp={() => handleSubmit()} /> */}
+                        <TestTimer testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
                     </div>
                 </div>
             </div>
@@ -655,7 +908,7 @@ const Screen5 = () => {
                     skippedQuestions={[12, 25]}
                     setCurrentQuestion={(index) => setCurrentQuestion(index)}
                     onClose={() => setShowModal(false)}
-                    onProceed={() => console.log('Proceed to summary')}
+                    onProceed={() => { }}
                 />
 
                 {/* Right Side - Question Panel */}

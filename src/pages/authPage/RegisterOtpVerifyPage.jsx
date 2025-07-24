@@ -10,7 +10,7 @@ const RegisterOtpVerifyPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { state } = useLocation()
   const nav = useNavigate()
-  console.log("state", state)
+  // console.log("state", state)
 
   const dispatch = useDispatch()
 
@@ -36,7 +36,7 @@ const RegisterOtpVerifyPage = () => {
     try {
 
       const res = await dispatch(sendOtp(userData)).unwrap();
-      console.log("response==>", res)
+      // console.log("response==>", res)
       if (res.status_code == 200) {
         setSuccess(res.message);
         nav('/user-set-password', {state:userData})
@@ -45,7 +45,7 @@ const RegisterOtpVerifyPage = () => {
         setIsLoading(false);
       }
     } catch (error) {
-      console.log("ERROR IN OTP SEND PAGE", error)
+      // console.log("ERROR IN OTP SEND PAGE", error)
     }
 
     // Replace this logic with actual API call

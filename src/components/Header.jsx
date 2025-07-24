@@ -4,13 +4,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../utils/auth';
 import { useDispatch } from 'react-redux';
 import { logoutSlice } from '../redux/authSlice';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoMdHome } from 'react-icons/io';
+import { clearUserData } from '../helpers/userStorage';
 
 const Header = ({ toggle }) => {
   const dispatch = useDispatch()
   const nav = useNavigate()
   const [logoutLoading, setLogoutLogin] = useState(false)
+  const [auth, setAuth] = useState(false);
+
 
   const handleLogout = async () => {
 
@@ -18,14 +21,15 @@ const Header = ({ toggle }) => {
       setLogoutLogin(true)
       const res = await dispatch(logoutSlice()).unwrap();
       if (res.status_code == 200) {
+        await clearUserData();
         nav('/login')
       } else {
-        console.log("response==>", res)
+        // console.log("response==>", res)
       }
 
       setLogoutLogin(false)
     } catch (error) {
-      console.log("Error in logout api", error)
+      // console.log("Error in logout api", error)
       setLogoutLogin(false)
     } finally {
       setLogoutLogin(false)
@@ -35,8 +39,16 @@ const Header = ({ toggle }) => {
 
 
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      const result = await isAuthenticated();
+      setAuth(result);
+    };
+    checkAuth();
+  }, []);
 
-  
+
+
   return (
     <header className="bg-white shadow-md w-full flex justify-between items-center px-4 py-3 md:px-6">
       {/* Left Section - Logo & Navigation */}
@@ -55,12 +67,17 @@ const Header = ({ toggle }) => {
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-4 text-gray-600 text-sm font-medium">
           <Link to="/" className="flex items-center gap-1 hover:text-black">
-            <IoMdHome />  Home 
+            <IoMdHome />  Home
           </Link>
-        
-          {/* <Link to="/test-series" >
-            <span className="hover:text-black">Test Series</span>
-          </Link> */}
+
+          {
+            auth && (
+              <Link to="/user-dashboard" >
+                <span className="hover:text-black">User Dashboard</span>
+              </Link>
+            )
+          }
+
           {/* <span className="hover:text-black">Skill Academy</span> */}
           {/* <button className="flex items-center gap-1 hover:text-black">
             Pass <ChevronDown size={14} />
@@ -84,19 +101,34 @@ const Header = ({ toggle }) => {
          
         </div> */}
 
-           <Link to="/subscription">
-          <span className=" text-sm bg-amber-600 text-white p-2 rounded-sm font-bold">Revision24 Plus</span>
-          </Link>
+        <Link to="/subscription">
+          {/* <span className=" text-sm bg-amber-600 text-white p-2 rounded-sm font-bold">Revision24</span> */}
+          <img src='/plain-icon.png' className='h-16' style={{objectFit:'cover'}} />
+        </Link>
 
         {/* Google Translate Icon Placeholder */}
         {/* <img src="https://ssl.gstatic.com/translate/favicon.ico" alt="Translate" className="w-5 h-5 hidden md:block" /> */}
 
         {/* Dropdown Arrow (User/Profile/etc) */}
         {/* <ChevronDown size={18} className="text-gray-500" /> */}
+
         {
-          isAuthenticated() && (
+          auth ? (
             <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-4 py-2 rounded-md text-sm font-semibold">
               {logoutLoading ? "please waite" : " Log out"}
+            </button>
+          ) : (
+            <button onClick={() => nav('/login')} className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-md text-sm font-semibold">
+              {logoutLoading ? "please waite" : "Sign in"}
+            </button>
+          )
+        }
+
+        {
+          !auth && (
+
+            <button onClick={() => nav('/register')} className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-md text-sm font-semibold">
+              {'Sign Up'}
             </button>
           )
         }

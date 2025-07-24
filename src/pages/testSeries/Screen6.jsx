@@ -2,13 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchUserTestSeriesRankSlice } from '../../redux/HomeSlice';
+import Header from '../../components/Header';
 
 const Screen6 = () => {
     const nav = useNavigate()
     const dispatch = useDispatch();
     const { state } = useLocation();
 
-    console.log("state==>", state)
+    // console.log("state==>", state)
 
     const [performance, setPerformance] = useState(null);
     const [sections, setSections] = useState([]);
@@ -20,7 +21,7 @@ const Screen6 = () => {
        let testId = state?.testInfo?.test_id || state?.testInfo?.id
         try {
             const res = await dispatch(fetchUserTestSeriesRankSlice(testId)).unwrap();
-            console.log("response===>", res)
+            // console.log("response===>", res)
 
             if (res.status_code == 200) {
                 const test = res.data.test_detail;
@@ -72,7 +73,7 @@ const Screen6 = () => {
                     }
                 ]);
 
-                console.log("Score:", calculatedScore.toFixed(2));
+                // console.log("Score:", calculatedScore.toFixed(2));
             }
         } catch (error) {
             console.error("ERROR IN RESULT SCREEN", error);
@@ -88,7 +89,9 @@ const Screen6 = () => {
     }
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen text-gray-800">
+        <>
+        <Header />
+         <div className="p-6 bg-gray-100 min-h-screen text-gray-800">
             <h2 className="text-xl font-semibold mb-4 text-center">{state && state?.testInfo?.title}</h2>
             <h2 className="text-xl mb-4">Overall Performance Summary</h2>
 
@@ -256,6 +259,8 @@ const Screen6 = () => {
                 <button onClick={() => nav('/test-solutions', { state: {testData, state} })} className='px-4 py-2 bg-blue-400 cursor-pointer text-white rounded-sm'>View Solutions</button>
             </div>
         </div>
+        </>
+       
     );
 };
 

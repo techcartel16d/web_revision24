@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaGooglePlay, FaApple, FaWhatsapp } from 'react-icons/fa';
+import { FaGooglePlay, FaApple, FaWhatsapp, FaAngleRight } from 'react-icons/fa';
 import SwiperSlider from './SwiperSlider';
 
 const HeroBanner = ({ banner }) => {
@@ -13,8 +13,8 @@ const HeroBanner = ({ banner }) => {
                         Practice SSC's new UI Today <br />
                         <span className="font-bold text-gray-900">Crack your Exam Tomorrow</span>
                     </h2>
-                    <p className="text-sm text-gray-600 mt-3">
-                        Learn ▶ Revise ▶ Crack
+                    <p className="text-sm flex items-center  text-gray-600 mt-3">
+                        Learn <FaAngleRight /> Revise <FaAngleRight />Crack
                     </p>
                     <p className="mt-4 text-gray-700">Start your selection's journey. Just Free!</p>
                     <div>

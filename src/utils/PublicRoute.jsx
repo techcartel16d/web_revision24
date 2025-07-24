@@ -1,13 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { getUserDataDecrypted } from '../helpers/userStorage'; // Adjust path as needed
 
 const PublicRoute = () => {
-  const token = localStorage.getItem('token');
-  const user = localStorage.getItem('user');
+  const [isChecking, setIsChecking] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  if (token && user) {
+  useEffect(() => {
+    const checkAuth = async () => {
+      const userData = await getUserDataDecrypted();
+      if (userData && userData.token) {
+        setIsAuthenticated(true);
+      }
+      setIsChecking(false);
+    };
+
+    checkAuth();
+  }, []);
+
+  if (isChecking) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-gray-600">
+        Checking authentication...
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 

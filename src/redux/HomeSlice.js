@@ -28,7 +28,7 @@ export const homePageSlice = createAsyncThunk(
 export const getSingleCategoryPackageTestseriesSlice = createAsyncThunk(
     'home/getSingleCategoryPackageTestseriesSlice',
     async ({ testId, page, search }, { rejectWithValue }) => {
-        console.log('getSingleCategoryPackageTestseriesSlice', testId, page, search);
+        // // console.log('getSingleCategoryPackageTestseriesSlice', testId, page, search);
         try {
             const data = await HomeProvider.getSingleCategoryPackageTestseries(
                 testId,
@@ -65,7 +65,7 @@ export const getSingleCategoryPackageTestseriesDetailSlice = createAsyncThunk(
 export const getSingleCategoryPackageTestseriesQuestionSlice = createAsyncThunk(
     'home/getSingleCategoryPackageTestseriesQuestionSlice',
     async (id, { rejectWithValue }) => {
-        console.log("this is id", id)
+        // console.log("this is id", id)
         try {
             const data = await HomeProvider.getSingleCategoryPackageTestseriesQuestion(id);
             return data;
