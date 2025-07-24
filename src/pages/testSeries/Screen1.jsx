@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MdArrowBackIos } from 'react-icons/md';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Screen1 = () => {
@@ -22,7 +23,9 @@ const Screen1 = () => {
 
   return (
     <div className="min-h-screen bg-white px-6 py-8 text-center">
-      <h1 className="text-xl font-semibold mb-4">SSC ONLINE MOCK TEST</h1>
+     
+
+      <h1 className="text-xl font-semibold mb-4">{state && state?.testInfo?.title}</h1>
 
       <div className="text-sm bg-blue-400 text-left text-white px-3 py-2 mb-6 font-bold rounded">
         Candidate Name : {userInfo?.name || 'N/A'}
@@ -78,7 +81,7 @@ const Screen1 = () => {
               onClick={() => {
                 // Replace this with your exam start logic
                 console.log('Start Exam');
-                nav("/screen2", { state: {userInfo, testInof:state} })
+                nav("/test-login", { state: { userInfo, testInfo: state?.testInfo, testId: state?.testId } })
               }}
             >
               Click Here to Start Exam

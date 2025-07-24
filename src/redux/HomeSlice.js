@@ -14,7 +14,7 @@ const initialState = {
 
 
 export const homePageSlice = createAsyncThunk(
-    'homeSlice/homePageSlice',
+    'home/homePageSlice',
     async (id, { rejectWithValue }) => {
         try {
             const response = await HomeProvider.homeData(id);
@@ -26,7 +26,7 @@ export const homePageSlice = createAsyncThunk(
 );
 
 export const getSingleCategoryPackageTestseriesSlice = createAsyncThunk(
-    'user/getSingleCategoryPackageTestseriesSlice',
+    'home/getSingleCategoryPackageTestseriesSlice',
     async ({ testId, page, search }, { rejectWithValue }) => {
         console.log('getSingleCategoryPackageTestseriesSlice', testId, page, search);
         try {
@@ -42,13 +42,14 @@ export const getSingleCategoryPackageTestseriesSlice = createAsyncThunk(
     },
 );
 
+
 // This thunk fetches the details of a specific test series based on the test ID
-export const getSingleCategoryPackageTestseriesQuestionSlice = createAsyncThunk(
-    'user/getSingleCategoryPackageTestseriesQuestionSlice',
+export const getSingleCategoryPackageTestseriesDetailSlice = createAsyncThunk(
+    'home/getSingleCategoryPackageTestseriesDetailSlice',
     async (id, { rejectWithValue }) => {
-        console.log("this is id", id)
         try {
-            const data =await HomeProvider.getSingleCategoryPackageTestseriesQuestion(id);
+            const data =
+                await HomeProvider.getSingleCategoryPackageTestseriesDetails(id);
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
@@ -58,8 +59,93 @@ export const getSingleCategoryPackageTestseriesQuestionSlice = createAsyncThunk(
 
 
 
+
+
+// This thunk fetches the details of a specific test series based on the test ID
+export const getSingleCategoryPackageTestseriesQuestionSlice = createAsyncThunk(
+    'home/getSingleCategoryPackageTestseriesQuestionSlice',
+    async (id, { rejectWithValue }) => {
+        console.log("this is id", id)
+        try {
+            const data = await HomeProvider.getSingleCategoryPackageTestseriesQuestion(id);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    },
+);
+
+// It takes user profile data as input and returns the response
+export const attendQuestionSubmitSlice = createAsyncThunk(
+    'home/attendQuestionSubmitSlice',
+    async (attendQuestion, { rejectWithValue }) => {
+        try {
+            const data = await HomeProvider.submitAttendQuestions(attendQuestion);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    },
+);
+
+
+// FETCH USER TEST SERIES RANK
+export const fetchUserTestSeriesRankSlice = createAsyncThunk(
+    'home/fetchUserTestSeriesRankSlice',
+    async (test_id, { rejectWithValue }) => {
+        try {
+            const data = await HomeProvider.getUserTestSeriesRank(test_id);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    },
+);
+
+
+
+export const fetchUserTestSeriesSolution = createAsyncThunk(
+    'home/fetchUserTestSeriesSolution',
+    async (test_id, { rejectWithValue }) => {
+        try {
+            const data = await HomeProvider.getUserTestSeriesSolution(test_id);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    },
+);
+
+
+// Async Thunks getSubscriptionSlice
+export const getSubscriptionSlice = createAsyncThunk(
+    'user/getSubscriptionSlice',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await HomeProvider.getSubscriptionData();
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+// Async Thunks getSubscriptionSlice
+export const checkoutpaySlice = createAsyncThunk(
+    'user/checkoutpaySlice',
+    async (subscibeData, { rejectWithValue }) => {
+        try {
+            const response = await HomeProvider.checkoutpay(subscibeData);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+
+
+
 const homeSlice = createSlice({
-    name: 'homeSlice',
+    name: 'home',
     initialState,
     reducers: {},
 });

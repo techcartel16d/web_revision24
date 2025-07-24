@@ -4,10 +4,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Screen4 = () => {
     const nav = useNavigate()
     const { state } = useLocation();
+    console.log(state)
     return (
         <div className="px-6 py-3">
             <div className='flex justify-between items-center gap-5 mb-3'>
-                <h1 className="text-xl font-semibold">SSC ONLINE MOCK TEST</h1>
+                <h1 className="text-xl font-semibold">{state && state?.testInfo?.title}</h1>
                 <div className='flex items-center justify-center gap-3'>
                     <p className="text-2xl font-bold text-blue-800">
                         {state?.userData?.systemNumber || 'R2400000'}
@@ -132,7 +133,7 @@ const Screen4 = () => {
             {/* Navigation buttons at the bottom */}
             <div className="mt-10 flex justify-between">
                 <button onClick={() => nav(-1)} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded">&lt;&lt; Back</button>
-                <button onClick={()=> nav('/screen5',{state})} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded">Start Test &gt;&gt;</button>
+                <button onClick={()=> nav('/scc-mock-test',{state})} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded">Start Test &gt;&gt;</button>
             </div>
         </div>
     );

@@ -2,87 +2,72 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const TestSeriesViewer = ({ testSeriesData }) => {
-    const nav = useNavigate()
-    
-    const categories = Object.keys(testSeriesData);
-    const [selectedCategory, setSelectedCategory] = useState(categories[1] || null);
-    console.log(categories)
+  const nav = useNavigate();
+  const categories = Object.keys(testSeriesData);
+  const [selectedCategory, setSelectedCategory] = useState(categories[1] || null);
 
-    return (
-        <div className="p-6 bg-gray-50 min-h-screen cursor-pointer" >
-            {/* Category Tabs */}
-            {/* <div className="flex flex-wrap gap-3 mb-6">
-                {categories.map((category, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setSelectedCategory(category)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium border 
-              ${selectedCategory === category ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
-                    >
-                        {category}
-                    </button>
-                ))}
-            </div> */}
-
-            {/* <button
-                className={`px-4 py-2 rounded-full text-sm font-medium border  bg-blue-600 text-white`}
-            >
-                {categories[1]}
-            </button> */}
-
-
-            {/* Series Cards */}
-            {selectedCategory && (
-                <div>
-                    <h2 className="text-xl font-semibold mb-4">{selectedCategory} - Test Series</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {testSeriesData[selectedCategory].map((item, index) => (
-                            <div
-                                onClick={() => nav('testpakages', { state: item })}
-                                key={index}
-                                className="bg-white shadow-md rounded-lg p-4 border hover:shadow-lg transition"
-                            >
-                                {/* <div className="mb-3">
-                                    {item.image ? (
-                                        <img
-                                            src={item.image}
-                                            alt={item.title}
-                                            className="w-full h-40 object-cover rounded"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-40 bg-gray-100 flex items-center justify-center rounded text-gray-400">
-                                            No Image
-                                        </div>
-                                    )}
-                                </div> */}
-                                <h3 className="text-lg font-bold text-gray-800 mb-1">{item.title}</h3>
-                                <p className="text-gray-600 text-sm mb-2">Tests: {item.total_assign_test}</p>
-                                <p className="text-gray-800 font-semibold">
-                                    Price: ₹{item.offer_price || 'Free'}
-                                </p>
-                                <p className={`text-sm font-medium ${item.purchase_or_not ? 'text-green-600' : 'text-red-500'}`}>
-                                    {item.purchase_or_not ? 'Purchased' : 'Not Purchased'}
-                                </p>
-
-                                {/* Action Button */}
-                                {/* <div className="flex justify-end mt-4">
-                                    {item.offer_price === "0" || item.offer_price === 0 ? (
-                                        <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm">
-                                            Start
-                                        </button>
-                                    ) : (
-                                        <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md text-sm">
-                                            Unlock
-                                        </button>
-                                    )}
-                                </div> */}
-                            </div>
-                        ))}
-                    </div>
+  return (
+    <div className="p-6 bg-gray-50" id="testseries">
+      {/* Test Series Grid */}
+      {selectedCategory && (
+        <div>
+          <h2 className="text-xl font-semibold mb-4">{selectedCategory} - Test Series</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {testSeriesData[selectedCategory].map((item, index) => (
+              <div
+                key={index}
+                onClick={() => nav('testpakages', { state: { item, testId: item.id } })}
+                className="bg-white rounded-xl shadow hover:shadow-lg transition border cursor-pointer overflow-hidden"
+              >
+                {/* Gradient Header */}
+                <div className="bg-gradient-to-r from-white to-blue-100 px-4 py-3 relative">
+                  <img
+                    src={item.logo || '/logo.jpeg'} // use fallback if logo missing
+                    alt="Logo"
+                    className="w-15 h-15  object-cover"
+                  />
+                  <span className="absolute top-3 right-3 bg-white text-yellow-500 text-xs font-semibold px-2 py-0.5 rounded-full shadow">
+                    ⚡ {item.purchase_or_not ? '' : 'paid'}
+                  </span>
                 </div>
-            )}
+
+                {/* Content */}
+                <div className="p-4">
+                  <h3 className="text-base font-semibold text-gray-800 mb-1 line-clamp-2">
+                    {item.title || 'Mock Test Series'}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-1">
+                    {item.total_assign_test} Total Tests{' '}
+                    <span className="text-green-600 font-semibold">| {item.free_test || 4} Free Tests</span>
+                  </p>
+
+                  <p className="text-xs text-blue-600 mb-2">
+                    {item.language || 'English,Hindi'}
+                  </p>
+
+                  {/* Features */}
+                  <ul className="text-sm text-gray-700 space-y-1 mb-4">
+                    {item.live_tests && <li>• {item.live_tests} 🔴 AI-Generated Ultimate Live Test</li>}
+                    {item.ai_tests && <li>• {item.ai_tests} AI-Generated Test</li>}
+                    {item.previous_papers && <li>• {item.previous_papers} SSC PYQs</li>}
+                    {item.more_tests && (
+                      <li className="text-green-600 font-medium">
+                        +{item.more_tests} more tests
+                      </li>
+                    )}
+                  </ul>
+
+                  <button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-2 text-sm rounded-md font-semibold">
+                    View Test Series
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default TestSeriesViewer;

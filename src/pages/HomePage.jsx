@@ -4,15 +4,22 @@ import SwiperSlider from '../components/SwiperSlider';
 import HeroBanner from '../components/HeroBanner';
 import ExamSelector from '../components/ExamSelector';
 import { useDispatch } from 'react-redux';
-import { homePageSlice } from '../redux/HomeSlice';
+import { getSubscriptionSlice, homePageSlice } from '../redux/HomeSlice';
 import TestSeriesViewer from '../components/TestSeriesViewer';
+import SubscriptionModal from '../components/SubscriptionModal';
+import AboutUs from '../components/AboutUs';
+import SubscriptionPlans from '../components/SubscriptionPlans';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 const HomePage = () => {
+
   const dispatch = useDispatch()
   const [homeData, setHomeData] = useState(null)
   const [bannerData, setBannerData] = useState([])
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
+
 
   const getHomeData = async (id) => {
     try {
@@ -37,6 +44,10 @@ const HomePage = () => {
 
   }
 
+
+
+  
+
   useEffect(() => {
     getHomeData()
   }, [])
@@ -44,8 +55,12 @@ const HomePage = () => {
 
 
 
+
+
   return (
+
     <div className='w-full'>
+      <Header />
       {
         homeData && (
 
@@ -71,6 +86,14 @@ const HomePage = () => {
         )
       }
 
+
+          <SubscriptionPlans  />
+        
+
+
+
+      {/* <SubscriptionModal /> */}
+      <Footer />
     </div>
   );
 };

@@ -1,46 +1,196 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 import LoginPage from './pages/authPage/LoginPage';
-import ProtectedRoute from './components/ProtectedRoute';
-import HomePage from './pages/HomePage';
-import Layout from './components/Layout';
 import RegisterPage from './pages/authPage/RegisterPage';
-import WalletPage from './pages/WalletPage'; // make sure this page exists
+import RegisterOtpVerifyPage from './pages/authPage/RegisterOtpVerifyPage';
+import UserDetailsPage from './pages/authPage/UserDetailsPage';
+import RegisterSetPasswordPage from './pages/authPage/RegisterSetPaswordPage';
+
+import WalletPage from './pages/WalletPage';
 import TestPagesPage from './pages/testSeries/TestPagesPage';
 import Screen1 from './pages/testSeries/Screen1';
 import Screen2 from './pages/testSeries/Screen2';
 import Screen3 from './pages/testSeries/Screen3';
 import Screen4 from './pages/testSeries/Screen4';
 import Screen5 from './pages/testSeries/Screen5';
+import Screen6 from './pages/testSeries/Screen6';
+import Screen7 from './pages/testSeries/Screen7';
+
+import Layout from './components/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicRoute from './utils/PublicRoute';
+
+import AboutUsPage from './pages/AboutUsPage';
+import HomePage from './pages/HomePage';
+import SubscriptionPage from './pages/SubscriptionPage';
+import TestSeriesPage from './pages/testSeries/TestSeriesPage';
+import PaymentSuccess from './pages/PaymentSuccess';
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
 
-        {/* Protected Routes with Shared Layout */}
-        <Route
-          path="/"
+        {/* ALWAYS ACCESSIBLE ROUTE */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/subscription" element={<SubscriptionPage />} />
+        <Route path="/test-series" element={<TestSeriesPage />} />
+
+        {/* PUBLIC ONLY ROUTES */}
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-otp" element={<RegisterOtpVerifyPage />} />
+          <Route path="/user-details" element={<UserDetailsPage />} />
+          <Route path="/user-set-password" element={<RegisterSetPasswordPage />} />
+        </Route>
+
+        {/* PROTECTED ROUTES */}
+        {/* <Route
           element={
             <ProtectedRoute>
               <Layout />
             </ProtectedRoute>
           }
         >
-          <Route index element={<HomePage />} />
-          <Route path="wallet" element={<WalletPage />} />
-          <Route path="testpakages" element={<TestPagesPage />} />
-          <Route path="screen1" element={<Screen1 />} />
-          <Route path="screen2" element={<Screen2 />} />
-          <Route path="screen3" element={<Screen3 />} />
-          <Route path="screen4" element={<Screen4 />} />
-          <Route path="screen5" element={<Screen5 />} />
-        </Route>
+          <Route path="/wallet" element={<WalletPage />} />
+          <Route path="/testpakages" element={<TestPagesPage />} />
+          <Route path="/system-info" element={<Screen1 />} />
+          <Route path="/test-login" element={<Screen2 />} />
+          <Route path="/instructions" element={<Screen3 />} />
+          <Route path="/symbols" element={<Screen4 />} />
+          <Route path="/analysis" element={<Screen6 />} />
+          <Route path="/test-solutions" element={<Screen7 />} />
+        </Route> */}
+
+        <Route path="/payment-response" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
+        <Route path="/wallet" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
+      <Route path="/testpakages" element={<ProtectedRoute><TestPagesPage /></ProtectedRoute>} />
+      <Route path="/system-info" element={<ProtectedRoute><Screen1 /></ProtectedRoute>} />
+      <Route path="/test-login" element={<ProtectedRoute><Screen2 /></ProtectedRoute>} />
+      <Route path="/instructions" element={<ProtectedRoute><Screen3 /></ProtectedRoute>} />
+      <Route path="/symbols" element={<ProtectedRoute><Screen4 /></ProtectedRoute>} />
+      <Route path="/analysis" element={<ProtectedRoute><Screen6 /></ProtectedRoute>} />
+      <Route path="/scc-mock-test" element={<ProtectedRoute><Screen5 /></ProtectedRoute>} />
+      <Route path="/test-solutions" element={<ProtectedRoute><Screen7 /></ProtectedRoute>} />
+
+       
+
       </Routes>
     </Router>
   );
 }
 
 export default App;
+
+
+
+// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// import { useSelector } from 'react-redux';
+
+// import LoginPage from './pages/authPage/LoginPage';
+// import RegisterPage from './pages/authPage/RegisterPage';
+// import RegisterOtpVerifyPage from './pages/authPage/RegisterOtpVerifyPage';
+// import UserDetailsPage from './pages/authPage/UserDetailsPage';
+// import RegisterSetPasswordPage from './pages/authPage/RegisterSetPaswordPage';
+
+// import HomePage from './pages/HomePage';
+// import WalletPage from './pages/WalletPage';
+// import TestPagesPage from './pages/testSeries/TestPagesPage';
+// import Screen1 from './pages/testSeries/Screen1';
+// import Screen2 from './pages/testSeries/Screen2';
+// import Screen3 from './pages/testSeries/Screen3';
+// import Screen4 from './pages/testSeries/Screen4';
+// import Screen5 from './pages/testSeries/Screen5';
+// import Screen6 from './pages/testSeries/Screen6';
+// import Screen7 from './pages/testSeries/Screen7';
+
+// import Layout from './components/Layout';
+// import ProtectedRoute from './components/ProtectedRoute';
+// import PublicRoute from './utils/PublicRoute';
+// import AboutUsPage from './pages/AboutUsPage';
+
+
+// function App() {
+
+//   return (
+//     <Router>
+//       <Routes>
+//         {/* PUBLIC ROUTES */}
+        
+//         <Route
+//           path="/login"
+//           element={
+//             <PublicRoute>
+//               <LoginPage />
+//             </PublicRoute>
+//           }
+//         />
+//         <Route
+//           path="/register"
+//           element={
+//             <PublicRoute>
+//               <RegisterPage />
+//             </PublicRoute>
+//           }
+//         />
+//         <Route
+//           path="/verify-otp"
+//           element={
+//             <PublicRoute>
+//               <RegisterOtpVerifyPage />
+//             </PublicRoute>
+//           }
+//         />
+//         <Route
+//           path="/user-details"
+//           element={
+//             <PublicRoute>
+//               <UserDetailsPage />
+//             </PublicRoute>
+//           }
+//         />
+//         <Route
+//           path="/user-set-password"
+//           element={
+//             <PublicRoute>
+//               <RegisterSetPasswordPage />
+//             </PublicRoute>
+//           }
+//         />
+
+//         {/* PROTECTED ROUTES */}
+//         <Route
+//           path="/"
+//           element={
+//             <ProtectedRoute>
+//               <Layout />
+//             </ProtectedRoute>
+//           }
+//         >
+//           <Route index element={<HomePage />} />
+//           <Route path="about" element={<AboutUsPage />} />
+//           <Route path="wallet" element={<WalletPage />} />
+//           <Route path="testpakages" element={<TestPagesPage />} />
+//           <Route path="system-info" element={<Screen1 />} />
+//           <Route path="test-login" element={<Screen2 />} />
+//           <Route path="instructions" element={<Screen3 />} />
+//           <Route path="symbols" element={<Screen4 />} />
+//           <Route path="scc-mock-test" element={<Screen5 />} />
+//           <Route path="analysis" element={<Screen6 />} />
+//           <Route path="test-solutions" element={<Screen7 />} />
+//         </Route>
+//       </Routes>
+//     </Router>
+//   );
+// }
+
+// export default App;
+
+
+
+
+
+

@@ -10,7 +10,7 @@ const Screen3 = () => {
         <div className="px-6 py-4">
             {/* Header */}
             <div className='flex justify-between items-center gap-5 my-3'>
-                <h1 className="text-xl font-semibold">SSC ONLINE MOCK TEST</h1>
+                <h1 className="text-xl font-semibold">{state && state?.testInfo?.title}</h1>
                 <div className='flex items-center justify-center gap-3'>
                     <p className="text-2xl font-bold text-blue-800">
                         {state?.userData?.systemNumber || 'R2400000'}
@@ -159,7 +159,7 @@ const Screen3 = () => {
                     onClick={() => {
                         // Replace this with your exam start logic
                         console.log('Start Exam');
-                        nav("/screen4", {state:state})
+                        nav("/symbols", {state:state})
                     }}
                 >
                     Agree

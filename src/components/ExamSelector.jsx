@@ -36,7 +36,7 @@ export default function ExamSelector({ category }) {
         <div className="p-4 max-w-6xl mx-auto">
             <h2 className="text-2xl font-bold mb-4">Choose your exam</h2>
 
-            <div className="flex flex-wrap gap-3 mb-6">
+            {/* <div className="flex flex-wrap gap-3 mb-6">
                 {category && category.map((cate) => (
                     <button
                         key={cate.id}
@@ -49,7 +49,7 @@ export default function ExamSelector({ category }) {
                         {cate.title}
                     </button>
                 ))}
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(showAll ? data : data.slice(0, 6)).map((item, index) => (

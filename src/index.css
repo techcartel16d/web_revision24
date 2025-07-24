@@ -1,8 +1,114 @@
+* {
+  user-select: none;
+  scroll-behavior: smooth
+}
+
 @import "tailwindcss";
+
 .question-content img,
 .option-content img {
   max-width: 100px;
   height: auto;
   display: inline-block;
   vertical-align: middle;
+}
+
+.fading-spinner {
+  margin: 40px auto;
+  width: 64px;
+  height: 64px;
+  position: relative;
+}
+
+.bar {
+  width: 6px;
+  height: 18px;
+  background-color: #333;
+  position: absolute;
+  left: 29px;
+  top: 0;
+  border-radius: 3px;
+  opacity: 0.2;
+  animation: fade 1.2s linear infinite;
+}
+
+@keyframes fade {
+
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.bar1 {
+  transform: rotate(0deg) translate(0, -28px);
+  animation-delay: -1.1s;
+}
+
+.bar2 {
+  transform: rotate(30deg) translate(0, -28px);
+  animation-delay: -1s;
+}
+
+.bar3 {
+  transform: rotate(60deg) translate(0, -28px);
+  animation-delay: -0.9s;
+}
+
+.bar4 {
+  transform: rotate(90deg) translate(0, -28px);
+  animation-delay: -0.8s;
+}
+
+.bar5 {
+  transform: rotate(120deg) translate(0, -28px);
+  animation-delay: -0.7s;
+}
+
+.bar6 {
+  transform: rotate(150deg) translate(0, -28px);
+  animation-delay: -0.6s;
+}
+
+.bar7 {
+  transform: rotate(180deg) translate(0, -28px);
+  animation-delay: -0.5s;
+}
+
+.bar8 {
+  transform: rotate(210deg) translate(0, -28px);
+  animation-delay: -0.4s;
+}
+
+.bar9 {
+  transform: rotate(240deg) translate(0, -28px);
+  animation-delay: -0.3s;
+}
+
+.bar10 {
+  transform: rotate(270deg) translate(0, -28px);
+  animation-delay: -0.2s;
+}
+
+.bar11 {
+  transform: rotate(300deg) translate(0, -28px);
+  animation-delay: -0.1s;
+}
+
+.bar12 {
+  transform: rotate(330deg) translate(0, -28px);
+  animation-delay: 0s;
+}
+
+#testBg{
+  background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('../public/testBg.png');
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }

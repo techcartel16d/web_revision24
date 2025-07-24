@@ -17,9 +17,8 @@ const Layout = () => {
 
       {/* Main Content */}
       <div
-        className={`flex flex-col flex-1 transition-all duration-300 ${
-          isSidebarOpen ? 'md:ml-64' : 'ml-0'
-        }`}
+        className={`flex flex-col flex-1 transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'ml-0'
+          }`}
       >
         <Header toggle={toggleSidebar} />
         <main className="p-4 flex-1 overflow-y-auto">

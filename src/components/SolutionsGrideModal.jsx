@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-const QuestionGridModal = ({
+const SolutionsGrideModal = ({
+    wrongQuestion =[],
     question = [],
     groupedQuestions = [],
     currentQuestion = 0,
@@ -110,15 +111,15 @@ const QuestionGridModal = ({
 
                             <div className="flex items-center gap-2">
                                 <div className="w-4 h-4 bg-yellow-300 rounded-sm"></div>
-                                <span>Marked with Answer</span>
+                                <span>Wrong Answer</span>
                             </div>
-                            <div className="text-right">({markedForReviewAns.length})</div>
-
+                            <div className="text-right">({wrongQuestion.length})</div>
+{/* 
                             <div className="flex items-center gap-2">
                                 <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
                                 <span>Marked without Answer</span>
-                            </div>
-                            <div className="text-right">({markedForReview.length})</div>
+                            </div> */}
+                            {/* <div className="text-right">({markedForReview.length})</div> */}
                         </div>
                     </div>
                 </div>
@@ -127,4 +128,4 @@ const QuestionGridModal = ({
     );
 };
 
-export default QuestionGridModal;
+export default SolutionsGrideModal;

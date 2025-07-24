@@ -1,19 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Add this
 import InputField from '../../components/InputField';
+import { useDispatch } from 'react-redux';
+import { register, sendOtp } from '../../redux/authSlice';
 
 const RegisterPage = () => {
   const [mobile, setMobile] = useState('');
   const navigate = useNavigate(); // Hook for navigation
+  const dispatch = useDispatch()
 
-  const handleSendOtp = (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!/^\d{10}$/.test(mobile)) {
       alert('Please enter a valid 10-digit mobile number.');
       return;
     }
 
-    console.log('Send OTP to:', mobile);
+    try {
+      const res = await dispatch(register({mobile})).unwrap()
+      if (res.status_code == 200) {
+        navigate("/verify-otp", { state: { mobile } })
+      } else {
+        alert(res.message)
+      }
+    } catch (error) {
+
+    }
+
+
+
     // Optionally navigate to OTP verification page
   };
 
@@ -51,6 +66,7 @@ const RegisterPage = () => {
           <p className="text-center text-sm mt-4">
             Already have an account?{' '}
             <button
+
               type="button"
               onClick={() => navigate('/login')}
               className="text-blue-600 hover:underline font-medium"

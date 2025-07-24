@@ -1,4 +1,4 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import UserApiProvider from '../api/AuthProvider';
 
 
@@ -16,7 +16,8 @@ const initialState = {
 // This thunk fetches the details of a specific test series based on the test ID
 export const register = createAsyncThunk(
   'user/register',
-  async (userData, {rejectWithValue}) => {
+  async (userData, { rejectWithValue }) => {
+    console.log("userData", userData)
     try {
       const response = await UserApiProvider.register(userData);
       return response;
@@ -29,7 +30,7 @@ export const register = createAsyncThunk(
 // This thunk handles user login
 export const login = createAsyncThunk(
   'user/login',
-  async (credentials, {rejectWithValue}) => {
+  async (credentials, { rejectWithValue }) => {
     try {
       const response = await UserApiProvider.login(credentials);
       return response;
@@ -41,7 +42,7 @@ export const login = createAsyncThunk(
 // This thunk handles user wallet fetch
 export const getWalletSlice = createAsyncThunk(
   'user/getWalletSlice',
-  async (_, {rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await UserApiProvider.getWallet();
       return response;
@@ -54,7 +55,7 @@ export const getWalletSlice = createAsyncThunk(
 // It takes user credentials as input and returns the response
 export const loadUserData = createAsyncThunk(
   'user/loadUserData',
-  async (_, {rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     try {
       const token = storage.getString('token');
       const userData = storage.getString('user');
@@ -73,8 +74,8 @@ export const loadUserData = createAsyncThunk(
 
 // This thunk handles user profile update
 export const updateProfileSlice = createAsyncThunk(
-  'user/updateProfileSlice',
-  async (profileData, {rejectWithValue}) => {
+  'authUser/updateProfileSlice',
+  async (profileData, { rejectWithValue }) => {
     try {
       const response = await UserApiProvider.updateProfile(profileData);
       return response;
@@ -87,7 +88,7 @@ export const updateProfileSlice = createAsyncThunk(
 // It takes user profile data as input and returns the response
 export const sendOtp = createAsyncThunk(
   'user/sendOtp',
-  async (otpData, {rejectWithValue}) => {
+  async (otpData, { rejectWithValue }) => {
     try {
       const response = await UserApiProvider.sendOtp(otpData);
       return response;
@@ -100,7 +101,7 @@ export const sendOtp = createAsyncThunk(
 // It takes user profile data as input and returns the response
 export const forgotPasswordSlice = createAsyncThunk(
   'user/forgotPasswordSlice',
-  async (mobile, {rejectWithValue}) => {
+  async (mobile, { rejectWithValue }) => {
     try {
       const response = await UserApiProvider.forgot_for_otp_Password(mobile);
       return response;
@@ -113,7 +114,7 @@ export const forgotPasswordSlice = createAsyncThunk(
 // It takes user profile data as input and returns the response
 export const verifyOtpSlice = createAsyncThunk(
   'user/verifyOtpSlice',
-  async (verifyOtpData, {rejectWithValue}) => {
+  async (verifyOtpData, { rejectWithValue }) => {
     try {
       const response = await UserApiProvider.verify_otp_for_forgot_password(
         verifyOtpData,
@@ -128,7 +129,7 @@ export const verifyOtpSlice = createAsyncThunk(
 // It takes user profile data as input and returns the response
 export const updateForgotPasswordSlice = createAsyncThunk(
   'user/updateForgotPasswordSlice',
-  async (verifyOtpData, {rejectWithValue}) => {
+  async (verifyOtpData, { rejectWithValue }) => {
     try {
       const response = await UserApiProvider.update_for_forgot_password(
         verifyOtpData,
@@ -143,7 +144,7 @@ export const updateForgotPasswordSlice = createAsyncThunk(
 // It takes user profile data as input and returns the response
 export const getUserInfoSlice = createAsyncThunk(
   'user/getUserInfoSlice',
-  async (_, {rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await UserApiProvider.userProfileGet();
       return response;
@@ -156,7 +157,7 @@ export const getUserInfoSlice = createAsyncThunk(
 // It takes user profile data as input and returns the response
 export const attendQuestionSubmitSlice = createAsyncThunk(
   'home/attendQuestionSubmit',
-  async (attendQuestion, {rejectWithValue}) => {
+  async (attendQuestion, { rejectWithValue }) => {
     try {
       const data = await UserApiProvider.submitAttendQuestions(attendQuestion);
       return data;
@@ -169,7 +170,7 @@ export const attendQuestionSubmitSlice = createAsyncThunk(
 // It takes user profile data as input and returns the response
 export const setPin = createAsyncThunk(
   'user/setPin',
-  async (pinData, {rejectWithValue}) => {
+  async (pinData, { rejectWithValue }) => {
     try {
       const response = await UserApiProvider.setPin(pinData);
       return response;
@@ -182,7 +183,7 @@ export const setPin = createAsyncThunk(
 // It takes user profile data as input and returns the response
 export const logoutSlice = createAsyncThunk(
   'user/logoutSlice',
-  async (_, {rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await UserApiProvider.logout();
       return response;
@@ -195,7 +196,7 @@ export const logoutSlice = createAsyncThunk(
 // REPORT QUETION GET
 export const getReportedQuetionSlice = createAsyncThunk(
   'user/getReportedQuetionSlice',
-  async (_, {rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await UserApiProvider.getReportQuetion();
       return res;
@@ -208,7 +209,7 @@ export const getReportedQuetionSlice = createAsyncThunk(
 // GET USER COLLECTION DETAILS
 export const getUserCollectionDetailSlice = createAsyncThunk(
   'user/getUserCollectionDetailSlice',
-  async (_, {rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await UserApiProvider.getUserCollectionDetails();
       return res;
@@ -221,7 +222,7 @@ export const getUserCollectionDetailSlice = createAsyncThunk(
 //ADD USER COLLECTION
 export const addUserCollectionSlice = createAsyncThunk(
   'user/addUserCollectionSlice',
-  async (collection, {rejectWithValue}) => {
+  async (collection, { rejectWithValue }) => {
     console.log('collectionData', collection);
     try {
       const res = await UserApiProvider.addUserCollection(collection);
@@ -235,7 +236,7 @@ export const addUserCollectionSlice = createAsyncThunk(
 //REMOVE USER COLLECTION
 export const removeUserCollectionSlice = createAsyncThunk(
   'user/removeUserCollectionSlice',
-  async (collection, {rejectWithValue}) => {
+  async (collection, { rejectWithValue }) => {
     console.log('collectionData in userSlice ======>', collection);
     try {
       const res = await UserApiProvider.removeUserCollection(collection);
@@ -248,7 +249,7 @@ export const removeUserCollectionSlice = createAsyncThunk(
 //REPORTED QUESTION
 export const reportedQuestionSlice = createAsyncThunk(
   'user/reportedQuestionSlice',
-  async (reportedQuetion, {rejectWithValue}) => {
+  async (reportedQuetion, { rejectWithValue }) => {
     console.log('collectionData', reportedQuetion);
     try {
       const res = await UserApiProvider.reportQuestion(reportedQuetion);
@@ -261,7 +262,7 @@ export const reportedQuestionSlice = createAsyncThunk(
 //REPORTED QUESTION GET
 export const reportedQuestionGetSlice = createAsyncThunk(
   'user/reportedQuestionGetSlice',
-  async (reportedQuetion, {rejectWithValue}) => {
+  async (reportedQuetion, { rejectWithValue }) => {
     console.log('collectionData', reportedQuetion);
     try {
       const res = await UserApiProvider.reportQuestionGet();
@@ -274,7 +275,7 @@ export const reportedQuestionGetSlice = createAsyncThunk(
 //NOTIFICATION GET
 export const geNotificationSlice = createAsyncThunk(
   'user/geNotificationSlice',
-  async (_, {rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     try {
       const res = await UserApiProvider.getNotification();
       return res;
@@ -283,6 +284,10 @@ export const geNotificationSlice = createAsyncThunk(
     }
   },
 );
+
+
+
+
 
 // Slice
 const authUser = createSlice({
@@ -351,7 +356,7 @@ const authUser = createSlice({
         state.error = action.payload;
       })
 
-      
+
 
       .addCase(register.pending, state => {
         state.loading = true;
@@ -393,50 +398,6 @@ const authUser = createSlice({
         state.error = action.payload;
         state.message = action.payload?.message;
       })
-
-      .addCase(logoutSlice.pending, state => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(logoutSlice.fulfilled, (state, action) => {
-        state.loading = false;
-
-        // Clear MMKV
-        storage.delete('token');
-        storage.delete('user');
-
-        // Clear Redux state
-        state.token = null;
-        state.user = null;
-        state.userInfo = {}; // ✅ Clear userInfo
-
-        state.message = action.payload.message;
-      })
-      .addCase(logoutSlice.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        state.message = action.payload?.message;
-      })
-
-      .addCase(updateProfileSlice.pending, state => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateProfileSlice.fulfilled, (state, action) => {
-        state.loading = false;
-        state.message = action.payload.message;
-
-        if (action.payload.data) {
-          // Use the central reducer to set userInfo and MMKV
-          userSlice.caseReducers.setUserInfo(state, {
-            payload: action.payload.data,
-          });
-        }
-      })
-      .addCase(updateProfileSlice.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
       .addCase(getUserInfoSlice.pending, state => {
         state.loading = true;
         state.error = null;
@@ -460,6 +421,6 @@ const authUser = createSlice({
   },
 });
 
-export const {setUserInfo, getUserInfo, clearUserInfo} = authUser.actions;
+export const { setUserInfo, getUserInfo, clearUserInfo } = authUser.actions;
 
 export default authUser.reducer;
