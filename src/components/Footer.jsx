@@ -72,7 +72,7 @@ const Footer = () => {
               <Link to="/about" className="hover:underline">About Us</Link>
             </li>
             <li>
-              <Link href="/terms-of-service" className="hover:underline">Terms & Conditions</Link>
+              <Link to="/terms-of-service" className="hover:underline">Terms & Conditions0000</Link>
             </li>
             <li>
               <a href="/privacy-policy" className="hover:underline">Privacy Policy</a>

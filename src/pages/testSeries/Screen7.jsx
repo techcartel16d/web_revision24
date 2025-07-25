@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { attendQuestionSubmitSlice, fetchUserTestSeriesSolution, getSingleCategoryPackageTestseriesQuestionSlice } from '../../redux/HomeSlice';
 
 import SolutionsGrideModal from '../../components/SolutionsGrideModal';
+import { getUserDataDecrypted } from '../../helpers/userStorage';
 
 
 
@@ -53,14 +54,9 @@ const Screen7 = () => {
 
 
   }
-
   const [wrongQuestions, setWrongQuestions] = useState([]);
 
-  const getUser = () => {
-    const user = JSON.parse(localStorage.getItem('user')) || {}
-    // console.log("user", user)
-    setUserInfo(user)
-  }
+ 
 
 
   const enterFullScreen = () => {
@@ -98,13 +94,16 @@ const Screen7 = () => {
     enterFullScreen()
   }, [])
 
+
+
+
+
   const fetchUserSolution = async () => {
     try {
       const res = await dispatch(fetchUserTestSeriesSolution(state?.testData?.my_detail?.test_id)).unwrap();
 
       if (res.status_code === 200) {
         setQuestionsState(res.data.all_question_list);
-        getUser();
         setSkippedQuestions(res.data.skip_question);
         setMarkedForReview(res.data.mark_for_review);
         setOptionSelected(res.data.attend_question);
@@ -124,7 +123,17 @@ const Screen7 = () => {
     }
   };
 
+      // LOAD. USER INFO
+      const loadUserData = async () => {
+          const user = await getUserDataDecrypted();
+          console.log("user info", user)
+          setUserInfo(user);
+      };
+  
 
+      useEffect(() => {
+          loadUserData();
+      }, []);
 
 
 

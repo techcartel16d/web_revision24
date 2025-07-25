@@ -29,6 +29,10 @@ import TestSeriesPage from './pages/testSeries/TestSeriesPage';
 import PaymentSuccess from './pages/PaymentSuccess';
 import UserDashboard from './pages/UserDashboard';
 import TermsOfServicePage from './pages/TermsOfServicePage';
+import ForgotPasswordPage from './pages/authPage/forgotpage/ForgotPasswordPage';
+import ForgotPasswordOtpPage from './pages/authPage/forgotpage/ForgotPasswordOtpPage';
+import SetNewPasswordPage from './pages/authPage/forgotpage/SetNewPasswordPage';
+
 
 function App() {
   return (
@@ -49,6 +53,9 @@ function App() {
           <Route path="/verify-otp" element={<RegisterOtpVerifyPage />} />
           <Route path="/user-details" element={<UserDetailsPage />} />
           <Route path="/user-set-password" element={<RegisterSetPasswordPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/forgot-password-verify-otp" element={<ForgotPasswordOtpPage />} />
+          <Route path="/reset-password" element={<SetNewPasswordPage />} />
         </Route>
 
         {/* PROTECTED ROUTES */}
@@ -68,7 +75,6 @@ function App() {
           <Route path="/analysis" element={<Screen6 />} />
           <Route path="/test-solutions" element={<Screen7 />} />
         </Route> */}
-
         <Route path="/payment-response" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
         <Route path="/user-dashboard" element={<ProtectedRoute> <UserDashboard /></ProtectedRoute>} />
         <Route path="/wallet" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />

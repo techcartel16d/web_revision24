@@ -33,12 +33,12 @@ const UserApiProvider = {
   },
 
   verify_otp_for_forgot_password: async (verifyOtpData) => {
-    const res = await api.post("/otp-forget-password", verifyOtpData);
+    const res = await api.post("/verify_register_otp", verifyOtpData);
     return res.data;
   },
 
   update_for_forgot_password: async (forgotPassData) => {
-    const res = await api.post("/otp-forget-password", forgotPassData);
+    const res = await api.post("/password-set", forgotPassData);
     return res.data;
   },
 

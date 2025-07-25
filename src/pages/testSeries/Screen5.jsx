@@ -352,7 +352,14 @@ const Screen5 = () => {
             await secureSaveTestData(testId, 'skippedQuestions', updatedSkipped);
         }
 
-        setCurrentQuestion(prev => prev + 1);
+        // Circular navigation: go to first if last question
+        if (currentQuestion === questionsState.length - 1) {
+            setCurrentQuestion(0);
+        } else {
+            setCurrentQuestion(prev => prev + 1);
+        }
+
+        // setCurrentQuestion(prev => prev + 1);
 
         // await saveUserTestLoginDataEncrypted(testId, {
         //     selectedOptions,
@@ -467,7 +474,13 @@ const Screen5 = () => {
             await secureSaveTestData(testId, 'skippedQuestions', updatedSkipped);
         }
 
-        setCurrentQuestion(prev => prev + 1);
+        // Circular navigation: go to first if last question
+        if (currentQuestion === questionsState.length - 1) {
+            setCurrentQuestion(0);
+        } else {
+            setCurrentQuestion(prev => prev + 1);
+        }
+        // setCurrentQuestion(prev => prev + 1);
 
         // await saveUserTestLoginDataEncrypted(testId, {
         //     selectedOptions,
@@ -743,6 +756,8 @@ const Screen5 = () => {
 
     // HANLDE SUBMIT NEW CODE ====>
     const handleSubmit = async () => {
+        // if (optionSelected.length === 0) return
+
         const testId = state?.testInfo?.test_id;
 
         // ✅ Use encrypted storage and await the values

@@ -121,9 +121,9 @@ const LoginPage = () => {
                                 <input type="checkbox" className="form-checkbox" />
                                 <span className="text-sm">Remember me</span>
                             </label>
-                            {/* <a href="#" className="text-sm text-blue-600 hover:underline">
+                            <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">
                                 Forgot password?
-                            </a> */}
+                            </Link>
                         </div>
                         <button
                             type="submit"
