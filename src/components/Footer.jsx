@@ -11,16 +11,16 @@ const Footer = () => {
         <div className="flex flex-wrap justify-center gap-6 mb-10">
 
           {/* Phone Box */}
-          <a href="tel:+917822936229" className="w-full md:w-1/3">
+          <a href="tel:+918306612328" className="w-full md:w-1/3">
             <div className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-md transition hover:scale-105">
               <img
-                src="https://revision24.com/website/images/phone.png"
+                src="/email.png"
                 alt="Phone"
                 className="w-12 h-12"
               />
               <div>
                 <h5 className="text-lg font-semibold text-gray-800">Any query call us</h5>
-                <p className="text-base text-gray-700">+91 78229-36229</p>
+                <p className="text-base text-gray-700">+91 8306612328</p>
               </div>
             </div>
           </a>
@@ -29,7 +29,7 @@ const Footer = () => {
           <a href="mailto:revision24@yahoo.com" className="w-full md:w-1/3">
             <div className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-md transition hover:scale-105">
               <img
-                src="https://revision24.com/website/images/email.png"
+                src="/phone.png"
                 alt="Email"
                 className="w-12 h-12"
               />
