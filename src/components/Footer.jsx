@@ -14,7 +14,8 @@ const Footer = () => {
           <a href="tel:+918306612328" className="w-full md:w-1/3">
             <div className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-md transition hover:scale-105">
               <img
-                src="/email.png"
+               
+                  src="/phone.png"
                 alt="Phone"
                 className="w-12 h-12"
               />
@@ -29,7 +30,7 @@ const Footer = () => {
           <a href="mailto:revision24@yahoo.com" className="w-full md:w-1/3">
             <div className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-md transition hover:scale-105">
               <img
-                src="/phone.png"
+                src="/email.png"
                 alt="Email"
                 className="w-12 h-12"
               />

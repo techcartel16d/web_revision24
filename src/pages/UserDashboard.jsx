@@ -40,11 +40,11 @@ const UserDashboard = () => {
   const getMyTransaction = async () => {
     try {
       const res = await dispatch(getTransactionSlice()).unwrap();
-      console.log(res.data);
+      // console.log(res.data);
       const data = res.data ?? [];
       setTransactions(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Transaction fetch error", error);
+      // console.error("Transaction fetch error", error);
     }
   };
 
@@ -275,9 +275,9 @@ const UserDashboard = () => {
                       {/* 📞 Call Button */}
                       <a
                         href="tel:+917822936229"
-                        className="px-4 py-2 rounded-lg font-semibold flex justify-center items-center gap-2 w-1/2 bg-blue-500 text-white"
+                        className="px-4 py-2  rounded-lg font-semibold flex justify-center items-center gap-2 w-1/2 bg-blue-500 text-white"
                       >
-                        <FaPhoneSquareAlt /> Call
+                        <FaPhoneSquareAlt  /> Call
                       </a>
 
                       {/* 💬 WhatsApp Button */}

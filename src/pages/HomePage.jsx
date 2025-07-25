@@ -13,6 +13,7 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { checkAllEncryptedTestData } from '../helpers/testStorage';
 import { getUserDataDecrypted, saveUserDataEncrypted } from '../helpers/userStorage';
+import AdBanner from '../components/AdBanner';
 
 const HomePage = () => {
 
@@ -22,6 +23,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [ad, setAd] = useState(null)
 
 
   const getHomeData = async (id) => {
@@ -29,7 +31,7 @@ const HomePage = () => {
       setLoading(true)
       const res = await dispatch(homePageSlice()).unwrap()
       // console.log("response", res)
-
+      setAd(res.data.popup.image)
 
       setHomeData(res.data)
       // console.log("home data in home screen", res.data)
@@ -67,7 +69,7 @@ const HomePage = () => {
         };
 
         await saveUserDataEncrypted(userInfo);
-      }else{
+      } else {
 
       }
 
@@ -77,6 +79,7 @@ const HomePage = () => {
 
     }
   }
+
 
 
 
@@ -112,6 +115,14 @@ const HomePage = () => {
           <HeroBanner banner={homeData?.banner} />
         )
       }
+
+
+      <AdBanner
+        imageUrl={ad}
+        linkUrl="/subscription"
+      />
+
+
       {
         homeData && (
           <ExamSelector category={homeData?.exam_category} />

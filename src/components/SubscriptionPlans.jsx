@@ -58,7 +58,7 @@ const SubscriptionPlans = () => {
             if (res.status && res.payment_session_id) {
                 if (window.Cashfree) {
                     const cashfree = window.Cashfree({
-                        mode: "sandbox", // Use "production" when live
+                        mode: "production", // Use "production" when live
                     });
 
                     const checkoutOptions = {
@@ -111,8 +111,10 @@ const SubscriptionPlans = () => {
                             key={idx}
                             className="rounded-2xl shadow-lg bg-white p-6 md:p-8 hover:scale-105 transition-all duration-300"
                         >
-                            <h3 className="text-xl font-bold text-blue-800 mb-2 uppercase">
+                          
+                            <h3 className="text-xl font-bold text-blue-800 mb-2 uppercase flex items-center justify-between">
                                 {plan.subscription_name}
+                                  <img src="/offer_tag.png" alt="" className='w-[100px]' />
                             </h3>
                             <div className="flex items-center gap-2 text-2xl font-bold text-green-600 mb-1">
                                 ₹{plan.offer_price}
@@ -127,11 +129,11 @@ const SubscriptionPlans = () => {
 
                             {
                                 auth ? (
-                                    <button onClick={() => checkOutPay(plan)} className="w-full mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200">
+                                    <button onClick={() => checkOutPay(plan)} className="w-full mt-auto cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200">
                                         Buy Now
                                     </button>
                                 ) : (
-                                    <button onClick={() => nav('/login')} className="w-full mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200">
+                                    <button onClick={() => nav('/login')} className="w-full mt-auto cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200">
                                         Buy Now
                                     </button>
                                 )

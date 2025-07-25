@@ -34,9 +34,10 @@ import ForgotPasswordOtpPage from './pages/authPage/forgotpage/ForgotPasswordOtp
 import SetNewPasswordPage from './pages/authPage/forgotpage/SetNewPasswordPage';
 import PrivacyPolicy from './pages/PrivacyPolicyPage';
 import RefundPolicy from './pages/RefundPolicyPage';
-
+import Clarity from '@microsoft/clarity';
 
 function App() {
+  Clarity.init("sjskd9cztm")
   return (
     <Router>
       <Routes>
