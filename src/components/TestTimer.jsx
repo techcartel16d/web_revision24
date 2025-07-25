@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { secureGetTestData, secureSaveTestData } from "../helpers/testStorage";
 
-const TestTimer = ({ testId, timeInMinutes = 60, onTimeUp = () => {}, showSeconds = true, textleft, textRight, timeTextSize="text-sm", textBg='' }) => {
+const TestTimer = ({ testId, timeInMinutes = 60, onTimeUp = () => {}, showSeconds = true, textleft, textRight, timeTextSize="text-sm", textBg='', timeClr='' }) => {
   const totalSeconds = timeInMinutes * 60;
   const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
 
@@ -40,7 +40,7 @@ const TestTimer = ({ testId, timeInMinutes = 60, onTimeUp = () => {}, showSecond
 
   return (
     <div className={`${timeTextSize} font-bold px-4 py-2 rounded ${textBg}`}>
-     {textleft} {formatTime(secondsLeft)} {textRight}
+     {textleft} <span className={timeClr}>{formatTime(secondsLeft)}</span> {textRight}
     </div>
   );
 };

@@ -118,9 +118,9 @@ const TestPagesPage = () => {
             // setTestDetailLoading(true)
 
             const res = await dispatch(getSingleCategoryPackageTestseriesDetailSlice(item.id)).unwrap()
-            // console.log("res details", res.data)
+            console.log("res details", res.data)
 
-            nav('/system-info', { state: { testInfo: res.data.test_series_info, testId: state?.testId } })
+            nav('/system-info', { state: { testInfo: res.data.test_series_info, testId: state?.testId, testDetail:res.data.details } })
             const data = {
                 testInfo: res.data.test_series_info,
                 testId: state?.testId
@@ -142,7 +142,7 @@ const TestPagesPage = () => {
         try {
             const res = await dispatch(getSingleCategoryPackageTestseriesDetailSlice(resumeData?.id)).unwrap()
             // // console.log("res details", res.data)
-            nav('/scc-mock-test', { state: { testInfo: res.data.test_series_info, testId: state?.testId } })
+            nav('/scc-mock-test', { state: { testInfo: res.data.test_series_info, testId: state?.testId, testDetail:res.data.details } })
             setShowModal(false);
 
         } catch (error) {
@@ -340,7 +340,10 @@ const TestPagesPage = () => {
                                                 >
                                                     Resume
                                                 </button>
-                                            ) : !isQuizStartAvailable(test.start_date_time) && !test.attend && !isPaused && !test.attend_status ? (
+                                            ) :
+                                             isQuizStartAvailable(test.start_date_time) && !test.attend && !isPaused && test.attend_status 
+                                            // true
+                                            ? (
                                                 <button
                                                     onClick={() => {
 

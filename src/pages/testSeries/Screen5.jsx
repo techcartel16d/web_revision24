@@ -14,6 +14,9 @@ import {
     clearAllTestData,
 } from '../../helpers/testStorage'; // path को adjust करें
 import { getUserDataDecrypted } from '../../helpers/userStorage';
+import ExamInstructionsModal from '../../components/ExamInstructionsModal';
+import SymbolModal from '../../components/SymbolModal';
+
 
 
 const Screen5 = () => {
@@ -34,6 +37,8 @@ const Screen5 = () => {
     const [language, setLanguage] = useState('en')
     const [showPauseModal, setShowPauseModal] = useState(false);
     const [confirmSubmit, setConfirmSubmit] = useState(false)
+    const [openModal, setOpenModal] = useState(false); // Open on mount
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // const [optionSelected, setOptionSelected] = useState(() => JSON.parse(localStorage.getItem("optionSelected")) || []);
     // const [markedForReview, setMarkedForReview] = useState(() => JSON.parse(localStorage.getItem("markedForReview")) || []);
@@ -833,13 +838,15 @@ const Screen5 = () => {
 
 
             {/* Header */}
-            <div className="m-auto bg-gray-800 text-white rounded-sm">
-                {/* <TestTimer timeInMinutes={60} onTimeUp={() => handleSubmit()} /> */}
-                <TestTimer textleft={'Time Left:'} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
-            </div>
+
             <div className="flex justify-between items-center mb-4">
 
                 <div className="text-lg font-bold">{state?.testInfo?.title || 'SSC ONLINE MOCK TEST'}</div>
+                <div className="m-auto bg-gray-800 text-white rounded-sm">
+                    {/* <TestTimer timeInMinutes={60} onTimeUp={() => handleSubmit()} /> */}
+
+                    <TestTimer  textleft={'Time Left:'} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
+                </div>
 
                 <div className="flex items-center gap-5">
                     <button
@@ -874,16 +881,15 @@ const Screen5 = () => {
 
                 <div className="text-red-600 font-semibold text-center flex text-sm gap-3">
                     <button
-                        onMouseEnter={() => alert("in")}
-                        onMouseLeave={() => alert("out")}
-                        className="text-orange-600 font-bold px-6 py-2 rounded text-xl"
+                        onMouseEnter={() => setIsModalOpen(true)}
+                        className="text-orange-600 font-bold px-6 py-2 rounded text-lg"
                     >
                         SYMBOLS
                     </button>
                     <button
-                        onMouseEnter={() => alert("in")}
-                        onMouseLeave={() => alert("out")}
-                        className="text-orange-600 font-bold px-6 py-2 rounded text-xl"
+                        onMouseEnter={() => setOpenModal(true)}
+                        // onMouseLeave={() => setOpenModal(false)}
+                        className="text-orange-600 font-bold px-6 py-2 rounded text-lg"
                     >
                         INSTRUCTIONS
                     </button>
@@ -925,7 +931,7 @@ const Screen5 = () => {
                         </div>
                     </div>
                     <div className="text-right">
-                        <TestTimer textleft={'LAST'} textBg='text-red-600' timeTextSize='text-xl' textRight={'Minutes'} showSeconds={false} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
+                        <TestTimer timeClr='text-blue-800' textleft={'LAST'} textBg='text-red-600' timeTextSize='text-2xl' textRight={'Minutes'} showSeconds={false} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
                     </div>
                 </div>
             </div>
@@ -1010,6 +1016,18 @@ const Screen5 = () => {
                 onClose={() => setConfirmSubmit(false)}
                 onConfirm={handleSubmit}
             />
+
+            <ExamInstructionsModal
+                isOpen={openModal}
+                onClose={() => setOpenModal(false)}
+                onAgree={() => {
+                    setOpenModal(false);
+                    nav("/symbols", { state });
+                }}
+                testInfo={state?.testInfo || {}}
+                testData={state?.testDetail || []}
+            />
+            <SymbolModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
     );
 };

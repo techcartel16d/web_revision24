@@ -5,13 +5,13 @@ import { getUserDataDecrypted } from '../../helpers/userStorage';
 
 const Screen1 = () => {
   const { state } = useLocation()
-  // // console.log("state====>", state)
+  // console.log("state====>", state)
   const [userInfo, setUserInfo] = useState({});
   const nav = useNavigate()
 
   const getUserInfo = async() => {
    const user = await getUserDataDecrypted()
-  //  // console.log("user info", user)
+   // console.log("user info", user)
     setUserInfo(user);
   };
 
@@ -82,7 +82,7 @@ const Screen1 = () => {
               onClick={() => {
                 // Replace this with your exam start logic
                 // console.log('Start Exam');
-                nav("/test-login", { state: { userInfo, testInfo: state?.testInfo, testId: state?.testId } })
+                nav("/test-login", { state: { userInfo, testInfo: state?.testInfo, testId: state?.testId, testDetail:state?.testDetail } })
               }}
             >
               Click Here to Start Exam

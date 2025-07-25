@@ -11,7 +11,7 @@ const Screen2 = () => {
     const [message, setMessage] = useState('')
 
     const [showSuccess, setShowSuccess] = useState(false);
-    // // console.log("state", state);
+    // console.log("state", state);
 
     const [userInfo, setUserInfo] = useState(state?.userInfo || {});
     const [systemNumber, setSystemNumber] = useState(`R24${state?.userInfo?.mobile?.slice(0, 5)}`);
@@ -132,7 +132,8 @@ const Screen2 = () => {
                                 systemNumber,
                             },
                             testInfo: state?.testInfo,
-                            testId: state?.testId
+                            testId: state?.testId,
+                            testDetail:state?.testDetail
                         }
                     });
                 }}
