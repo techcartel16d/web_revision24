@@ -833,9 +833,21 @@ const Screen5 = () => {
 
 
             {/* Header */}
+            <div className="m-auto bg-gray-800 text-white rounded-sm">
+                {/* <TestTimer timeInMinutes={60} onTimeUp={() => handleSubmit()} /> */}
+                <TestTimer textleft={'Time Left:'} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
+            </div>
             <div className="flex justify-between items-center mb-4">
+
                 <div className="text-lg font-bold">{state?.testInfo?.title || 'SSC ONLINE MOCK TEST'}</div>
+
                 <div className="flex items-center gap-5">
+                    <button
+                        onClick={handlePauseClick}
+                        className="bg-yellow-400 text-gray-800 px-3 py-2 rounded text-xs"
+                    >
+                        Puase
+                    </button>
                     {
                         isFullScreen ? (
                             <div className=''>
@@ -858,21 +870,24 @@ const Screen5 = () => {
             </div>
 
             {/* Top Controls */}
-            <div className="flex justify-between items-center border-y py-2 mb-3">
+            <div className="flex justify-between items-center border-y py-4 mb-3">
 
                 <div className="text-red-600 font-semibold text-center flex text-sm gap-3">
                     <button
-                        onClick={handlePauseClick}
-                        className="bg-yellow-400 text-gray-800 px-3 py-1 rounded text-xs"
+                        onMouseEnter={() => alert("in")}
+                        onMouseLeave={() => alert("out")}
+                        className="text-orange-600 font-bold px-6 py-2 rounded text-xl"
                     >
-                        Puase
+                        SYMBOLS
                     </button>
                     <button
-                        onClick={() => setConfirmSubmit(true)}
-                        className="text-white text-sm font-bold bg-green-600 px-4 py-2 rounded"
+                        onMouseEnter={() => alert("in")}
+                        onMouseLeave={() => alert("out")}
+                        className="text-orange-600 font-bold px-6 py-2 rounded text-xl"
                     >
-                        Submit
+                        INSTRUCTIONS
                     </button>
+
                 </div>
 
                 <div className="flex gap-4 justify-between items-center w-1/2">
@@ -901,11 +916,16 @@ const Screen5 = () => {
                                     Next
                                 </button>
                             )}
+                            <button
+                                onClick={() => setConfirmSubmit(true)}
+                                className="text-white text-sm font-bold bg-green-600 px-4 py-2 rounded"
+                            >
+                                Submit
+                            </button>
                         </div>
                     </div>
                     <div className="text-right">
-                        {/* <TestTimer timeInMinutes={60} onTimeUp={() => handleSubmit()} /> */}
-                        <TestTimer testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
+                        <TestTimer textleft={'LAST'} textBg='text-red-600' timeTextSize='text-xl' textRight={'Minutes'} showSeconds={false} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
                     </div>
                 </div>
             </div>

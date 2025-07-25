@@ -8,10 +8,11 @@ import { MdArrowBackIos } from "react-icons/md";
 import { clearAllEncryptedTestData, secureGetTestData } from "../../helpers/testStorage";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { getUserDataDecrypted } from "../../helpers/userStorage";
+import { clearUserData, getUserDataDecrypted } from "../../helpers/userStorage";
 import SuccessModal from "../../components/SuccessModal";
 import ConfirmModal from "../../components/ConfirmModal";
 import AlertModal from "../../components/AlertModal";
+import { formatStartDateTime, isQuizStartAvailable, isQuizUpcoming } from "../../helpers/checkTestStartDate";
 
 
 
@@ -75,10 +76,15 @@ const TestPagesPage = () => {
         if (state) {
             try {
                 const res = await dispatch(getSingleCategoryPackageTestseriesSlice({ testId: state.testId })).unwrap()
-                console.log("single category test series data getSingleCategoryPackageTestseries", res)
-                setTestData(res.data.test_series.data)
-                // console.log("res.data.package_detail.id", res.data.package_detail.id)
-                setTestId(res.data.package_detail.id)
+                if (res.status_code == 200) {
+                    // console.log("single category test series data getSingleCategoryPackageTestseries", res)
+                    setTestData(res.data.test_series.data)
+                    // console.log("res.data.package_detail.id", res.data.package_detail.id)
+                    setTestId(res.data.package_detail.id)
+                } else if (res.status_code == 401) {
+                    await clearUserData()
+                }
+
 
                 // setTestPackageSeries(res.data)
                 // setRefreshing(false);
@@ -87,8 +93,10 @@ const TestPagesPage = () => {
                 // setCurrentPage(res.data.test_series.current_page)
 
             } catch (error) {
+                // console.log("error", error)
                 // setRefreshing(false);
                 // setLoading(false)
+                await clearUserData()
             } finally {
                 // setRefreshing(false);
                 // setLoading(false)
@@ -332,7 +340,7 @@ const TestPagesPage = () => {
                                                 >
                                                     Resume
                                                 </button>
-                                            ) : test.purchase_type === 'free' && !test.attend ? (
+                                            ) : !isQuizStartAvailable(test.start_date_time) && !test.attend && !isPaused && !test.attend_status ? (
                                                 <button
                                                     onClick={() => {
 
@@ -367,7 +375,7 @@ const TestPagesPage = () => {
                                                     }}
                                                     className={`px-6 py-1.5 cursor-pointer rounded font-semibold text-sm bg-gray-300`}
                                                 >
-                                                    Locked
+                                                    Available on {formatStartDateTime(test.start_date_time)}
                                                 </button>
                                             )
                                         ) : (

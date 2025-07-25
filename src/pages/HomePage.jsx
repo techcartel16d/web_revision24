@@ -4,7 +4,7 @@ import SwiperSlider from '../components/SwiperSlider';
 import HeroBanner from '../components/HeroBanner';
 import ExamSelector from '../components/ExamSelector';
 import { useDispatch } from 'react-redux';
-import { getSubscriptionSlice, homePageSlice } from '../redux/HomeSlice';
+import { getSubscriptionSlice, getUserInfoSlice, homePageSlice } from '../redux/HomeSlice';
 import TestSeriesViewer from '../components/TestSeriesViewer';
 import SubscriptionModal from '../components/SubscriptionModal';
 import AboutUs from '../components/AboutUs';
@@ -12,7 +12,7 @@ import SubscriptionPlans from '../components/SubscriptionPlans';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { checkAllEncryptedTestData } from '../helpers/testStorage';
-import { getUserDataDecrypted } from '../helpers/userStorage';
+import { getUserDataDecrypted, saveUserDataEncrypted } from '../helpers/userStorage';
 
 const HomePage = () => {
 
@@ -48,6 +48,36 @@ const HomePage = () => {
 
   }
 
+  const loadUserData = async () => {
+    const user = await getUserDataDecrypted();
+    setUserInfo(user);
+    // console.log("user", user)
+  };
+
+  const getUserDetails = async () => {
+    try {
+      const res = await dispatch(getUserInfoSlice()).unwrap()
+      if (res.status_code == 200) {
+        // console.log("response==>", res)
+        const userInfo = {
+          ...res.data, // user info
+          token: res.token, // add token manually if needed
+          subscription_status: res.subscription_status,
+          subscription_details: res.subscription_details
+        };
+
+        await saveUserDataEncrypted(userInfo);
+      }else{
+
+      }
+
+      // console.log("response user info==> ", res)
+    } catch (error) {
+      console.log("error in get user profile", error)
+
+    }
+  }
+
 
 
 
@@ -56,17 +86,14 @@ const HomePage = () => {
     getHomeData()
     // Call this from a dev tool, admin page, or `useEffect`
     checkAllEncryptedTestData();
+    getUserDetails()
   }, [])
 
 
 
 
 
-  const loadUserData = async () => {
-    const user = await getUserDataDecrypted();
-    setUserInfo(user);
-    // console.log("user", user)
-  };
+
 
   useEffect(() => {
     loadUserData();
@@ -105,12 +132,12 @@ const HomePage = () => {
       }
 
 
-{
-  userInfo && !userInfo?.subscription_status&&(
+      {
+        userInfo && !userInfo?.subscription_status && (
 
-    <SubscriptionPlans />
-  )
-}
+          <SubscriptionPlans />
+        )
+      }
 
 
 

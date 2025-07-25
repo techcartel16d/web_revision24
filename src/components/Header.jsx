@@ -6,13 +6,17 @@ import { useDispatch } from 'react-redux';
 import { logoutSlice } from '../redux/authSlice';
 import { useEffect, useState } from 'react';
 import { IoMdHome } from 'react-icons/io';
-import { clearUserData } from '../helpers/userStorage';
+import { clearUserData, getUserDataDecrypted } from '../helpers/userStorage';
 
 const Header = ({ toggle }) => {
   const dispatch = useDispatch()
   const nav = useNavigate()
   const [logoutLoading, setLogoutLogin] = useState(false)
   const [auth, setAuth] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
+
+
 
 
   const handleLogout = async () => {
@@ -23,14 +27,20 @@ const Header = ({ toggle }) => {
       if (res.status_code == 200) {
         await clearUserData();
         nav('/login')
+      } else if (res.status_code == 401) {
+        nav('/login')
+        await clearUserData()
       } else {
-        // console.log("response==>", res)
+        nav('/login')
+        await clearUserData()
+
+
       }
 
       setLogoutLogin(false)
     } catch (error) {
-      // console.log("Error in logout api", error)
-      setLogoutLogin(false)
+      await clearUserData()
+      nav('/login')
     } finally {
       setLogoutLogin(false)
 
@@ -46,6 +56,7 @@ const Header = ({ toggle }) => {
     };
     checkAuth();
   }, []);
+
 
 
 
@@ -103,7 +114,7 @@ const Header = ({ toggle }) => {
 
         <Link to="/subscription">
           {/* <span className=" text-sm bg-amber-600 text-white p-2 rounded-sm font-bold">Revision24</span> */}
-          <img src='/plain-icon.png' className='h-16' style={{objectFit:'cover'}} />
+          <img src='/plain-icon.png' className='h-16' style={{ objectFit: 'cover' }} />
         </Link>
 
         {/* Google Translate Icon Placeholder */}

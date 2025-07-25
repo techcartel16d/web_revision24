@@ -140,12 +140,33 @@ const HomeProvider = {
             const token = localStorage.getItem('token');
             // if (!token) throw new Error('No token found');
 
-            const response = await api.post(`/checkout.pay`,planData, {
+            const response = await api.post(`/checkout.pay`, planData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    userProfileGet: async () => {
+        try {
+       
+
+            const response = await api.post(`/profile-get`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+    getTransaction: async () => {
+        try {
+       
+
+            const response = await api.get(`/my-transactions`);
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;

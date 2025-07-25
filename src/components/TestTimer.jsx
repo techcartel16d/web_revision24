@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { secureGetTestData, secureSaveTestData } from "../helpers/testStorage";
 
-
-const TestTimer = ({ testId, timeInMinutes = 60, onTimeUp = () => {} }) => {
+const TestTimer = ({ testId, timeInMinutes = 60, onTimeUp = () => {}, showSeconds = true, textleft, textRight, timeTextSize="text-sm", textBg='' }) => {
   const totalSeconds = timeInMinutes * 60;
   const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
 
@@ -12,7 +11,6 @@ const TestTimer = ({ testId, timeInMinutes = 60, onTimeUp = () => {} }) => {
       const storedTime = await secureGetTestData(testId, "remainingTime");
       setSecondsLeft(storedTime ?? totalSeconds);
     };
-
     loadTime();
   }, [testId]);
 
@@ -20,14 +18,12 @@ const TestTimer = ({ testId, timeInMinutes = 60, onTimeUp = () => {} }) => {
     const timer = setInterval(() => {
       setSecondsLeft((prev) => {
         const updated = prev - 1;
-
         if (updated <= 0) {
           clearInterval(timer);
           secureSaveTestData(testId, "remainingTime", 0);
           onTimeUp();
           return 0;
         }
-
         secureSaveTestData(testId, "remainingTime", updated);
         return updated;
       });
@@ -39,12 +35,12 @@ const TestTimer = ({ testId, timeInMinutes = 60, onTimeUp = () => {} }) => {
   const formatTime = (seconds) => {
     const min = String(Math.floor(seconds / 60)).padStart(2, "0");
     const sec = String(seconds % 60).padStart(2, "0");
-    return `${min}:${sec}`;
+    return showSeconds ? `${min}:${sec}` : `${min}`;
   };
 
   return (
-    <div className="text-white text-sm font-bold bg-gray-800 px-4 py-2 rounded">
-      Time Left: {formatTime(secondsLeft)}
+    <div className={`${timeTextSize} font-bold px-4 py-2 rounded ${textBg}`}>
+     {textleft} {formatTime(secondsLeft)} {textRight}
     </div>
   );
 };

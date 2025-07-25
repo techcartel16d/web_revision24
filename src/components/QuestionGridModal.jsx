@@ -34,10 +34,10 @@ const QuestionGridModal = ({
 
     return (
         <div className="flex w-1/5 justify-center overflow-hidden">
-            <div className="bg-gray-900 rounded shadow-lg flex flex-col w-full">
+            <div className="bg-gray-50 rounded shadow-lg flex flex-col w-full">
                 {/* Header */}
                 <div className="flex justify-between items-center p-4">
-                    <h2 className="text-white font-bold text-lg">
+                    <h2 className="text-black font-bold text-lg">
                         {selectedGroup.subject_name || 'Subject'}
                     </h2>
                 </div>
@@ -63,7 +63,7 @@ const QuestionGridModal = ({
 
                 {/* Question Grid */}
                 <div className="flex-1 p-4 overflow-y-auto">
-                    <div className="text-white font-semibold mb-2">
+                    <div className="text-black font-semibold mb-2">
                         PART-{String.fromCharCode(65 + selectedPartIndex)} - {selectedGroup.subject_name}
                     </div>
 
@@ -78,9 +78,9 @@ const QuestionGridModal = ({
                             const isSelected = optionSelected.includes(q.id);
                             const isSkipped = skippedQuestions.includes(q.id);
 
-                            let bg = 'bg-blue-400'; // default = not attempted
+                            let bg = 'bg-blue-500'; // default = not attempted
                             if (isSelected) bg = 'bg-green-600';
-                            if (isMarkedAns) bg = 'bg-yellow-300 border-2 border-green-500';
+                            if (isMarkedAns) bg = 'bg-yellow-500 border-2 border-green-500';
                             else if (isMarked) bg = 'bg-red-400';
                             else if (isSkipped) bg = 'bg-red-600';
 
@@ -100,7 +100,7 @@ const QuestionGridModal = ({
                     </div>
 
                     {/* Legend */}
-                    <div className="mt-6 text-white w-full max-w-md">
+                    <div className="mt-6 text-black w-full max-w-md">
                         <div className="grid grid-cols-2 gap-y-3 text-sm">
                             <div className="flex items-center gap-2">
                                 <div className="w-4 h-4 bg-green-600 rounded-sm"></div>
@@ -109,7 +109,7 @@ const QuestionGridModal = ({
                             <div className="text-right">({optionSelected.length})</div>
 
                             <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-yellow-300 rounded-sm"></div>
+                                <div className="w-4 h-4 bg-yellow-500 rounded-sm"></div>
                                 <span>Marked with Answer</span>
                             </div>
                             <div className="text-right">({markedForReviewAns.length})</div>

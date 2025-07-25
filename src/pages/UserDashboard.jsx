@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getUserDataDecrypted } from '../helpers/userStorage';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { FaUserAlt } from 'react-icons/fa';
 
 const UserDashboard = () => {
     const [loading, setLoading] = useState(true);
@@ -13,6 +14,20 @@ const UserDashboard = () => {
         // console.log("userinfon in dashboard", user)
         setLoading(false);
     };
+
+
+    const getMyTransaction = async () => {
+        try {
+            const res = await dispact
+
+        } catch (error) {
+
+        }
+    }
+
+
+
+
 
     useEffect(() => {
         loadUserData();
@@ -55,11 +70,22 @@ const UserDashboard = () => {
                                                 <tr className="border-b">
                                                     <th className="p-2 w-40">Profile</th>
                                                     <td className="p-2">
-                                                        <img
-                                                            src={userInfo.profile}
-                                                            alt="User"
-                                                            className="h-20 w-20 object-cover rounded-full border"
-                                                        />
+                                                        {
+                                                            userInfo.profile ? (
+                                                                <img
+                                                                    src={userInfo.profile}
+                                                                    alt="User"
+                                                                    className="h-20 w-20 object-cover rounded-full border"
+                                                                />
+                                                            ) : (
+                                                                <div className="h-20 w-20 object-cover rounded-full border flex items-center justify-center overflow-hidden bg-blue-800">
+
+                                                                    <FaUserAlt className='text-6xl text-white' />
+                                                                </div>
+
+                                                            )
+                                                        }
+
                                                     </td>
                                                 </tr>
                                                 <tr className="border-b"><th className="p-2">Name</th><td className="p-2">{userInfo.name}</td></tr>
@@ -95,7 +121,7 @@ const UserDashboard = () => {
                                                 <h2 className="text-lg font-semibold capitalize">
                                                     {userInfo.subscription_details.subscription_name}
                                                 </h2>
-                                                <p className="text-gray-300 text-sm">₹{userInfo.subscription_details.offer_price} / user</p>
+                                                <p className="text-gray-300 text-sm">₹{userInfo.subscription_details.offer_price}</p>
                                             </div>
                                         </div>
 

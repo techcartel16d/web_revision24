@@ -142,6 +142,30 @@ export const checkoutpaySlice = createAsyncThunk(
     },
 );
 
+// It takes user profile data as input and returns the response
+export const getUserInfoSlice = createAsyncThunk(
+    'home/getUserInfoSlice',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await HomeProvider.userProfileGet();
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+// It takes user profile data as input and returns the response
+export const getTransactionSlice = createAsyncThunk(
+    'home/getTransactionSlice',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await HomeProvider.getTransaction();
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
 
 
 const homeSlice = createSlice({
