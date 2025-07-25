@@ -32,6 +32,8 @@ import TermsOfServicePage from './pages/TermsOfServicePage';
 import ForgotPasswordPage from './pages/authPage/forgotpage/ForgotPasswordPage';
 import ForgotPasswordOtpPage from './pages/authPage/forgotpage/ForgotPasswordOtpPage';
 import SetNewPasswordPage from './pages/authPage/forgotpage/SetNewPasswordPage';
+import PrivacyPolicy from './pages/PrivacyPolicyPage';
+import RefundPolicy from './pages/RefundPolicyPage';
 
 
 function App() {
@@ -45,6 +47,8 @@ function App() {
         <Route path="/subscription" element={<SubscriptionPage />} />
         <Route path="/test-series" element={<TestSeriesPage />} />
         <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
 
         {/* PUBLIC ONLY ROUTES */}
         <Route element={<PublicRoute />}>
