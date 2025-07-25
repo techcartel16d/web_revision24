@@ -10,6 +10,7 @@ const UserDashboard = () => {
     const loadUserData = async () => {
         const user = await getUserDataDecrypted();
         setUserInfo(user);
+        // console.log("userinfon in dashboard", user)
         setLoading(false);
     };
 
@@ -70,8 +71,8 @@ const UserDashboard = () => {
                                                 <tr className="border-b"><th className="p-2">DOB</th><td className="p-2">{userInfo.dob}</td></tr>
                                                 <tr className="border-b"><th className="p-2">Wallet Balance</th><td className="p-2">₹{userInfo.wallet_balance}</td></tr>
                                                 <tr className="border-b"><th className="p-2">Status</th><td className="p-2 capitalize">{userInfo.status}</td></tr>
-                                                <tr className="border-b"><th className="p-2">Referral Code</th><td className="p-2">{userInfo.my_referral_code || '-'}</td></tr>
-                                                <tr className="border-b"><th className="p-2">Referred By</th><td className="p-2">{userInfo.referral_by || '-'}</td></tr>
+                                                {/* <tr className="border-b"><th className="p-2">Referral Code</th><td className="p-2">{userInfo.my_referral_code || '-'}</td></tr>
+                                                <tr className="border-b"><th className="p-2">Referred By</th><td className="p-2">{userInfo.referral_by || '-'}</td></tr> */}
                                             </tbody>
                                         </table>
                                     </div>

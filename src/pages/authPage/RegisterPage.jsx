@@ -3,25 +3,34 @@ import { useNavigate } from 'react-router-dom'; // Add this
 import InputField from '../../components/InputField';
 import { useDispatch } from 'react-redux';
 import { register, sendOtp } from '../../redux/authSlice';
+import AlertModal from '../../components/AlertModal';
+import SuccessModal from '../../components/SuccessModal';
 
 const RegisterPage = () => {
   const [mobile, setMobile] = useState('');
   const navigate = useNavigate(); // Hook for navigation
   const dispatch = useDispatch()
+  const [message, setMessage] = useState('')
+  const [showAlert, setShowAlert] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!/^\d{10}$/.test(mobile)) {
-      alert('Please enter a valid 10-digit mobile number.');
+      setShowAlert(true)
+      setMessage('Please enter a valid 10-digit mobile number.')
       return;
     }
 
     try {
-      const res = await dispatch(register({mobile})).unwrap()
+      const res = await dispatch(register({ mobile })).unwrap()
       if (res.status_code == 200) {
-        navigate("/verify-otp", { state: { mobile } })
+        setShowSuccess(true)
+        setMessage(res.message)
+
       } else {
-        alert(res.message)
+        setShowAlert(true)
+        setMessage(res.message)
       }
     } catch (error) {
 
@@ -49,6 +58,7 @@ const RegisterPage = () => {
               label="Mobile Number"
               name="mobile"
               type="tel"
+              maxLength={10}
               placeholder="Enter 10-digit mobile number"
               value={mobile}
               onChange={(e) => setMobile(e.target.value)}
@@ -76,6 +86,26 @@ const RegisterPage = () => {
           </p>
         </div>
       </div>
+
+      <AlertModal
+        isOpen={showAlert}
+        onClose={() => {
+          setShowAlert(false)
+          setMessage('')
+        }}
+        // title="Commin"
+        message={message}
+      />
+
+      <SuccessModal
+        isOpen={showSuccess}
+        onClose={() => {
+          setShowSuccess(false)
+          navigate("/verify-otp", { state: { mobile } })
+          setMessage('')
+        }}
+        message={message}
+      />
     </div>
   );
 };

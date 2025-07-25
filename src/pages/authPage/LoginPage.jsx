@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import { login } from '../../redux/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { saveUserDataEncrypted } from '../../helpers/userStorage';
+import AlertModal from '../../components/AlertModal';
+import SuccessModal from '../../components/SuccessModal';
 
 const LoginPage = () => {
     const dispatch = useDispatch()
@@ -11,7 +13,9 @@ const LoginPage = () => {
     const [formData, setFormData] = useState({ mobile: '', password: '' });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false)
-
+    const [message, setMessage] = useState('')
+    const [showAlert, setShowAlert] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
     const handleChange = (e) => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
@@ -54,24 +58,33 @@ const LoginPage = () => {
         const errs = validate();
         setErrors(errs);
 
+
         try {
             if (Object.keys(errs).length === 0) {
                 setLoading(true);
                 const res = await dispatch(login(formData)).unwrap();
-                // console.log("Login Response ==>", res);
+                if (res.status_code == 200) {
+                    // console.log("Login Response ==>", res);
 
-                // ✅ Save user data securely in IndexedDB
-                const userInfo = {
-                    ...res.data, // user info
-                    token: res.token, // add token manually if needed
-                    subscription_status: res.subscription_status,
-                    subscription_details: res.subscription_details
-                };
+                    // ✅ Save user data securely in IndexedDB
+                    const userInfo = {
+                        ...res.data, // user info
+                        token: res.token, // add token manually if needed
+                        subscription_status: res.subscription_status,
+                        subscription_details: res.subscription_details
+                    };
 
-                await saveUserDataEncrypted(userInfo);
+                    await saveUserDataEncrypted(userInfo);
+                    setLoading(false);
+                    setMessage(res.message)
+                    setShowSuccess(true)
 
-                setLoading(false);
-                nav('/');
+                } else {
+                    setShowAlert(true)
+                    setMessage(res.message)
+
+                }
+
             }
         } catch (error) {
             // console.log("ERROR IN LOGIN PAGE====>", error);
@@ -102,6 +115,7 @@ const LoginPage = () => {
                             label="Mobile Number"
                             name="mobile"
                             type="tel"
+                            maxLength={10}
                             placeholder="Enter your mobile"
                             value={formData.mobile}
                             onChange={handleChange}
@@ -153,6 +167,22 @@ const LoginPage = () => {
                     </div>
                 </div>
             </div>
+            <AlertModal
+                isOpen={showAlert}
+                onClose={() => setShowAlert(false)}
+                // title="Commin"
+                message={message}
+            />
+
+            <SuccessModal
+                isOpen={showSuccess}
+                onClose={() => {
+                    setShowSuccess(false)
+                    nav('/');
+                    setMessage('')
+                }}
+                message={message}
+            />
         </div>
     );
 };

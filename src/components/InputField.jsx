@@ -10,6 +10,7 @@ const InputField = ({
   onChange,
   error = '',
   className = '',
+  maxLength=''
 }) => {
   return (
     <div className={`mb-4 ${className}`}>
@@ -22,6 +23,7 @@ const InputField = ({
         id={name}
         name={name}
         type={type}
+        maxLength={maxLength}
         className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
           error ? 'border-red-500' : 'border-gray-300'
         }`}

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setPin } from '../../redux/authSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getUserDataDecrypted, saveUserDataEncrypted } from '../../helpers/userStorage';
 
 const RegisterSetPasswordPage = () => {
     const nav = useNavigate()
     const dispatch = useDispatch()
-    const {state} = useLocation()
+    const [userInfo, setUserInfo] = useState(null);
+    const { state } = useLocation()
     // console.log("state", state)
     const [formData, setFormData] = useState({
         password: '',
@@ -24,6 +26,13 @@ const RegisterSetPasswordPage = () => {
         }));
     };
 
+
+
+
+
+
+
+    // return
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -48,10 +57,19 @@ const RegisterSetPasswordPage = () => {
 
         try {
             const res = await dispatch(setPin(pinData)).unwrap()
-            if(res.status_code == 200){
-                // console.log("register response", res)
-                localStorage.setItem("token", res.token)
-                
+            // console.log("register response", res)
+
+
+            if (res.status_code == 200) {
+                const userInfo = {
+                    ...res.data, // user info
+                    token: res.token, // add token manually if needed
+                    subscription_status: res.subscription_status || '',
+                    subscription_details: res.subscription_details || ''
+                };
+
+                await saveUserDataEncrypted(userInfo);
+
                 // console.log(res.message)
                 nav("/user-details")
             }

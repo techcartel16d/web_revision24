@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { sendOtp } from '../../redux/authSlice';
+import { register, sendOtp } from '../../redux/authSlice';
+import AlertModal from '../../components/AlertModal';
+import SuccessModal from '../../components/SuccessModal';
 
 const RegisterOtpVerifyPage = () => {
   const [otp, setOtp] = useState('');
@@ -10,6 +12,9 @@ const RegisterOtpVerifyPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { state } = useLocation()
   const nav = useNavigate()
+  const [message, setMessage] = useState('')
+  const [showAlert, setShowAlert] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   // console.log("state", state)
 
   const dispatch = useDispatch()
@@ -39,25 +44,47 @@ const RegisterOtpVerifyPage = () => {
       // console.log("response==>", res)
       if (res.status_code == 200) {
         setSuccess(res.message);
-        nav('/user-set-password', {state:userData})
+        setShowSuccess(true)
+        setIsLoading(false);
+
       } else {
         setError(res.message);
         setIsLoading(false);
       }
     } catch (error) {
       // console.log("ERROR IN OTP SEND PAGE", error)
+    } finally {
+      setIsLoading(false)
     }
 
     // Replace this logic with actual API call
 
   };
 
-  const handleResend = () => {
-    setOtp('');
-    setSuccess('');
-    setError('');
-    // Add resend OTP logic here
-    alert('OTP resent successfully.');
+  // const handleResend = () => {
+  //   setOtp('');
+  //   setSuccess('');
+  //   setError('');
+  //   // Add resend OTP logic here
+  //   alert('OTP resent successfully.');
+  // };
+
+  const resendOtp = async (e) => {
+    e.preventDefault();
+    const mobile = state?.mobile
+    try {
+      const res = await dispatch(register({ mobile })).unwrap();
+      if (res.status_code == 200) {
+        setShowSuccess(true);
+        setMessage(res.message)
+        setOtp('');
+        setSuccess('');
+        setError('');
+      }
+    } catch (err) {
+      setShowAlert(true);
+      setMessage(`Failed to resend OTP. Try again later. ${err}`)
+    }
   };
 
   return (
@@ -88,12 +115,31 @@ const RegisterOtpVerifyPage = () => {
 
         <button
           type="button"
-          onClick={handleResend}
+          onClick={resendOtp}
           className="w-full py-2 px-4 rounded-lg font-semibold text-blue-600 border border-blue-600 hover:bg-blue-50"
         >
           Resend OTP
         </button>
       </form>
+      <AlertModal
+        isOpen={showAlert}
+        onClose={() => {
+          setShowAlert(false)
+          setMessage('')
+        }}
+        // title="Commin"
+        message={message}
+      />
+
+      <SuccessModal
+        isOpen={showSuccess}
+        onClose={() => {
+          setShowSuccess(false)
+          nav('/user-set-password', { state: { mobile: state?.mobile } })
+          setMessage('')
+        }}
+        message={message}
+      />
     </div>
   );
 };

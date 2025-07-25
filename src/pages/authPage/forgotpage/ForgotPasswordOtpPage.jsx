@@ -2,17 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { forgotPasswordSlice, verifyOtpSlice } from '../../../redux/authSlice';
+import AlertModal from '../../../components/AlertModal';
+import SuccessModal from '../../../components/SuccessModal';
 
 const ForgotPasswordOtpPage = () => {
     const [otp, setOtp] = useState('');
     const [error, setError] = useState('');
     const [timer, setTimer] = useState(300); // 5 minutes
     const [loading, setLoading] = useState(false)
-
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    const [message, setMessage] = useState('')
+    const [showAlert, setShowAlert] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
     const mobile = location.state?.mobile || '';
 
     // Timer logic (fixed)
@@ -47,15 +50,20 @@ const ForgotPasswordOtpPage = () => {
         try {
             const res = await dispatch(verifyOtpSlice(verifyOtpData)).unwrap();
             if (res.status_code == 200) {
-                navigate('/reset-password', { state: verifyOtpData })
+
                 setLoading(false)
+                setShowSuccess(true)
+                setMessage(res.message)
                 setError('');
             } else {
-                console.log("error in verify otp", res)
+                // console.log("error in verify otp", res)
+                setShowAlert(true)
+                setMessage(res.message)
+
             }
 
         } catch (error) {
-            console.log("ERROR IN VERIFY OTP SLICE", error)
+            // console.log("ERROR IN VERIFY OTP SLICE", error)
             setLoading(false)
 
         } finally {
@@ -131,6 +139,22 @@ const ForgotPasswordOtpPage = () => {
                     Resend OTP
                 </button>
             </div>
+            <AlertModal
+                isOpen={showAlert}
+                onClose={() => setShowAlert(false)}
+                // title="Commin"
+                message={message}
+            />
+
+            <SuccessModal
+                isOpen={showSuccess}
+                onClose={() => {
+                    setShowSuccess(false)
+                    navigate('/reset-password', { state: { mobile } })
+                    setMessage('')
+                }}
+                message={message}
+            />
         </div>
     );
 };

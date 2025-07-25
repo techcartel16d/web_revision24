@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { updateForgotPasswordSlice } from '../../../redux/authSlice';
+import AlertModal from '../../../components/AlertModal';
+import SuccessModal from '../../../components/SuccessModal';
 
 const SetNewPasswordPage = () => {
     const [password, setPassword] = useState('');
@@ -11,6 +13,9 @@ const SetNewPasswordPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch()
+    const [message, setMessage] = useState('')
+    const [showAlert, setShowAlert] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
     const mobile = location.state?.mobile || '';
 
     const handleSubmit = async (e) => {
@@ -27,23 +32,26 @@ const SetNewPasswordPage = () => {
         }
 
         setError('');
-        const updatePassword ={
+        const updatePassword = {
             mobile,
-            password:confirmPassword
+            password: confirmPassword
         }
 
         try {
             const res = await dispatch(updateForgotPasswordSlice(updatePassword)).unwrap()
             if (res.status_code == 200) {
-                alert('Password reset successfully!');
-                navigate('/login');
-            }else{
-                alert(res.message)
+                setShowSuccess(true)
+                setMessage(res.message);
+            } else {
+                setMessage(res.message)
+                setShowAlert(true)
             }
 
 
         } catch (err) {
-            alert('Failed to reset password. Try again.');
+            setMessage(res.message)
+            setShowAlert(true)
+            setMessage('some thin went wrong try again !!')
         }
     };
 
@@ -97,6 +105,22 @@ const SetNewPasswordPage = () => {
                     </button>
                 </form>
             </div>
+            <AlertModal
+                isOpen={showAlert}
+                onClose={() => setShowAlert(false)}
+                // title="Commin"
+                message={message}
+            />
+
+            <SuccessModal
+                isOpen={showSuccess}
+                onClose={() => {
+                    setShowSuccess(false)
+                    navigate('/login')
+                    setMessage('')
+                }}
+                message={message}
+            />
         </div>
     );
 };

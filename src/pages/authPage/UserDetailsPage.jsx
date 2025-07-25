@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CountrySelect,
   StateSelect,
@@ -9,6 +9,7 @@ import 'react-country-state-city/dist/react-country-state-city.css';
 import { useDispatch } from 'react-redux';
 import { updateProfileSlice } from '../../redux/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { getUserDataDecrypted, saveUserDataEncrypted } from '../../helpers/userStorage';
 
 const UserDetailsPage = () => {
   const dispatch = useDispatch()
@@ -16,6 +17,7 @@ const UserDetailsPage = () => {
 
   const [selectedCountryId, setSelectedCountryId] = useState(101);
   const [selectedStateId, setSelectedStateId] = useState(0);
+  const [token, setToken] = useState('')
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -36,16 +38,34 @@ const UserDetailsPage = () => {
     }));
   };
 
+
+  const loadUserData = async () => {
+    const user = await getUserDataDecrypted();
+    setToken(user.token)
+    // setUserInfo(user);
+    // console.log("user info inlocal ", user)
+  };
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.state == '' || formData.city == '') return alert("Please fill all inputs")
     try {
       const res = await dispatch(updateProfileSlice(formData)).unwrap();
+
+
       if (res.status_code == 200) {
-        // console.log("res", res)
-        // return
-        localStorage.setItem("user", JSON.stringify(res.data))
+        const userInfo = {
+          ...res.data, // user info
+          token: token, // add token manually if needed
+          subscription_status: '',
+          subscription_details: ''
+        };
+        await saveUserDataEncrypted(userInfo);
         nav('/', { replace: true })
       }
     } catch (error) {

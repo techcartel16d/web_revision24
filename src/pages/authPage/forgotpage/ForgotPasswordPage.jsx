@@ -12,7 +12,8 @@ const ForgotPasswordPage = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch()
-    const [message, setMessage] = useState()
+    const [message, setMessage] = useState('')
+    const [loading, setLoading] = useState(false)
     const [showSuccess, setShowSuccess] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
@@ -26,15 +27,27 @@ const ForgotPasswordPage = () => {
         }
 
         try {
+            setLoading(true)
             const res = await dispatch(forgotPasswordSlice(mobile)).unwrap()
             if (res.status_code == 200) {
                 setError('');
-                navigate('/forgot-password-verify-otp', { state: { mobile } });
+                setMessage(res.message)
+                setShowSuccess(true)
+
+            } else {
+                setShowAlert(true)
+                setMessage(res.message)
             }
 
         } catch (error) {
-            console.log("ERROR IN FORGOT PASSWORD PAGE", error)
+            // console.log("ERROR IN FORGOT PASSWORD PAGE", error)
+            setShowAlert(true)
+            setLoading(false)
+            setMessage('some thin went wrong try again !!')
 
+
+        } finally {
+            setLoading(false)
         }
 
 
@@ -63,7 +76,10 @@ const ForgotPasswordPage = () => {
                         type="submit"
                         className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
                     >
-                        Send OTP
+                        {
+                            loading ? "Please wait....." : "Send OTP"
+                        }
+
                     </button>
                 </form>
 
@@ -83,8 +99,12 @@ const ForgotPasswordPage = () => {
 
                 <SuccessModal
                     isOpen={showSuccess}
-                    onClose={() => setShowSuccess(false)}
-                    message="Your action was completed successfully!"
+                    onClose={() => {
+                        setShowSuccess(false)
+                        navigate('/forgot-password-verify-otp', { state: { mobile } });
+                        setMessage('')
+                    }}
+                    message={message}
                 />
 
                 {/* <ConfirmModal
@@ -102,7 +122,7 @@ const ForgotPasswordPage = () => {
                     isOpen={showAlert}
                     onClose={() => setShowAlert(false)}
                     // title="Commin"
-                    message="Not Available at this time"
+                    message={message}
                 />
             </div>
         </div>
