@@ -98,7 +98,7 @@ const Screen6 = () => {
         <>
             <Header />
             <div className="p-6 bg-gray-100 min-h-screen text-gray-800">
-                <h2 className="text-xl font-semibold mb-4 text-center">{state && state?.testInfo?.title}</h2>
+                <h2 className="text-xl font-semibold mb-4 text-center">{testData && testData?.test_detail?.title}</h2>
                 <h2 className="text-xl mb-4">Overall Performance Summary</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-10">
@@ -197,7 +197,7 @@ const Screen6 = () => {
                                         <td className="px-6 py-4">
                                             <div className="bg-yellow-50 rounded px-2 py-1 relative">
                                                 <div className="text-yellow-800 font-semibold">
-                                                    {s.time} <span className="text-gray-400">/ 60 min</span>
+                                                    {s.time} <span className="text-gray-400">/{testData && testData?.test_detail?.time} min</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -221,7 +221,7 @@ const Screen6 = () => {
                                     {performance.accuracy}%
                                 </td>
                                 <td className="px-6 py-4">
-                                    {performance.time || sections[0]?.time} <span className="text-gray-500">/ 60 min</span>
+                                    {performance.time || sections[0]?.time} <span className="text-gray-500">/ {testData && testData?.test_detail?.time} min</span>
                                 </td>
                             </tr>
                         </tbody>

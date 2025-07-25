@@ -114,12 +114,12 @@ const SolutionsGrideModal = ({
                                 <span>Wrong Answer</span>
                             </div>
                             <div className="text-right">({wrongQuestion.length})</div>
-{/* 
+
                             <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
-                                <span>Marked without Answer</span>
-                            </div> */}
-                            {/* <div className="text-right">({markedForReview.length})</div> */}
+                                <div className="w-4 h-4 bg-green-600 rounded-sm"></div>
+                                <span>Right Question</span>
+                            </div>
+                            <div className="text-right">({optionSelected.length - wrongQuestion.length})</div>
                         </div>
                     </div>
                 </div>

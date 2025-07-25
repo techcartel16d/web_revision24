@@ -126,7 +126,7 @@ const Screen7 = () => {
       // LOAD. USER INFO
       const loadUserData = async () => {
           const user = await getUserDataDecrypted();
-          console.log("user info", user)
+          // console.log("user info", user)
           setUserInfo(user);
       };
   

@@ -87,7 +87,7 @@ const QuestionGridModal = ({
                             return (
                                 <button
                                     key={q.id}
-                                    className={`w-10 h-10 text-xs rounded text-white font-bold ${bg} border ${currentQuestion === globalIndex ? "border-white" : "border-none"}`}
+                                    className={`w-10 h-10 text-xs rounded text-white font-bold ${bg} border-2 ${currentQuestion === globalIndex ? "border-slate-700" : "border-none"}`}
                                     onClick={() => {
                                         setCurrentQuestion(globalIndex);
                                         setUserChangedPart(false); // 👈 allow auto part switch
