@@ -6,34 +6,28 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const SwiperSlider = ({ banner }) => {
-  // console.log("banner", banner)
   return (
     <div className="w-full">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={30}
+        spaceBetween={20}
         slidesPerView={1}
-        // navigation
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000 }}
         loop={true}
         className="rounded-xl overflow-hidden shadow-lg"
       >
-        {
-          banner.map((item, idx) => {
-            return (
-              <SwiperSlide key={idx}>
-                <img
-                  src={item.image}
-                  alt="Slide 1"
-                  className="w-full h-[350px] object-cover"
-                />
-              </SwiperSlide>
-            )
-
-          })
-        }
-
+        {banner.map((item, idx) => (
+          <SwiperSlide key={idx}>
+            <img
+              src={item.image}
+              alt={`Slide ${idx + 1}`}
+              className="w-full 
+                         h-60 sm:h-56 md:h-72 lg:h-60 xl:h-[350px] 
+                         object-cover rounded-xl"
+            />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );

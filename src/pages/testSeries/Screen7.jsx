@@ -287,202 +287,351 @@ const Screen7 = () => {
 
 
   return (
+    // <div className="flex flex-col p-4 text-sm font-sans overflow-hidden">
+
+
+    //   {/* Header */}
+    //   <div className="flex justify-between items-center mb-4">
+    //     <div className="text-lg font-bold">{state?.testData?.test_detail?.title || 'SSC ONLINE MOCK TEST'}</div>
+    //     <div className="flex items-center gap-5">
+    //       {
+    //         isFullScreen ? (
+    //           <div className=''>
+    //             <button onClick={() => {
+    //               setIsFullScreen(false)
+    //               exitFullScreen()
+    //             }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Exit Full Screen</button>
+    //           </div>
+    //         ) : (
+    //           <div className=''>
+    //             <button onClick={() => {
+    //               setIsFullScreen(true)
+    //               enterFullScreen()
+    //             }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Full Screen</button>
+    //           </div>
+    //         )
+    //       }
+    //       <div className="text-sm">Name : <span className="font-semibold"></span>{userInfo && userInfo?.name || 'guest'}</div>
+    //     </div>
+    //   </div>
+
+    //   {/* Top Controls */}
+    //   <div className="flex justify-between items-center border-y py-2 mb-3">
+
+    //     <div className="text-red-600 font-semibold text-center flex text-sm gap-3">
+    //       {/* <button
+    //         onClick={handlePauseClick}
+    //         className="bg-yellow-400 text-gray-800 px-3 py-1 rounded text-xs"
+    //       >
+    //         Puase
+    //       </button>
+    //       <button
+    //         onClick={handleSubmit}
+    //         className="text-white text-sm font-bold bg-green-600 px-4 py-2 rounded"
+    //       >
+    //         Submit
+    //       </button> */}
+    //     </div>
+
+    //     <div className="flex gap-4 justify-between items-center w-1/2">
+
+    //       <div className="flex gap-1">
+    //         <div className="flex gap-2">
+    //           <button
+    //             onClick={handlePreviousQuestion}
+    //             className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
+    //           >
+    //             {"<< Previous"}
+    //           </button>
+
+    //           {selectedOptions[current.id] ? (
+    //             <button
+    //               className="bg-green-600 text-white px-6 py-2 rounded text-sm"
+    //             >
+    //               Save & Next
+    //             </button>
+    //           ) : (
+    //             <button
+    //               onClick={handleNextQuestion}
+    //               className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
+    //             >
+    //               {"Next >>"}
+    //             </button>
+    //           )}
+    //         </div>
+    //       </div>
+    //       <div className="text-right">
+    //         {/* <TestTimer timeInMinutes={60} onTimeUp={() => alert("Time is up!")} /> */}
+    //         <button
+    //           onClick={() => {
+    //             exitFullScreen()
+    //             nav('/analysis', { state: state?.state })
+
+    //           }}
+    //           className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
+    //         >
+    //           Analytics
+    //         </button>
+    //       </div>
+    //     </div>
+    //   </div>
+
+
+    //   {/* Main Body */}
+    //   <div className="flex gap-4 w-full">
+
+
+
+    //     <SolutionsGrideModal
+    //       wrongQuestion={wrongQuestions}
+    //       question={questionsState}
+    //       groupedQuestions={groupedQuestions}
+    //       currentQuestion={currentQuestion}
+    //       optionSelected={optionSelected}
+    //       markedForReview={markedForReview}
+    //       markedForReviewAns={markedWithAns}
+    //       skippedQuestions={skippedQuestions}
+    //       setCurrentQuestion={(index) => setCurrentQuestion(index)}
+    //       onClose={() => setShowModal(false)}
+    //       onProceed={() => { }}
+    //     />
+
+    //     {/* Right Side - Question Panel */}
+    //     <div className="flex-1 relative border rounded-lg px-4 py-3 " id="testBg">
+    //       {/* <div className='absolute top-50 left-[45%] w-full h-full items-center justify-center '>
+    //         <h1 className='text-gray-300 font-bold text-5xl'>REVISION24</h1>
+    //       </div> */}
+    //       {/* Header */}
+    //       <div className="flex justify-between items-center mb-2">
+    //         <div className="text-md font-bold">Question : {currentQuestion + 1}</div>
+    //         {/* Language Switch */}
+    //         <div className="flex justify-end flex-col gap-2">
+    //           {/* ⏱️ Time for current question */}
+    //           {/* <div className="text-xs text-gray-600 font-semibold">
+    //             Time: {formatTime(elapsedSeconds)}
+    //           </div> */}
+    //           <select
+    //             value={language}
+    //             onChange={(e) => setLanguage(e.target.value)}
+    //             className="border text-xs px-2 py-1 rounded"
+    //           >
+    //             <option value="en">English</option>
+    //             <option value="hi">Hindi</option>
+    //           </select>
+
+    //         </div>
+    //       </div>
+
+    //       {/* Question */}
+    //       <div
+    //         className="mb-2 text-lg leading-relaxed"
+    //         dangerouslySetInnerHTML={{ __html: questionText }}
+    //       />
+
+    //       {/* <div className="mb-2 text-sm">
+    //         <BlockMath math={stripLatex(questionText)} />
+    //       </div> */}
+
+    //       {/* update  */}
+    //       {Object.entries(options).map(([key, value]) => {
+    //         const isSelected = key.toLowerCase() === current.user_selected_ans?.toLowerCase();
+    //         const isCorrect = language === 'en'
+    //           ? key.toLowerCase() === current.english_ans?.toLowerCase()
+    //           : key.toLowerCase() === current.hindi_ans?.toLowerCase();
+
+    //         let optionClass = 'border-gray-300';
+    //         if (isCorrect) {
+    //           optionClass = 'bg-green-200 border-green-500';
+    //         } else if (isSelected) {
+    //           optionClass = 'bg-red-200 border-red-500';
+    //         }
+
+    //         return (
+    //           <div
+    //             key={key}
+    //             className={`border-2 p-3 mb-2 rounded ${optionClass}`}
+    //           >
+    //             <strong>{key.toUpperCase()}.</strong> {renderOption(value)}
+    //             {/* <span className="option-content text-sm">
+    //               <InlineMath math={stripLatex(value)} />
+    //             </span> */}
+    //           </div>
+    //         );
+    //       })}
+
+
+
+
+
+
+    //       <div>
+    //         <button
+    //           onClick={() => setShowSolution(!showSolution)}
+    //           className="px-6 py-2 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
+    //         >
+    //           {showSolution ? 'Hide Solution' : 'View Solution'}
+    //         </button>
+
+    //         {showSolution && renderExplanation()}
+    //       </div>
+    //     </div>
+    //   </div>
+
+    
+    // </div>
     <div className="flex flex-col p-4 text-sm font-sans overflow-hidden">
 
-
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <div className="text-lg font-bold">{state?.testData?.test_detail?.title || 'SSC ONLINE MOCK TEST'}</div>
-        <div className="flex items-center gap-5">
-          {
-            isFullScreen ? (
-              <div className=''>
-                <button onClick={() => {
-                  setIsFullScreen(false)
-                  exitFullScreen()
-                }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Exit Full Screen</button>
-              </div>
-            ) : (
-              <div className=''>
-                <button onClick={() => {
-                  setIsFullScreen(true)
-                  enterFullScreen()
-                }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Full Screen</button>
-              </div>
-            )
-          }
-          <div className="text-sm">Name : <span className="font-semibold"></span>{userInfo && userInfo?.name || 'guest'}</div>
-        </div>
-      </div>
-
-      {/* Top Controls */}
-      <div className="flex justify-between items-center border-y py-2 mb-3">
-
-        <div className="text-red-600 font-semibold text-center flex text-sm gap-3">
-          {/* <button
-            onClick={handlePauseClick}
-            className="bg-yellow-400 text-gray-800 px-3 py-1 rounded text-xs"
-          >
-            Puase
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="text-white text-sm font-bold bg-green-600 px-4 py-2 rounded"
-          >
-            Submit
-          </button> */}
-        </div>
-
-        <div className="flex gap-4 justify-between items-center w-1/2">
-
-          <div className="flex gap-1">
-            <div className="flex gap-2">
-              <button
-                onClick={handlePreviousQuestion}
-                className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
-              >
-                {"<< Previous"}
-              </button>
-
-              {selectedOptions[current.id] ? (
-                <button
-                  className="bg-green-600 text-white px-6 py-2 rounded text-sm"
-                >
-                  Save & Next
-                </button>
-              ) : (
-                <button
-                  onClick={handleNextQuestion}
-                  className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
-                >
-                  {"Next >>"}
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="text-right">
-            {/* <TestTimer timeInMinutes={60} onTimeUp={() => alert("Time is up!")} /> */}
-            <button
-              onClick={() => {
-                exitFullScreen()
-                nav('/analysis', { state: state?.state })
-
-              }}
-              className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
-            >
-              Analytics
-            </button>
-          </div>
-        </div>
-      </div>
-
-
-      {/* Main Body */}
-      <div className="flex gap-4 w-full">
-
-
-
-        <SolutionsGrideModal
-          wrongQuestion={wrongQuestions}
-          question={questionsState}
-          groupedQuestions={groupedQuestions}
-          currentQuestion={currentQuestion}
-          optionSelected={optionSelected}
-          markedForReview={markedForReview}
-          markedForReviewAns={markedWithAns}
-          skippedQuestions={skippedQuestions}
-          setCurrentQuestion={(index) => setCurrentQuestion(index)}
-          onClose={() => setShowModal(false)}
-          onProceed={() => { }}
-        />
-
-        {/* Right Side - Question Panel */}
-        <div className="flex-1 relative border rounded-lg px-4 py-3 " id="testBg">
-          {/* <div className='absolute top-50 left-[45%] w-full h-full items-center justify-center '>
-            <h1 className='text-gray-300 font-bold text-5xl'>REVISION24</h1>
-          </div> */}
-          {/* Header */}
-          <div className="flex justify-between items-center mb-2">
-            <div className="text-md font-bold">Question : {currentQuestion + 1}</div>
-            {/* Language Switch */}
-            <div className="flex justify-end flex-col gap-2">
-              {/* ⏱️ Time for current question */}
-              {/* <div className="text-xs text-gray-600 font-semibold">
-                Time: {formatTime(elapsedSeconds)}
-              </div> */}
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="border text-xs px-2 py-1 rounded"
-              >
-                <option value="en">English</option>
-                <option value="hi">Hindi</option>
-              </select>
-
-            </div>
-          </div>
-
-          {/* Question */}
-          {/* <div
-            className="mb-2 text-lg leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: questionText }}
-          /> */}
-
-          <div className="mb-2 text-sm">
-            <BlockMath math={stripLatex(questionText)} />
-          </div>
-
-          {/* update  */}
-          {Object.entries(options).map(([key, value]) => {
-            const isSelected = key.toLowerCase() === current.user_selected_ans?.toLowerCase();
-            const isCorrect = language === 'en'
-              ? key.toLowerCase() === current.english_ans?.toLowerCase()
-              : key.toLowerCase() === current.hindi_ans?.toLowerCase();
-
-            let optionClass = 'border-gray-300';
-            if (isCorrect) {
-              optionClass = 'bg-green-200 border-green-500';
-            } else if (isSelected) {
-              optionClass = 'bg-red-200 border-red-500';
-            }
-
-            return (
-              <div
-                key={key}
-                className={`border-2 p-3 mb-2 rounded ${optionClass}`}
-              >
-                {/* <strong>{key.toUpperCase()}.</strong> {renderOption(value)} */}
-                <span className="option-content text-sm">
-                  <InlineMath math={stripLatex(value)} />
-                </span>
-              </div>
-            );
-          })}
-
-
-
-
-
-
-          <div>
-            <button
-              onClick={() => setShowSolution(!showSolution)}
-              className="px-6 py-2 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition"
-            >
-              {showSolution ? 'Hide Solution' : 'View Solution'}
-            </button>
-
-            {showSolution && renderExplanation()}
-          </div>
-        </div>
-      </div>
-
-      {/* <PauseTestModal
-        isOpen={showPauseModal}
-        onConfirm={handleConfirmPause}
-        onCancel={handleCancelPause}
-      /> */}
+  {/* Header */}
+  <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+    <div className="text-lg font-bold">
+      {state?.testData?.test_detail?.title || 'SSC ONLINE MOCK TEST'}
     </div>
+    <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
+      {isFullScreen ? (
+        <button
+          onClick={() => {
+            setIsFullScreen(false)
+            exitFullScreen()
+          }}
+          className="w-full md:w-auto px-4 py-2 bg-gray-600 rounded-md text-white"
+        >
+          Exit Full Screen
+        </button>
+      ) : (
+        <button
+          onClick={() => {
+            setIsFullScreen(true)
+            enterFullScreen()
+          }}
+          className="w-full md:w-auto px-4 py-2 bg-gray-600 rounded-md text-white"
+        >
+          Full Screen
+        </button>
+      )}
+      <div className="text-sm">
+        Name: <span className="font-semibold">{userInfo?.name || 'guest'}</span>
+      </div>
+    </div>
+  </div>
+
+  {/* Top Controls */}
+  <div className="flex flex-col md:flex-row justify-between items-center border-y py-3 mb-4 gap-4">
+    <div className="text-red-600 font-semibold text-sm flex gap-3">
+      {/* pause / submit (if needed) */}
+    </div>
+
+    <div className="flex flex-col md:flex-row gap-3 items-center w-full md:w-1/2">
+      <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto justify-center">
+        <button
+          onClick={handlePreviousQuestion}
+          className="bg-blue-500 text-white px-4 py-2 rounded text-sm w-full sm:w-auto"
+        >
+          {"<< Previous"}
+        </button>
+
+        {selectedOptions[current.id] ? (
+          <button className="bg-green-600 text-white px-4 py-2 rounded text-sm w-full sm:w-auto">
+            Save & Next
+          </button>
+        ) : (
+          <button
+            onClick={handleNextQuestion}
+            className="bg-blue-500 text-white px-4 py-2 rounded text-sm w-full sm:w-auto"
+          >
+            {"Next >>"}
+          </button>
+        )}
+      </div>
+      <button
+        onClick={() => {
+          exitFullScreen()
+          nav('/analysis', { state: state?.state })
+        }}
+        className="bg-blue-500 text-white px-4 py-2 rounded text-sm w-full md:w-auto"
+      >
+        Analytics
+      </button>
+    </div>
+  </div>
+
+  {/* Main Body */}
+  <div className="flex flex-col lg:flex-row gap-4 w-full">
+
+    {/* Solution Modal (can be toggle component) */}
+    <SolutionsGrideModal
+      wrongQuestion={wrongQuestions}
+      question={questionsState}
+      groupedQuestions={groupedQuestions}
+      currentQuestion={currentQuestion}
+      optionSelected={optionSelected}
+      markedForReview={markedForReview}
+      markedForReviewAns={markedWithAns}
+      skippedQuestions={skippedQuestions}
+      setCurrentQuestion={(index) => setCurrentQuestion(index)}
+      onClose={() => setShowModal(false)}
+      onProceed={() => {}}
+    />
+
+    {/* Right Side - Question Panel */}
+    <div className="flex-1 border rounded-lg px-4 py-3" id="testBg">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2 gap-3">
+        <div className="text-md font-bold">Question : {currentQuestion + 1}</div>
+        <div className="flex gap-2 items-center">
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="border text-xs px-2 py-1 rounded"
+          >
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+          </select>
+        </div>
+      </div>
+
+      <div
+        className="mb-3 text-base leading-relaxed"
+        dangerouslySetInnerHTML={{ __html: questionText }}
+      />
+
+      {/* Options */}
+      {Object.entries(options).map(([key, value]) => {
+        const isSelected = key.toLowerCase() === current.user_selected_ans?.toLowerCase();
+        const isCorrect = language === 'en'
+          ? key.toLowerCase() === current.english_ans?.toLowerCase()
+          : key.toLowerCase() === current.hindi_ans?.toLowerCase();
+
+        let optionClass = 'border-gray-300';
+        if (isCorrect) {
+          optionClass = 'bg-green-200 border-green-500';
+        } else if (isSelected) {
+          optionClass = 'bg-red-200 border-red-500';
+        }
+
+        return (
+          <div
+            key={key}
+            className={`border-2 p-3 mb-2 rounded ${optionClass}`}
+          >
+            <strong>{key.toUpperCase()}.</strong> {renderOption(value)}
+          </div>
+        );
+      })}
+
+      {/* Solution Toggle */}
+      <div className="mt-3">
+        <button
+          onClick={() => setShowSolution(!showSolution)}
+          className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition w-full sm:w-auto"
+        >
+          {showSolution ? 'Hide Solution' : 'View Solution'}
+        </button>
+
+        {showSolution && renderExplanation()}
+      </div>
+    </div>
+  </div>
+</div>
+
   );
 };
 

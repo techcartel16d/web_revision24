@@ -20,9 +20,39 @@ const UserDashboard = () => {
   const loadUserData = async () => {
     const user = await getUserDataDecrypted();
     setUserInfo(user);
-    // console.log("userinfon in dashboard", user)
+    console.log("userinfon in dashboard", user)
     setLoading(false);
   };
+
+  // const subscriptionDetails = [
+  //   {
+  //     subscription_name: "Yearly Focus+",
+  //     price: "499",
+  //     offer_price: "299",
+  //     duration: "12",
+  //     purchase_date: "2025-07-24",
+  //     expiry_date: "2026-07-24",
+  //   },
+  //   {
+  //     subscription_name: "Monthly Booster",
+  //     price: "99",
+  //     offer_price: "49",
+  //     duration: "1",
+  //     purchase_date: "2025-07-15",
+  //     expiry_date: "2025-08-15",
+  //   },
+  //   {
+  //     subscription_name: "Exam Sprint Pack",
+  //     price: "299",
+  //     offer_price: "199",
+  //     duration: "3",
+  //     purchase_date: "2025-06-01",
+  //     expiry_date: "2025-09-01",
+  //   },
+  // ];
+
+
+
 
   const getTransactionDescription = (item) => {
     switch (item.transaction_type) {
@@ -121,7 +151,8 @@ const UserDashboard = () => {
       name: 'Amount',
       selector: row => `₹${parseFloat(row.amount).toFixed(2)}`,
       sortable: true,
-      cell: row => <span className="text-green-600 font-bold">₹{parseFloat(row.amount).toFixed(2)}</span>,
+      cell: row => <span className={`${row.paying_status === 'true' ? 'text-green-500' : 'text-red-500'
+        } font-bold`}>₹{parseFloat(row.amount).toFixed(2)}</span>,
     },
     {
       name: 'Description',
@@ -244,77 +275,64 @@ const UserDashboard = () => {
                 </div>
 
                 {/* Subscription Details */}
-                <div className="bg-white p-4 rounded-lg shadow-md mt-4">
-                  {userInfo.subscription_details ? (
-                    <div className="bg-[#0f172a] text-white p-3 rounded-md shadow-xl w-full relative max-h-[280px] min-h-[250px]">
-                      {/* Popular Tag */}
-                      <span className="absolute top-4 right-4 bg-indigo-600 text-xs font-semibold px-3 py-1 rounded-full">
-                        ACTIVE
-                      </span>
+                <div className="bg-white p-4 rounded-lg shadow-md mt-4 space-y-6">
 
-                      {/* Icon and Title */}
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-12 h-12 bg-orange-300 rounded-xl flex items-center justify-center text-xl font-bold text-white">
-                          {userInfo.subscription_details.subscription_name[0]}
-                        </div>
-                        <div>
-                          <h2 className="text-lg font-semibold capitalize">
-                            {userInfo.subscription_details.subscription_name}
-                          </h2>
-                          <p className="text-gray-300 text-sm">
-                            ₹{userInfo.subscription_details.offer_price}
-                          </p>
-                        </div>
-                      </div>
+                  {/* Scrollable Subscription List */}
+                  {userInfo?.subscription_details?.length > 0 ? (
+                    <div className="space-y-6 max-h-[580px] overflow-y-auto pr-2">
+                      {userInfo.subscription_details.map((sub, index) => {
+                        const expiry = new Date(sub.expiry_date);
+                        const now = new Date();
+                        const timeDiff = expiry - now;
+                        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((timeDiff / (1000 * 60 * 60)) % 24);
+                        const minutes = Math.floor((timeDiff / (1000 * 60)) % 60);
+                        const seconds = Math.floor((timeDiff / 1000) % 60);
+                        const isExpired = timeDiff <= 0;
 
-                      {/* Features */}
-                      <ul className="text-sm text-gray-200 space-y-2 mb-6">
-                        <li>
-                          ✅ <span className="font-semibold">Duration:</span>{" "}
-                          {userInfo.subscription_details.duration} months
-                        </li>
-                        <li>
-                          💰{" "}
-                          <span className="font-semibold">Original Price:</span>{" "}
-                          ₹{userInfo.subscription_details.price}
-                        </li>
-                        <li>
-                          🏷️ <span className="font-semibold">Offer Price:</span>{" "}
-                          ₹{userInfo.subscription_details.offer_price}
-                        </li>
-                        <li>
-                          📅 <span className="font-semibold">Purchase:</span>{" "}
-                          {new Date(
-                            userInfo.subscription_details.purchase_date
-                          ).toLocaleDateString("en-GB")}
-                        </li>
-
-                        <li>
-                          ⏲️ <span className="font-semibold">Expiry:</span>{" "}
-                          {new Date(
-                            userInfo.subscription_details.expiry_date
-                          ).toLocaleDateString("en-GB")}
-                        </li>
-                        <li className="px-3 py-2 bg-amber-500 rounded-sm font-bold text-black">
-                          ⏳ <span className="font-semibold">Time Left:</span>{" "}
-                          {timeLeft ? (
-                            timeLeft.days > 3 ? (
-                              `${timeLeft.days} Days Left`
-                            ) : (
-                              `${timeLeft.days} Days ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`
-                            )
-                          ) : (
-                            <span className="text-red-500 font-semibold">
-                              Expired
+                        return (
+                          <div
+                            key={index}
+                            className="bg-[#0f172a] text-white p-3 rounded-md shadow-xl w-full relative min-h-[250px]"
+                          >
+                            <span className="absolute top-4 right-4 bg-green-600 text-xs font-semibold px-3 py-1 rounded-full">
+                              ACTIVE
                             </span>
-                          )}
-                        </li>
-                      </ul>
 
-                      {/* Action Button */}
-                      {/* <button className="w-full bg-indigo-600 hover:bg-indigo-700 transition text-white font-semibold py-2 rounded-lg text-sm">
-                                            Manage Plan →
-                                        </button> */}
+                            <div className="flex items-center gap-3 mb-4">
+                              <div className="w-12 h-12 bg-orange-300 rounded-xl flex items-center justify-center text-xl font-bold text-white">
+                                {sub.subscription_name[0]}
+                              </div>
+                              <div>
+                                <h2 className="text-lg font-semibold capitalize">
+                                  {sub.subscription_name}
+                                </h2>
+                                <p className="text-gray-300 text-sm">₹{sub.offer_price}</p>
+                              </div>
+                            </div>
+
+                            <ul className="text-sm text-gray-200 space-y-2 mb-6">
+                              <li>✅ <span className="font-semibold">Duration:</span> {sub.duration} months</li>
+                              <li>💰 <span className="font-semibold">Original Price:</span> ₹{sub.price}</li>
+                              <li>🏷️ <span className="font-semibold">Offer Price:</span> ₹{sub.offer_price}</li>
+                              <li>📅 <span className="font-semibold">Purchase:</span> {new Date(sub.purchase_date).toLocaleDateString("en-GB")}</li>
+                              <li>⏲️ <span className="font-semibold">Expiry:</span> {new Date(sub.expiry_date).toLocaleDateString("en-GB")}</li>
+                              <li className="px-3 py-2 bg-amber-500 rounded-sm font-bold text-black">
+                                ⏳ <span className="font-semibold">Time Left:</span>{" "}
+                                {!isExpired ? (
+                                  days > 3 ? (
+                                    `${days} Days Left`
+                                  ) : (
+                                    `${days}d ${hours}h ${minutes}m ${seconds}s`
+                                  )
+                                ) : (
+                                  <span className="text-red-500 font-semibold">Expired</span>
+                                )}
+                              </li>
+                            </ul>
+                          </div>
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="bg-white p-6 rounded-2xl shadow-md text-center text-gray-500">
@@ -322,23 +340,19 @@ const UserDashboard = () => {
                     </div>
                   )}
 
+                  {/* Contact Mentor Section */}
                   <div className="rounded-lg shadow-md mt-4 p-4 bg-white">
-                    {/* Title */}
                     <div className="w-full font-bold text-center mb-3">
                       <h3 className="text-lg">Contact Your Mentor</h3>
                     </div>
 
-                    {/* Buttons */}
                     <div className="flex gap-4 justify-around">
-                      {/* 📞 Call Button */}
                       <a
                         href="tel:+917822936229"
-                        className="px-4 py-2  rounded-lg font-semibold flex justify-center items-center gap-2 w-1/2 bg-blue-500 text-white"
+                        className="px-4 py-2 rounded-lg font-semibold flex justify-center items-center gap-2 w-1/2 bg-blue-500 text-white"
                       >
                         <IoCall className="text-2xl" /> Call
                       </a>
-
-                      {/* 💬 WhatsApp Button */}
                       <a
                         href="https://wa.me/917822936229"
                         target="_blank"

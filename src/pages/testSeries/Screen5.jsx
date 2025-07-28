@@ -277,39 +277,89 @@ const Screen5 = () => {
 
 
     // HANDLE SAVE AND NEXT FUNCTION =====> NEW
+    // const handleSaveAndNext = async () => {
+    //     const testId = state?.testInfo?.test_id;
+    //     const currentId = questionsState[currentQuestion]?.id;
+
+    //     await updateSpentTime(currentId);
+
+    //     if (selectedOptions[currentId] && !optionSelected.includes(currentId)) {
+    //         const updatedSelected = [...optionSelected, currentId];
+    //         setOptionSelected(updatedSelected);
+    //         await secureSaveTestData(testId, 'optionSelected', updatedSelected);
+    //     }
+
+    //     if (selectedOptions[currentId] && skippedQuestions.includes(currentId)) {
+    //         const updatedSkipped = skippedQuestions.filter(id => id !== currentId);
+    //         setSkippedQuestions(updatedSkipped);
+    //         await secureSaveTestData(testId, 'skippedQuestions', updatedSkipped);
+    //     }
+
+    //     // Circular navigation: go to first if last question
+    //     if (currentQuestion === questionsState.length - 1) {
+    //         setCurrentQuestion(0);
+    //     } else {
+    //         setCurrentQuestion(prev => prev + 1);
+    //     }
+
+
+    // };
+
     const handleSaveAndNext = async () => {
         const testId = state?.testInfo?.test_id;
         const currentId = questionsState[currentQuestion]?.id;
 
         await updateSpentTime(currentId);
 
-        if (selectedOptions[currentId] && !optionSelected.includes(currentId)) {
+        const isOptionSelected = !!selectedOptions[currentId];
+        const isAlreadySelected = optionSelected.includes(currentId);
+        const isAlreadyMarked = markedForReview.includes(currentId);
+        const isAlreadyMarkedWithAns = markedWithAns.includes(currentId);
+
+        // Add to optionSelected if not already
+        if (isOptionSelected && !isAlreadySelected) {
             const updatedSelected = [...optionSelected, currentId];
             setOptionSelected(updatedSelected);
             await secureSaveTestData(testId, 'optionSelected', updatedSelected);
         }
 
-        if (selectedOptions[currentId] && skippedQuestions.includes(currentId)) {
+        // Remove from skippedQuestions if present
+        if (isOptionSelected && skippedQuestions.includes(currentId)) {
             const updatedSkipped = skippedQuestions.filter(id => id !== currentId);
             setSkippedQuestions(updatedSkipped);
             await secureSaveTestData(testId, 'skippedQuestions', updatedSkipped);
         }
 
-        // Circular navigation: go to first if last question
+        // If markedForReview but now answered, move to markedWithAns
+        if (isOptionSelected && isAlreadyMarked && !isAlreadyMarkedWithAns) {
+            const updatedMarkedWithAns = [...markedWithAns, currentId];
+            setMarkedWithAns(updatedMarkedWithAns);
+            await secureSaveTestData(testId, 'marked_with_ans', updatedMarkedWithAns);
+
+            const updatedMarked = markedForReview.filter(id => id !== currentId);
+            setMarkedForReview(updatedMarked);
+            await secureSaveTestData(testId, 'markedForReview', updatedMarked);
+        }
+
+        // ✅ If already in markedWithAns, remove from BOTH lists (cleanup)
+        if (isAlreadyMarkedWithAns) {
+            const updatedMarkedWithAns = markedWithAns.filter(id => id !== currentId);
+            setMarkedWithAns(updatedMarkedWithAns);
+            await secureSaveTestData(testId, 'marked_with_ans', updatedMarkedWithAns);
+        }
+
+        if (isAlreadyMarked) {
+            const updatedMarked = markedForReview.filter(id => id !== currentId);
+            setMarkedForReview(updatedMarked);
+            await secureSaveTestData(testId, 'markedForReview', updatedMarked);
+        }
+
+        // Navigate to next (circular logic)
         if (currentQuestion === questionsState.length - 1) {
             setCurrentQuestion(0);
         } else {
             setCurrentQuestion(prev => prev + 1);
         }
-
-        // setCurrentQuestion(prev => prev + 1);
-
-        // await saveUserTestLoginDataEncrypted(testId, {
-        //     selectedOptions,
-        //     optionSelected,
-        //     skippedQuestions,
-        //     testInfo: state?.testInfo,
-        // });
     };
 
 
@@ -317,7 +367,34 @@ const Screen5 = () => {
 
 
 
+
+
     // HANDLE MARK FOR REVIEW FUNCTION ====> NEW
+    // const handleMarkForReview = async () => {
+    //     const testId = state?.testInfo?.test_id;
+    //     const currentId = questionsState[currentQuestion]?.id;
+
+    //     const isOptionSelected = !!selectedOptions[currentId];
+    //     const isAlreadyMarked = markedForReview.includes(currentId);
+    //     const isAlreadyMarkedWithAns = markedWithAns.includes(currentId);
+
+    //     if (isOptionSelected && !isAlreadyMarkedWithAns) {
+    //         const updatedMarkedWithAns = [...markedWithAns, currentId];
+    //         setMarkedWithAns(updatedMarkedWithAns);
+    //         await secureSaveTestData(testId, 'marked_with_ans', updatedMarkedWithAns);
+    //     }
+
+    //     if (!isOptionSelected && !isAlreadyMarked) {
+    //         const updatedMarked = [...markedForReview, currentId];
+    //         setMarkedForReview(updatedMarked);
+    //         await secureSaveTestData(testId, 'markedForReview', updatedMarked);
+    //     }
+
+    //     setCurrentQuestion(prev => prev + 1);
+
+
+    // };
+
     const handleMarkForReview = async () => {
         const testId = state?.testInfo?.test_id;
         const currentId = questionsState[currentQuestion]?.id;
@@ -339,13 +416,6 @@ const Screen5 = () => {
         }
 
         setCurrentQuestion(prev => prev + 1);
-
-        // await saveUserTestLoginDataEncrypted(testId, {
-        //     selectedOptions,
-        //     markedForReview,
-        //     markedWithAns,
-        //     testInfo: state?.testInfo,
-        // });
     };
 
 
@@ -598,121 +668,266 @@ const Screen5 = () => {
 
 
     return (
-        <div className="flex flex-col p-4 text-sm font-sans overflow-hidden">
+        // <div className="flex flex-col p-4 text-sm font-sans overflow-hidden">
 
 
+        //     {/* Header */}
+
+        //     <div className="flex justify-between items-center mb-4">
+
+        //         <div className="text-lg font-bold">{state?.testInfo?.title || 'SSC ONLINE MOCK TEST'}</div>
+        //         <div className="m-auto bg-gray-800 text-white rounded-sm">
+        //             {/* <TestTimer timeInMinutes={60} onTimeUp={() => handleSubmit()} /> */}
+
+        //             <TestTimer textleft={'Time Left:'} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
+        //         </div>
+
+        //         <div className="flex items-center gap-5">
+        //             <button
+        //                 onClick={handlePauseClick}
+        //                 className="bg-yellow-400 text-gray-800 px-3 py-2 rounded text-xs"
+        //             >
+        //                 Puase
+        //             </button>
+        //             {
+        //                 isFullScreen ? (
+        //                     <div className=''>
+        //                         <button onClick={() => {
+        //                             setIsFullScreen(false)
+        //                             exitFullScreen()
+        //                         }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Exit Full Screen</button>
+        //                     </div>
+        //                 ) : (
+        //                     <div className=''>
+        //                         <button onClick={() => {
+        //                             setIsFullScreen(true)
+        //                             enterFullScreen()
+        //                         }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Full Screen</button>
+        //                     </div>
+        //                 )
+        //             }
+        //             <div className="text-sm">Name : <span className="font-semibold"></span>{userInfo.name || 'guest'}</div>
+        //         </div>
+        //     </div>
+
+        //     {/* Top Controls */}
+        //     <div className="flex justify-between items-center border-y py-4 mb-3">
+
+        //         <div className="text-red-600 font-semibold text-center flex text-sm gap-3">
+        //             <button
+        //                 onMouseEnter={() => setIsModalOpen(true)}
+        //                 className="text-orange-600 font-bold px-6 py-2 rounded text-lg"
+        //             >
+        //                 SYMBOLS
+        //             </button>
+        //             <button
+        //                 onMouseEnter={() => setOpenModal(true)}
+        //                 // onMouseLeave={() => setOpenModal(false)}
+        //                 className="text-orange-600 font-bold px-6 py-2 rounded text-lg"
+        //             >
+        //                 INSTRUCTIONS
+        //             </button>
+
+        //         </div>
+
+        //         <div className="flex gap-4 justify-between items-center w-1/2">
+
+        //             <div className="flex gap-1">
+        //                 <div className="flex gap-2">
+        //                     {
+        //                         selectedOptions[current.id] && (
+        //                             <button
+        //                                 onClick={() => handleOptionDeselect(current.id)}
+        //                                 className="bg-red-500 text-white px-3 py-2 rounded text-sm"
+        //                             >
+        //                                 Clear Option
+        //                             </button>
+        //                         )
+        //                     }
+        //                     <button
+        //                         onClick={handleMarkForReview}
+        //                         className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
+        //                     >
+        //                         Mark for Review
+        //                     </button>
+
+        //                     {selectedOptions[current.id] ? (
+        //                         <button
+        //                             onClick={handleSaveAndNext}
+        //                             className="bg-green-600 text-white px-6 py-2 rounded text-sm"
+        //                         >
+        //                             Save & Next
+        //                         </button>
+        //                     ) : (
+        //                         <button
+        //                             onClick={handleNextQuestion}
+        //                             className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
+        //                         >
+        //                             Next
+        //                         </button>
+        //                     )}
+        //                     <button
+        //                         onClick={() => setConfirmSubmit(true)}
+        //                         className="text-white text-sm font-bold bg-green-600 px-4 py-2 rounded"
+        //                     >
+        //                         Submit
+        //                     </button>
+        //                 </div>
+        //             </div>
+        //             <div className="text-right">
+        //                 <TestTimer timeClr='text-blue-800' textleft={'LAST'} textBg='text-red-600' timeTextSize='text-2xl' textRight={'Minutes'} showSeconds={false} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
+        //             </div>
+        //         </div>
+        //     </div>
+
+
+        //     {/* Main Body */}
+        //     <div className="flex gap-4 w-full">
+        //         <QuestionGridModal
+        //             question={questionsState}
+        //             groupedQuestions={groupedQuestions}
+        //             currentQuestion={currentQuestion}
+        //             optionSelected={optionSelected}
+        //             markedForReview={markedForReview}
+        //             markedForReviewAns={markedWithAns}
+        //             skippedQuestions={[12, 25]}
+        //             setCurrentQuestion={(index) => setCurrentQuestion(index)}
+        //             onClose={() => setShowModal(false)}
+        //             onProceed={() => { }}
+        //         />
+
+        //         {/* Right Side - Question Panel */}
+        //         <div className="flex-1 relative border px-4 py-3" id="testBg">
+
+        //             {/* Header */}
+        //             <div className="flex justify-between items-center mb-2">
+        //                 <div className="text-sm font-bold">Question : {currentQuestion + 1}</div>
+        //                 {/* Language Switch */}
+        //                 <div className="flex justify-end flex-col gap-2">
+        //                     {/* ⏱️ Time for current question */}
+        //                     <div className="text-xs text-gray-600 font-semibold">
+        //                         Time: {formatTime(elapsedSeconds)}
+        //                     </div>
+        //                     <select
+        //                         value={language}
+        //                         onChange={(e) => setLanguage(e.target.value)}
+        //                         className="border text-xs px-2 py-1 rounded"
+        //                     >
+        //                         <option value="en">English</option>
+        //                         <option value="hi">Hindi</option>
+        //                     </select>
+
+        //                 </div>
+        //             </div>
+
+        //             {/* Question */}
+        //             <div
+        //                 className="mb-2 text-sm"
+        //                 // dangerouslySetInnerHTML={{ __html: questionText }}
+        //                 dangerouslySetInnerHTML={{ __html: questionText }}
+        //             />
+        //             {/* <div className="mb-2 text-sm">
+        //                 <BlockMath math={stripLatex(questionText)} />
+        //             </div> */}
+
+        //             {/* Options */}
+        //             <div className="flex flex-col gap-2">
+        //                 {Object.entries(options).map(([key, value]) => (
+        //                     <label key={key} className="flex items-center gap-2">
+        //                         <input
+        //                             type="radio"
+        //                             name={`question_${current.id}`}
+        //                             value={key}
+        //                             checked={selectedOptions[current.id] === key}
+        //                             onChange={() => handleOptionChange(current.id, key)}
+        //                         />
+        //                         <span
+        //                             className="option-content text-sm"
+        //                             dangerouslySetInnerHTML={{ __html: value }}
+        //                         />
+
+        //                         {/* <span className="option-content text-sm">
+        //                             <InlineMath math={stripLatex(value)} />
+        //                         </span> */}
+        //                     </label>
+        //                 ))}
+        //             </div>
+
+
+        //         </div>
+        //     </div>
+
+        //     <PauseTestModal
+        //         isOpen={showPauseModal}
+        //         onConfirm={handleConfirmPause}
+        //         onCancel={handleCancelPause}
+        //     />
+
+        //     <ConfirmTestSubmitModal
+        //         show={confirmSubmit}
+        //         onClose={() => setConfirmSubmit(false)}
+        //         onConfirm={handleSubmit}
+        //     />
+
+        //     <ExamInstructionsModal
+        //         isOpen={openModal}
+        //         onClose={() => setOpenModal(false)}
+        //         onAgree={() => {
+        //             setOpenModal(false);
+        //             nav("/symbols", { state });
+        //         }}
+        //         testInfo={state?.testInfo || {}}
+        //         testData={state?.testDetail || []}
+        //     />
+        //     <SymbolModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        // </div>
+
+        <div className="flex flex-col p-4 text-sm font-sans overflow-hidden w-full">
             {/* Header */}
-
-            <div className="flex justify-between items-center mb-4">
-
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 gap-4">
                 <div className="text-lg font-bold">{state?.testInfo?.title || 'SSC ONLINE MOCK TEST'}</div>
-                <div className="m-auto bg-gray-800 text-white rounded-sm">
-                    {/* <TestTimer timeInMinutes={60} onTimeUp={() => handleSubmit()} /> */}
-
-                    <TestTimer textleft={'Time Left:'} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
+                <div className="w-full lg:w-auto m-auto bg-gray-800 text-white rounded-sm">
+                    <TestTimer textleft={'Time Left:'} testId={state?.testInfo?.test_id} timeInMinutes={state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
                 </div>
-
-                <div className="flex items-center gap-5">
-                    <button
-                        onClick={handlePauseClick}
-                        className="bg-yellow-400 text-gray-800 px-3 py-2 rounded text-xs"
-                    >
-                        Puase
-                    </button>
-                    {
-                        isFullScreen ? (
-                            <div className=''>
-                                <button onClick={() => {
-                                    setIsFullScreen(false)
-                                    exitFullScreen()
-                                }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Exit Full Screen</button>
-                            </div>
-                        ) : (
-                            <div className=''>
-                                <button onClick={() => {
-                                    setIsFullScreen(true)
-                                    enterFullScreen()
-                                }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Full Screen</button>
-                            </div>
-                        )
-                    }
-                    <div className="text-sm">Name : <span className="font-semibold"></span>{userInfo.name || 'guest'}</div>
+                <div className="flex flex-wrap justify-between lg:justify-end items-center gap-3 w-full lg:w-auto">
+                    <button onClick={handlePauseClick} className="bg-yellow-400 text-gray-800 px-3 py-2 rounded text-xs">Puase</button>
+                    {isFullScreen ? (
+                        <button onClick={() => { setIsFullScreen(false); exitFullScreen(); }} className="px-4 py-2 bg-gray-600 rounded-md text-white">Exit Full Screen</button>
+                    ) : (
+                        <button onClick={() => { setIsFullScreen(true); enterFullScreen(); }} className="px-4 py-2 bg-gray-600 rounded-md text-white">Full Screen</button>
+                    )}
+                    <div className="text-sm">Name : <span className="font-semibold">{userInfo.name || 'guest'}</span></div>
                 </div>
             </div>
 
             {/* Top Controls */}
-            <div className="flex justify-between items-center border-y py-4 mb-3">
-
-                <div className="text-red-600 font-semibold text-center flex text-sm gap-3">
-                    <button
-                        onMouseEnter={() => setIsModalOpen(true)}
-                        className="text-orange-600 font-bold px-6 py-2 rounded text-lg"
-                    >
-                        SYMBOLS
-                    </button>
-                    <button
-                        onMouseEnter={() => setOpenModal(true)}
-                        // onMouseLeave={() => setOpenModal(false)}
-                        className="text-orange-600 font-bold px-6 py-2 rounded text-lg"
-                    >
-                        INSTRUCTIONS
-                    </button>
-
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center border-y py-4 mb-3 gap-3">
+                <div className="text-red-600 font-semibold text-center flex flex-wrap gap-3 w-full lg:w-auto">
+                    <button onMouseEnter={() => setIsModalOpen(true)} className="text-orange-600 font-bold px-4 py-2 rounded text-base">SYMBOLS</button>
+                    <button onMouseEnter={() => setOpenModal(true)} className="text-orange-600 font-bold px-4 py-2 rounded text-base">INSTRUCTIONS</button>
                 </div>
 
-                <div className="flex gap-4 justify-between items-center w-1/2">
-
-                    <div className="flex gap-1">
-                        <div className="flex gap-2">
-                            {
-                                selectedOptions[current.id] && (
-                                    <button
-                                        onClick={() => handleOptionDeselect(current.id)}
-                                        className="bg-red-500 text-white px-3 py-2 rounded text-sm"
-                                    >
-                                        Clear Option
-                                    </button>
-                                )
-                            }
-                            <button
-                                onClick={handleMarkForReview}
-                                className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
-                            >
-                                Mark for Review
-                            </button>
-
-                            {selectedOptions[current.id] ? (
-                                <button
-                                    onClick={handleSaveAndNext}
-                                    className="bg-green-600 text-white px-6 py-2 rounded text-sm"
-                                >
-                                    Save & Next
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={handleNextQuestion}
-                                    className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
-                                >
-                                    Next
-                                </button>
-                            )}
-                            <button
-                                onClick={() => setConfirmSubmit(true)}
-                                className="text-white text-sm font-bold bg-green-600 px-4 py-2 rounded"
-                            >
-                                Submit
-                            </button>
-                        </div>
+                <div className="flex flex-col lg:flex-row gap-4 w-full lg:w-1/2 items-start lg:items-center justify-between">
+                    <div className="flex flex-wrap gap-2">
+                        {selectedOptions[current.id] && (
+                            <button onClick={() => handleOptionDeselect(current.id)} className="bg-red-500 text-white px-3 py-2 rounded text-sm">Clear Option</button>
+                        )}
+                        <button onClick={handleMarkForReview} className="bg-blue-500 text-white px-6 py-2 rounded text-sm">Mark for Review</button>
+                        {selectedOptions[current.id] ? (
+                            <button onClick={handleSaveAndNext} className="bg-green-600 text-white px-6 py-2 rounded text-sm">Save & Next</button>
+                        ) : (
+                            <button onClick={handleNextQuestion} className="bg-blue-500 text-white px-6 py-2 rounded text-sm">Next</button>
+                        )}
+                        <button onClick={() => setConfirmSubmit(true)} className="text-white text-sm font-bold bg-green-600 px-4 py-2 rounded">Submit</button>
                     </div>
-                    <div className="text-right">
-                        <TestTimer timeClr='text-blue-800' textleft={'LAST'} textBg='text-red-600' timeTextSize='text-2xl' textRight={'Minutes'} showSeconds={false} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
+                    <div className="text-right w-full lg:w-auto">
+                        <TestTimer timeClr='text-blue-800' textleft={'LAST'} textBg='text-red-600' timeTextSize='text-2xl' textRight={'Minutes'} showSeconds={false} testId={state?.testInfo?.test_id} timeInMinutes={state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
                     </div>
                 </div>
             </div>
 
-
             {/* Main Body */}
-            <div className="flex gap-4 w-full">
+            <div className="flex flex-col lg:flex-row gap-4 w-full">
                 <QuestionGridModal
                     question={questionsState}
                     groupedQuestions={groupedQuestions}
@@ -720,97 +935,44 @@ const Screen5 = () => {
                     optionSelected={optionSelected}
                     markedForReview={markedForReview}
                     markedForReviewAns={markedWithAns}
-                    skippedQuestions={[12, 25]}
+                    skippedQuestions={skippedQuestions}
                     setCurrentQuestion={(index) => setCurrentQuestion(index)}
                     onClose={() => setShowModal(false)}
                     onProceed={() => { }}
                 />
 
-                {/* Right Side - Question Panel */}
                 <div className="flex-1 relative border px-4 py-3" id="testBg">
-
-                    {/* Header */}
                     <div className="flex justify-between items-center mb-2">
                         <div className="text-sm font-bold">Question : {currentQuestion + 1}</div>
-                        {/* Language Switch */}
-                        <div className="flex justify-end flex-col gap-2">
-                            {/* ⏱️ Time for current question */}
-                            <div className="text-xs text-gray-600 font-semibold">
-                                Time: {formatTime(elapsedSeconds)}
-                            </div>
-                            <select
-                                value={language}
-                                onChange={(e) => setLanguage(e.target.value)}
-                                className="border text-xs px-2 py-1 rounded"
-                            >
+                        <div className="flex flex-col gap-2 text-xs">
+                            <div className="text-gray-600 font-semibold">Time: {formatTime(elapsedSeconds)}</div>
+                            <select value={language} onChange={(e) => setLanguage(e.target.value)} className="border text-xs px-2 py-1 rounded">
                                 <option value="en">English</option>
                                 <option value="hi">Hindi</option>
                             </select>
-
                         </div>
                     </div>
-
-                    {/* Question */}
-                    <div
-                        className="mb-2 text-sm"
-                        // dangerouslySetInnerHTML={{ __html: questionText }}
-                        dangerouslySetInnerHTML={{ __html: questionText }}
-                    />
-                    {/* <div className="mb-2 text-sm">
-                        <BlockMath math={stripLatex(questionText)} />
-                    </div> */}
-
-                    {/* Options */}
+                    <div className="mb-2 text-sm" dangerouslySetInnerHTML={{ __html: questionText }} />
                     <div className="flex flex-col gap-2">
                         {Object.entries(options).map(([key, value]) => (
                             <label key={key} className="flex items-center gap-2">
-                                <input
-                                    type="radio"
-                                    name={`question_${current.id}`}
-                                    value={key}
-                                    checked={selectedOptions[current.id] === key}
-                                    onChange={() => handleOptionChange(current.id, key)}
-                                />
-                                <span
-                                    className="option-content text-sm"
-                                    dangerouslySetInnerHTML={{ __html: value }}
-                                />
-
-                                {/* <span className="option-content text-sm">
-                                    <InlineMath math={stripLatex(value)} />
-                                </span> */}
+                                <input type="radio" name={`question_${current.id}`} value={key} checked={selectedOptions[current.id] === key} onChange={() => handleOptionChange(current.id, key)} />
+                                <span className="option-content text-sm" dangerouslySetInnerHTML={{ __html: value }} />
                             </label>
                         ))}
                     </div>
-
-
                 </div>
             </div>
 
-            <PauseTestModal
-                isOpen={showPauseModal}
-                onConfirm={handleConfirmPause}
-                onCancel={handleCancelPause}
-            />
-
-            <ConfirmTestSubmitModal
-                show={confirmSubmit}
-                onClose={() => setConfirmSubmit(false)}
-                onConfirm={handleSubmit}
-            />
-
-            <ExamInstructionsModal
-                isOpen={openModal}
-                onClose={() => setOpenModal(false)}
-                onAgree={() => {
-                    setOpenModal(false);
-                    nav("/symbols", { state });
-                }}
-                testInfo={state?.testInfo || {}}
-                testData={state?.testDetail || []}
-            />
+            {/* Modals */}
+            <PauseTestModal isOpen={showPauseModal} onConfirm={handleConfirmPause} onCancel={handleCancelPause} />
+            <ConfirmTestSubmitModal show={confirmSubmit} onClose={() => setConfirmSubmit(false)} onConfirm={handleSubmit} />
+            <ExamInstructionsModal isOpen={openModal} onClose={() => setOpenModal(false)} onAgree={() => { setOpenModal(false); nav("/symbols", { state }); }} testInfo={state?.testInfo || {}} testData={state?.testDetail || []} />
             <SymbolModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
+
+
+
     );
 };
 

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchUserTestSeriesRankSlice } from '../../redux/HomeSlice';
 import Header from '../../components/Header';
+import LeaderBoardTable from '../../components/LeaderBoardTable';
 
 const Screen6 = () => {
     const nav = useNavigate()
@@ -91,7 +92,13 @@ const Screen6 = () => {
     }, [fetchUserResult]);
 
     if (!performance) {
-        return <div className="p-6">Loading...</div>;
+        return <div className="p-4-400 text-red-500 w-full h-screen flex items-center justify-center">
+            <div className="fading-spinner">
+                {[...Array(12)].map((_, i) => (
+                    <div key={i} className={`bar bar${i + 1}`}></div>
+                ))}
+            </div>
+        </div>;
     }
 
     return (
@@ -169,12 +176,12 @@ const Screen6 = () => {
                                         <td className="px-6 py-4">
                                             <div className={`${s.attempted < 70 ? 'bg-red-50' : 'bg-blue-50'}  rounded px-2 py-1 relative`}>
                                                 <div className="text-blue-800 font-semibold">
-                                                    {s.attempted} <span className="text-gray-400 font-normal">/ {s.maxAttempted || s.maxScore}</span>
+                                                    {s.attempted} <span className="text-gray-400 font-normal">/ {performance.attempted.max}</span>
                                                 </div>
-                                                <div className={`h-1 ${s.score < 130 ? " bg-red-300 " : 'bg-blue-300 '}rounded mt-1`}>
+                                                <div className={`h-1 ${s.attempted < 130 ? " bg-red-300 " : 'bg-blue-300 '}rounded mt-1`}>
                                                     <div
                                                         className={`h-1 ${attemptedColor} rounded`}
-                                                        style={{ width: `${(s.attempted / (s.maxAttempted || s.maxScore)) * 100}%` }}
+                                                        style={{ width: `${(s.attempted / performance.attempted.max) * 100}%` }}
                                                     />
                                                 </div>
                                             </div>
@@ -183,7 +190,7 @@ const Screen6 = () => {
                                         {/* Accuracy */}
                                         <td className="px-6 py-4">
                                             <div className={`${accuracyNum < 70 ? 'bg-red-50' : 'bg-green-100'} rounded px-2 py-1 relative`}>
-                                                <div className="text-green-800 font-semibold">{s.accuracy}%</div>
+                                                <div className="text-green-800 font-semibold">{s.accuracy}</div>
                                                 <div className={`h-1 ${s.score < 130 ? " bg-red-300 " : 'bg-violet-300 '}rounded mt-1`}>
                                                     <div
                                                         className={`h-1 ${accuracyColor} rounded`}
@@ -206,7 +213,7 @@ const Screen6 = () => {
                             })}
 
                             {/* Overall row remains unchanged */}
-                            <tr className="border-t bg-gray-50 font-bold text-gray-900">
+                            {/* <tr className="border-t bg-gray-50 font-bold text-gray-900">
                                 <td className="px-6 py-4">Overall</td>
                                 <td className="px-6 py-4">
                                     <div className="text-purple-800">
@@ -218,12 +225,12 @@ const Screen6 = () => {
                                     {performance.attempted.value} <span className="text-gray-500 font-normal">/ {performance.attempted.max}</span>
                                 </td>
                                 <td className="px-6 py-4">
-                                    {performance.accuracy}%
+                                    {performance.accuracy}
                                 </td>
                                 <td className="px-6 py-4">
                                     {performance.time || sections[0]?.time} <span className="text-gray-500">/ {testData && testData?.test_detail?.time} min</span>
                                 </td>
-                            </tr>
+                            </tr> */}
                         </tbody>
                     </table>
                 </div>
@@ -263,6 +270,7 @@ const Screen6 = () => {
                     </table>
                 </div>
 
+                <LeaderBoardTable data={testData && testData?.leaderboard || []} />
 
 
                 <div className='my-3 w-full flex items-center justify-center'>

@@ -1,53 +1,32 @@
-import { Menu } from 'lucide-react';
-import { ChevronDown, Search } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../utils/auth';
 import { useDispatch } from 'react-redux';
 import { logoutSlice } from '../redux/authSlice';
 import { useEffect, useState } from 'react';
 import { IoMdHome } from 'react-icons/io';
-import { clearUserData, getUserDataDecrypted } from '../helpers/userStorage';
+import { clearUserData } from '../helpers/userStorage';
 
-const Header = ({ toggle }) => {
-  const dispatch = useDispatch()
-  const nav = useNavigate()
-  const [logoutLoading, setLogoutLogin] = useState(false)
+const Header = () => {
+  const dispatch = useDispatch();
+  const nav = useNavigate();
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const [auth, setAuth] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
-
-
-
-
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = async () => {
-
     try {
-      setLogoutLogin(true)
-      const res = await dispatch(logoutSlice()).unwrap();
-      if (res.status_code == 200) {
-        await clearUserData();
-        nav('/login')
-      } else if (res.status_code == 401) {
-        nav('/login')
-        await clearUserData()
-      } else {
-        nav('/login')
-        await clearUserData()
-
-
-      }
-
-      setLogoutLogin(false)
+      setLogoutLoading(true);
+      await dispatch(logoutSlice()).unwrap();
+      await clearUserData();
+      nav('/login');
     } catch (error) {
-      await clearUserData()
-      nav('/login')
+      await clearUserData();
+      nav('/login');
     } finally {
-      setLogoutLogin(false)
-
+      setLogoutLoading(false);
     }
-  }
-
-
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -57,94 +36,98 @@ const Header = ({ toggle }) => {
     checkAuth();
   }, []);
 
-
-
-
   return (
-    <header className="bg-white shadow-md w-full flex justify-between items-center px-4 py-3 md:px-6">
-      {/* Left Section - Logo & Navigation */}
-      <div className="flex items-center gap-6">
-        {/* Mobile Menu Icon */}
-        {/* <button onClick={toggle} className="md:hidden text-gray-700">
-          <Menu size={24} />
-        </button> */}
+    <header className="bg-white shadow-md w-full px-4 py-3 md:px-6 z-50 relative">
+      <div className="flex justify-between items-center">
+        {/* Left Side: Logo + Nav */}
+        <div className="flex items-center gap-4">
+          {/* Mobile Menu Button */}
+          <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-gray-700">
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
 
-        {/* Logo */}
-        <div className="flex items-center space-x-2 cursor-pointer" onClick={() => nav('/')}>
-          <img src="/logo.jpeg" alt="Logo" className="w-6 h-6" />
-          <span className="text-sky-500 text-xl font-bold ">Revision24</span>
+          {/* Logo */}
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => nav('/')}>
+            <img src="/logo.jpeg" alt="Logo" className="w-6 h-6" />
+            <span className="text-sky-500 text-xl font-bold">Revision24</span>
+          </div>
+
+          {/* Desktop Nav */}
+          {auth && (
+            <div className="hidden md:flex gap-4 items-center text-gray-700 font-medium ml-6">
+              <Link to="/" className="hover:text-sky-600">Home</Link>
+              <Link to="/user-dashboard" className="hover:text-sky-600">User Dashboard</Link>
+            </div>
+          )}
         </div>
 
-        {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center space-x-4 text-gray-600 text-sm font-medium">
-          <Link to="/" className="flex items-center gap-1 hover:text-black">
-            <IoMdHome />  Home
+        {/* Right Side: Subscription + Buttons */}
+        <div className="flex items-center space-x-2 md:space-x-4">
+          <Link to="/subscription">
+            <img
+              src="/plain-icon.png"
+              alt="icon"
+              className="h-10 md:h-14 object-cover"
+            />
           </Link>
 
-          {
-            auth && (
-              <Link to="/user-dashboard" >
-                <span className="hover:text-black">User Dashboard</span>
-              </Link>
-            )
-          }
-
-          {/* <span className="hover:text-black">Skill Academy</span> */}
-          {/* <button className="flex items-center gap-1 hover:text-black">
-            Pass <ChevronDown size={14} />
-          </button>
-          <button className="flex items-center gap-1 hover:text-black">
-            More <ChevronDown size={14} />
-          </button> */}
-        </nav>
-      </div>
-
-      {/* Right Section - Search, Translate, Button */}
-      <div className="flex items-center space-x-4">
-        {/* Search Bar */}
-        {/* <div className="hidden md:flex items-center border rounded-md px-2 py-1 bg-white">
-          <input
-            type="text"
-            placeholder="Search"
-            className="outline-none text-sm w-40 md:w-60"
-          />
-          <Search size={18} className="text-gray-500" />
-         
-        </div> */}
-
-        <Link to="/subscription">
-          {/* <span className=" text-sm bg-amber-600 text-white p-2 rounded-sm font-bold">Revision24</span> */}
-          <img src='/plain-icon.png' className='h-16' style={{ objectFit: 'cover' }} />
-        </Link>
-
-        {/* Google Translate Icon Placeholder */}
-        {/* <img src="https://ssl.gstatic.com/translate/favicon.ico" alt="Translate" className="w-5 h-5 hidden md:block" /> */}
-
-        {/* Dropdown Arrow (User/Profile/etc) */}
-        {/* <ChevronDown size={18} className="text-gray-500" /> */}
-
-        {
-          auth ? (
-            <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-4 py-2 rounded-md text-sm font-semibold">
-              {logoutLoading ? "please waite" : " Log out"}
+          {auth ? (
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-semibold"
+            >
+              {logoutLoading ? 'Please wait' : 'Log out'}
             </button>
           ) : (
-            <button onClick={() => nav('/login')} className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-md text-sm font-semibold">
-              {logoutLoading ? "please waite" : "Sign in"}
-            </button>
-          )
-        }
-
-        {
-          !auth && (
-
-            <button onClick={() => nav('/register')} className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-md text-sm font-semibold">
-              {'Sign Up'}
-            </button>
-          )
-        }
-
+            <>
+              <button
+                onClick={() => nav('/login')}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => nav('/register')}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold"
+              >
+                Sign Up
+              </button>
+            </>
+          )}
+        </div>
       </div>
+
+      {/* Mobile Nav (Visible only in mobile) */}
+      {menuOpen && (
+        <nav className="block md:hidden mt-4 bg-white shadow rounded-md py-4 px-6 space-y-3 text-gray-700 text-base font-medium animate-slide-in">
+          <Link to="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+            <IoMdHome /> Home
+          </Link>
+          {auth && (
+            <Link to="/user-dashboard" onClick={() => setMenuOpen(false)}>
+              User Dashboard
+            </Link>
+          )}
+        </nav>
+      )}
+
+      {/* Slide-in animation */}
+      <style jsx>{`
+        .animate-slide-in {
+          animation: slide-in 0.3s ease-out forwards;
+        }
+
+        @keyframes slide-in {
+          0% {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </header>
   );
 };

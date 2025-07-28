@@ -35,6 +35,7 @@ const TestPagesPage = () => {
 
     const loadUserData = async () => {
         const user = await getUserDataDecrypted();
+        // console.log("user infon print ", user)
         setSubscribe(user.subscription_status)
 
     };
@@ -381,7 +382,63 @@ const TestPagesPage = () => {
                                                     )
                                                 )
                                             )
-                                        ) : (
+                                        ) : !subscribe  && test.purchase_type === 'free'? (
+                                            test.attend_status === '' && isPaused ? (
+                                                // ✅ Show Resume if paused and not started yet
+                                                <button
+                                                    onClick={() => {
+                                                        setShowModal(true);
+                                                        setResumeData(test);
+                                                    }}
+                                                    className="px-6 py-1.5 cursor-pointer rounded font-semibold text-sm bg-gray-500 text-white"
+                                                >
+                                                    Resume
+                                                </button>
+                                            ) : (
+                                                // ✅ Show Start if test is available and not attempted
+                                                isQuizStartAvailable(test.start_date_time) &&
+                                                    !test.attend &&
+                                                    !isPaused &&
+                                                    test.attend_status === '' ? (
+                                                    <button
+                                                        onClick={() => fetchTestSeriesDetails(test)}
+                                                        className="px-6 py-1.5 cursor-pointer rounded font-semibold text-sm bg-blue-500 text-white"
+                                                    >
+                                                        Start
+                                                    </button>
+                                                ) : (
+                                                    // ✅ Show Result if test is completed
+                                                    test.attend && test.attend_status === 'done' ? (
+                                                        <button
+                                                            onClick={() =>
+                                                                nav('/analysis', {
+                                                                    state: {
+                                                                        testId: test.id,
+                                                                        testInfo: test,
+                                                                        userData: userInfo,
+                                                                    },
+                                                                })
+                                                            }
+                                                            className="px-6 py-1.5 cursor-pointer rounded font-semibold text-sm bg-yellow-500 text-white"
+                                                        >
+                                                            Result
+                                                        </button>
+                                                    ) : (
+                                                        // ✅ Show Available On button if not available yet
+                                                        <button
+                                                            onClick={() => setShowAlert(true)}
+                                                            className="px-6 py-1.5 cursor-pointer rounded font-semibold text-sm bg-gray-300"
+                                                        >
+                                                            Available on {formatStartDateTime(test.start_date_time)}
+                                                        </button>
+                                                    )
+                                                )
+                                            )
+                                        ):
+                                        
+                                        
+                                        
+                                        (
                                             // ✅ Show Buy Now if not subscribed
                                             <button
                                                 onClick={() => setShowAlert(true)}
