@@ -5,7 +5,7 @@ import SwiperSlider from './SwiperSlider';
 const HeroBanner = ({ banner }) => {
     return (
         <section className="w-full bg-gradient-to-b from-white to-blue-50">
-            <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-16 flex flex-col md:flex-row items-center justify-between gap-10">
+            <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-16 flex flex-col-reverse md:flex-row items-center justify-between gap-10">
                 {/* Left Content */}
                 <div className="w-full md:w-1/2 text-center md:text-left">
                     <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800 leading-tight">

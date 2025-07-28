@@ -36,13 +36,14 @@ import PrivacyPolicy from './pages/PrivacyPolicyPage';
 import RefundPolicy from './pages/RefundPolicyPage';
 import Clarity from '@microsoft/clarity';
 import NotFoundPage from './pages/NotFoundPage';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   Clarity.init("sjskd9cztm")
   return (
     <Router>
+        <ScrollToTop />
       <Routes>
-
         {/* ALWAYS ACCESSIBLE ROUTE */}
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutUsPage />} />

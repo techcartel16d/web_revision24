@@ -23,7 +23,7 @@ const SwiperSlider = ({ banner }) => {
               src={item.image}
               alt={`Slide ${idx + 1}`}
               className="w-full 
-                         h-60 sm:h-56 md:h-72 lg:h-60 xl:h-[350px] 
+                         h-40 sm:h-56 md:h-72 lg:h-80 xl:h-[350px] 
                          object-cover rounded-xl"
             />
           </SwiperSlide>

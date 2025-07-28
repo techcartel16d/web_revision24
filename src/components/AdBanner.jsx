@@ -18,7 +18,7 @@ const AdBanner = ({
 
   return (
     <div
-      className={`fixed inset-0 z-40 flex items-center justify-center bg-[rgba(0,0,0,0.5)] ${className}`}
+      className={`fixed inset-0 z-99999 flex items-center justify-center bg-[rgba(0,0,0,0.5)] ${className}`}
     >
       <div className="relative max-w-[90vw] sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px] w-full p-4">
         {/* ❌ Close button */}

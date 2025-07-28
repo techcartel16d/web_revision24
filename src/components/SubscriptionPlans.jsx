@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../utils/auth';
 
 const SubscriptionPlans = ({ userInfo }) => {
+    // console.log("user info", userInfo)
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [subscriptionData, setSubscriptionData] = useState([]);
@@ -17,7 +18,8 @@ const SubscriptionPlans = ({ userInfo }) => {
         try {
             setIsLoading(true);
             const res = await dispatch(getSubscriptionSlice()).unwrap();
-            if (res.status_code === 200) {
+            // console.log("plan", res)
+            if (res.status_code == 200) {
                 setSubscriptionData(res.data.plus.details);
                 setPlanId(res.data.plus.id);
                 setBenefitsHTML(res.data.plus.benefits);
@@ -78,6 +80,8 @@ const SubscriptionPlans = ({ userInfo }) => {
         getSubscription();
     }, []);
 
+    
+
     return (
         <section className="py-12 px-4 bg-gray-100">
             <h1 className="text-center text-3xl sm:text-4xl md:text-5xl font-bold text-blue-600 mb-10 sm:mb-16">
@@ -89,8 +93,9 @@ const SubscriptionPlans = ({ userInfo }) => {
             ) : (
                 <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 px-2">
                     {subscriptionData.map((plan, idx) => {
-                        const isActivePlain = userInfo?.subscription_details?.subscription_name === plan.subscription_name;
-
+                        const isActivePlain = userInfo?.subscription_details?.some(
+                            (sub) => sub.subscription_name === plan.subscription_name
+                        );
                         return (
                             <div
                                 key={idx}

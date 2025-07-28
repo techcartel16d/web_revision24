@@ -34,7 +34,7 @@ export default function ExamSelector({ category }) {
 
     return (
         <div className="p-4 max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold mb-4">Choose your exam</h2>
+            <h2 className="text-2xl font-bold mb-4">Exam Category</h2>
 
             {/* <div className="flex flex-wrap gap-3 mb-6">
                 {category && category.map((cate) => (

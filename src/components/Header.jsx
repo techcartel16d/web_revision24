@@ -37,7 +37,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="bg-white shadow-md w-full px-4 py-3 md:px-6 z-50 relative">
+    <header className="bg-white shadow-md w-full px-4 py-3 md:px-6  relative">
       <div className="flex justify-between items-center">
         {/* Left Side: Logo + Nav */}
         <div className="flex items-center gap-4">
@@ -49,7 +49,8 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center space-x-2 cursor-pointer" onClick={() => nav('/')}>
             <img src="/logo.jpeg" alt="Logo" className="w-6 h-6" />
-            <span className="text-sky-500 text-xl font-bold">Revision24</span>
+            <span className="text-sky-500 text-xs md:text-sm lg:text-xl font-bold">Revision24</span>
+
           </div>
 
           {/* Desktop Nav */}
@@ -62,19 +63,19 @@ const Header = () => {
         </div>
 
         {/* Right Side: Subscription + Buttons */}
-        <div className="flex items-center space-x-2 md:space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
           <Link to="/subscription">
             <img
               src="/plain-icon.png"
               alt="icon"
-              className="h-10 md:h-14 object-cover"
+              className="h-8 sm:h-10 md:h-14 object-cover"
             />
           </Link>
 
           {auth ? (
             <button
               onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-semibold"
+              className="bg-red-500 hover:bg-red-600 text-white px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-semibold"
             >
               {logoutLoading ? 'Please wait' : 'Log out'}
             </button>
@@ -82,13 +83,13 @@ const Header = () => {
             <>
               <button
                 onClick={() => nav('/login')}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-semibold"
               >
                 Sign In
               </button>
               <button
                 onClick={() => nav('/register')}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-semibold"
               >
                 Sign Up
               </button>
@@ -111,23 +112,7 @@ const Header = () => {
         </nav>
       )}
 
-      {/* Slide-in animation */}
-      <style jsx>{`
-        .animate-slide-in {
-          animation: slide-in 0.3s ease-out forwards;
-        }
 
-        @keyframes slide-in {
-          0% {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </header>
   );
 };
