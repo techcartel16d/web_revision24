@@ -129,11 +129,14 @@
   }
 }
 
-.math-content {
+.math-renderer-content {
+  font-size: 1.05rem;
+  font-family: 'Noto Sans Devanagari', 'Times New Roman', serif;
+  line-height: 1.8;
   text-align: left;
-  line-height: 1.6;
-  font-size: 1.1rem;
-  word-spacing: normal;
-  letter-spacing: 10;
-  /* font-family: 'Times New Roman', serif; */
+  white-space: normal;
+}
+
+.math-renderer-content p {
+  margin-bottom: 0.9rem;
 }

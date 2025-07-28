@@ -105,6 +105,7 @@ const Screen7 = () => {
   const fetchUserSolution = async () => {
     try {
       const res = await dispatch(fetchUserTestSeriesSolution(state?.testData?.my_detail?.test_id)).unwrap();
+      // console.log("res", res)
 
       if (res.status_code === 200) {
         setQuestionsState(res.data.all_question_list);

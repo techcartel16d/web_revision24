@@ -4,18 +4,21 @@ const MathRenderer = ({ text }) => {
   const ref = useRef(null);
 
   useEffect(() => {
-    if (ref.current && window.MathJax) {
+    if (ref.current) {
       ref.current.innerHTML = text;
-      window.MathJax.typesetPromise([ref.current]).catch((err) =>
-        console.error('MathJax render error:', err)
-      );
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([ref.current]).catch((err) =>
+          console.error('MathJax render error:', err)
+        );
+      }
     }
   }, [text]);
 
   return (
     <div
       ref={ref}
-      className="math-content"
+      className="math-renderer-content"
     />
   );
 };
