@@ -5,6 +5,9 @@ import Footer from "../components/Footer";
 import { FaPhoneSquareAlt, FaUserAlt, FaWhatsappSquare } from "react-icons/fa";
 import { getTransactionSlice } from "../redux/HomeSlice";
 import { useDispatch } from "react-redux";
+import DataTable from "react-data-table-component";
+import { IoLogoWhatsapp } from "react-icons/io";
+import { IoCall } from "react-icons/io5";
 
 const UserDashboard = () => {
   const dispatch = useDispatch();
@@ -12,7 +15,8 @@ const UserDashboard = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [timeLeft, setTimeLeft] = useState(null);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 10; // Or any number you set for pagination
   const loadUserData = async () => {
     const user = await getUserDataDecrypted();
     setUserInfo(user);
@@ -83,6 +87,61 @@ const UserDashboard = () => {
     return () => clearInterval(interval);
   }, [userInfo]);
 
+
+  //  Define columns
+  const columns = [
+    {
+      name: '#',
+      cell: (row, index, column, id) => (
+        (currentPage - 1) * perPage + index + 1
+      ),
+      width: '60px',
+    },
+    {
+      name: 'Date',
+      selector: row =>
+        new Date(row.created_at).toLocaleDateString('en-IN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }),
+      sortable: true,
+    },
+    {
+      name: 'Order Id',
+      selector: row => row.order_id,
+      sortable: true,
+    },
+    {
+      name: 'Payment Id',
+      selector: row => row.payment_id,
+      sortable: true,
+    },
+    {
+      name: 'Amount',
+      selector: row => `₹${parseFloat(row.amount).toFixed(2)}`,
+      sortable: true,
+      cell: row => <span className="text-green-600 font-bold">₹{parseFloat(row.amount).toFixed(2)}</span>,
+    },
+    {
+      name: 'Description',
+      selector: row => getTransactionDescription(row),
+    },
+    {
+      name: 'Status',
+      selector: row => row.paying_status,
+      cell: row => (
+        <div
+          className={`p-2 text-white text-center rounded-sm ${row.paying_status === 'true' ? 'bg-green-500' : 'bg-red-500'
+            }`}
+        >
+          {row.paying_status === 'true' ? 'Success' : 'Failed'}
+        </div>
+      ),
+      sortable: true,
+    },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -105,11 +164,10 @@ const UserDashboard = () => {
                     📦 Subscription Status
                   </h2>
                   <span
-                    className={`text-sm font-medium px-3 py-1 rounded-full ${
-                      userInfo.subscription_status
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
+                    className={`text-sm font-medium px-3 py-1 rounded-full ${userInfo.subscription_status
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                      }`}
                   >
                     {userInfo.subscription_status ? "Active" : "Inactive"}
                   </span>
@@ -277,7 +335,7 @@ const UserDashboard = () => {
                         href="tel:+917822936229"
                         className="px-4 py-2  rounded-lg font-semibold flex justify-center items-center gap-2 w-1/2 bg-blue-500 text-white"
                       >
-                        <FaPhoneSquareAlt  /> Call
+                        <IoCall className="text-2xl" /> Call
                       </a>
 
                       {/* 💬 WhatsApp Button */}
@@ -287,7 +345,7 @@ const UserDashboard = () => {
                         rel="noopener noreferrer"
                         className="px-4 py-2 rounded-lg font-semibold flex justify-center items-center gap-2 w-1/2 bg-green-500 text-white"
                       >
-                        <FaWhatsappSquare /> WhatsApp
+                        <IoLogoWhatsapp className="text-xl" /> WhatsApp
                       </a>
                     </div>
                   </div>
@@ -299,7 +357,7 @@ const UserDashboard = () => {
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">
                   💰 Transaction History
                 </h2>
-                <div className="overflow-x-auto">
+                {/* <div className="overflow-x-auto">
                   <table className="w-full text-sm text-left border">
                     <thead className="bg-gray-100">
                       <tr>
@@ -359,7 +417,17 @@ const UserDashboard = () => {
                       )}
                     </tbody>
                   </table>
-                </div>
+                </div> */}
+
+                <DataTable
+                  columns={columns}
+                  data={transactions}
+                  pagination
+                  highlightOnHover
+                  onChangePage={(page) => setCurrentPage(page)}
+                  striped
+                  noDataComponent="No Transactions Found"
+                />
               </div>
             </>
           )}

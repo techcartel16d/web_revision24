@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { MdOutlineGTranslate } from "react-icons/md";
 const TestSeriesViewer = ({ testSeriesData }) => {
   const nav = useNavigate();
   const categories = Object.keys(testSeriesData);
+  // console.log("testSeriesData", testSeriesData)
   const [selectedCategory, setSelectedCategory] = useState(categories[1] || null);
 
   return (
@@ -27,7 +28,8 @@ const TestSeriesViewer = ({ testSeriesData }) => {
                     className="w-15 h-15  object-cover"
                   />
                   <span className="absolute top-3 right-3 bg-white text-yellow-500 text-xs font-semibold px-2 py-0.5 rounded-full shadow">
-                    ⚡ {item.purchase_or_not ? '' : 'paid'}
+                    ⚡
+                    {/* {item.purchase_or_not ? '' : 'paid'} */}
                   </span>
                 </div>
 
@@ -38,11 +40,11 @@ const TestSeriesViewer = ({ testSeriesData }) => {
                   </h3>
                   <p className="text-sm text-gray-600 mb-1">
                     {item.total_assign_test} Total Tests{' '}
-                    <span className="text-green-600 font-semibold">| {item.free_test || 4} Free Tests</span>
+                    {/* <span className="text-green-600 font-semibold">| {item.free_test || 4} Free Tests</span> */}
                   </p>
 
-                  <p className="text-xs text-blue-600 mb-2">
-                    {item.language || 'English,Hindi'}
+                  <p className="text-xs text-blue-600  flex item-center justify-start gap-2">
+                    <MdOutlineGTranslate className='text-xl' />{item.language || 'English,Hindi'}
                   </p>
 
                   {/* Features */}

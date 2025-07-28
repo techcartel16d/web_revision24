@@ -35,6 +35,7 @@ import SetNewPasswordPage from './pages/authPage/forgotpage/SetNewPasswordPage';
 import PrivacyPolicy from './pages/PrivacyPolicyPage';
 import RefundPolicy from './pages/RefundPolicyPage';
 import Clarity from '@microsoft/clarity';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   Clarity.init("sjskd9cztm")
@@ -92,7 +93,8 @@ function App() {
         <Route path="/scc-mock-test" element={<ProtectedRoute><Screen5 /></ProtectedRoute>} />
         <Route path="/test-solutions" element={<ProtectedRoute><Screen7 /></ProtectedRoute>} />
 
-
+        {/* ❗️ Catch-all route outside PublicRoute */}
+        <Route path="*" element={<NotFoundPage />} />
 
       </Routes>
     </Router>

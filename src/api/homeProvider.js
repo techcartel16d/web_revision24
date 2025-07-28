@@ -4,7 +4,7 @@ import axios from "axios";
 import api from "./axiosConfig";
 const HomeProvider = {
 
-    homeData: async (id) => {
+    homeData: async (id = '') => {
         // console.log("id---->", id)
         try {
             const token = localStorage.getItem('token');
@@ -164,8 +164,6 @@ const HomeProvider = {
     },
     getTransaction: async () => {
         try {
-       
-
             const response = await api.get(`/my-transactions`);
             return response.data;
         } catch (error) {

@@ -14,7 +14,7 @@ const QuestionGridModal = ({
 }) => {
     const [selectedPartIndex, setSelectedPartIndex] = useState(0);
     const [userChangedPart, setUserChangedPart] = useState(false); // 👈 track manual tab change
-
+console.log("optionSelected", optionSelected)
     // 🔁 Auto update selectedPartIndex when currentQuestion changes
     useEffect(() => {
         if (!userChangedPart) {

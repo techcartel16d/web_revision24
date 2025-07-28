@@ -5,7 +5,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../utils/auth';
 
-const SubscriptionPlans = () => {
+const SubscriptionPlans = ({ userInfo }) => {
+    // console.log("userInfo", userInfo)
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [subscriptionData, setSubscriptionData] = useState([]);
@@ -106,41 +107,71 @@ const SubscriptionPlans = () => {
                 <div className="text-center text-xl text-gray-600">Loading Plans...</div>
             ) : (
                 <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
-                    {subscriptionData.map((plan, idx) => (
-                        <div
-                            key={idx}
-                            className="rounded-2xl shadow-lg bg-white p-6 md:p-8 hover:scale-105 transition-all duration-300"
-                        >
-                          
-                            <h3 className="text-xl font-bold text-blue-800 mb-2 uppercase flex items-center justify-between">
-                                {plan.subscription_name}
-                                  <img src="/offer_tag.png" alt="" className='w-[100px]' />
-                            </h3>
-                            <div className="flex items-center gap-2 text-2xl font-bold text-green-600 mb-1">
-                                ₹{plan.offer_price}
-                                <span className="line-through text-sm text-red-400">₹{plan.price}</span>
-                            </div>
-                            <p className="text-sm text-gray-500 mb-4">{plan.duration} months</p>
+                    {subscriptionData.map((plan, idx) => {
+                        const isActivePlain =
+                            userInfo?.subscription_details?.subscription_name ==
+                            plan.subscription_name;
 
+                        return (
                             <div
-                                className="text-sm text-gray-700 mb-6 space-y-2"
-                                dangerouslySetInnerHTML={{ __html: benefitsHTML }}
-                            />
+                                key={idx}
+                                className={`rounded-2xl shadow-lg p-6 md:p-8 hover:scale-105 transition-all duration-300 ${isActivePlain ? 'text-white' : 'bg-white'
+                                    }`}
+                                style={
+                                    isActivePlain
+                                        ? {
+                                            background: 'linear-gradient(135deg, #0a1f44, #112b63)',
+                                        }
+                                        : {}
+                                }
+                            >
+                                <h3 className="text-xl font-bold text-yellow-400 mb-2 uppercase  flex items-center justify-between">
+                                    {plan.subscription_name}
+                                    <img src="/offer_tag.png" alt="" className="w-[100px]" />
+                                </h3>
+                                <div className="flex items-center gap-2 text-2xl font-bold text-green-300 mb-1">
+                                    ₹{plan.offer_price}
+                                    <span className="line-through text-sm text-red-300">
+                                        ₹{plan.price}
+                                    </span>
+                                </div>
+                                <p className="text-sm mb-4 text-gray-200">{plan.duration} months</p>
 
-                            {
-                                auth ? (
-                                    <button onClick={() => checkOutPay(plan)} className="w-full mt-auto cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200">
-                                        Buy Now
-                                    </button>
+                                <div
+                                    className="text-sm mb-6 space-y-2"
+                                    style={{ color: isActivePlain ? '#e2e8f0' : '#374151' }} // tailwind: slate-200 vs gray-700
+                                    dangerouslySetInnerHTML={{ __html: benefitsHTML }}
+                                />
+
+                                {auth ? (
+                                    isActivePlain ? (
+                                        <button
+                                            className="w-full mt-auto cursor-pointer text-white font-semibold py-2 rounded-lg transition-all duration-200"
+                                            style={{
+                                                background: 'linear-gradient(135deg, #3b5998, #5b7db1)',
+                                            }}
+                                        >
+                                            Active Plan
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => checkOutPay(plan)}
+                                            className="w-full mt-auto cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200"
+                                        >
+                                            Buy Now
+                                        </button>
+                                    )
                                 ) : (
-                                    <button onClick={() => nav('/login')} className="w-full mt-auto cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200">
+                                    <button
+                                        onClick={() => nav('/login')}
+                                        className="w-full mt-auto cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-all duration-200"
+                                    >
                                         Buy Now
                                     </button>
-                                )
-                            }
-
-                        </div>
-                    ))}
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
             )}
         </section>

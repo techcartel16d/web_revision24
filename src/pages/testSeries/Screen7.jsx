@@ -5,6 +5,9 @@ import { attendQuestionSubmitSlice, fetchUserTestSeriesSolution, getSingleCatego
 
 import SolutionsGrideModal from '../../components/SolutionsGrideModal';
 import { getUserDataDecrypted } from '../../helpers/userStorage';
+import { BlockMath, InlineMath } from 'react-katex';
+import 'katex/dist/katex.min.css';
+import stripLatex from '../../helpers/cleanMathTags';
 
 
 
@@ -56,7 +59,7 @@ const Screen7 = () => {
   }
   const [wrongQuestions, setWrongQuestions] = useState([]);
 
- 
+
 
 
   const enterFullScreen = () => {
@@ -123,17 +126,17 @@ const Screen7 = () => {
     }
   };
 
-      // LOAD. USER INFO
-      const loadUserData = async () => {
-          const user = await getUserDataDecrypted();
-          // console.log("user info", user)
-          setUserInfo(user);
-      };
-  
+  // LOAD. USER INFO
+  const loadUserData = async () => {
+    const user = await getUserDataDecrypted();
+    // console.log("user info", user)
+    setUserInfo(user);
+  };
 
-      useEffect(() => {
-          loadUserData();
-      }, []);
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
 
 
 
@@ -390,7 +393,7 @@ const Screen7 = () => {
           skippedQuestions={skippedQuestions}
           setCurrentQuestion={(index) => setCurrentQuestion(index)}
           onClose={() => setShowModal(false)}
-          onProceed={() => {}}
+          onProceed={() => { }}
         />
 
         {/* Right Side - Question Panel */}
@@ -420,10 +423,14 @@ const Screen7 = () => {
           </div>
 
           {/* Question */}
-          <div
+          {/* <div
             className="mb-2 text-lg leading-relaxed"
             dangerouslySetInnerHTML={{ __html: questionText }}
-          />
+          /> */}
+
+          <div className="mb-2 text-sm">
+            <BlockMath math={stripLatex(questionText)} />
+          </div>
 
           {/* update  */}
           {Object.entries(options).map(([key, value]) => {
@@ -444,7 +451,10 @@ const Screen7 = () => {
                 key={key}
                 className={`border-2 p-3 mb-2 rounded ${optionClass}`}
               >
-                <strong>{key.toUpperCase()}.</strong> {renderOption(value)}
+                {/* <strong>{key.toUpperCase()}.</strong> {renderOption(value)} */}
+                <span className="option-content text-sm">
+                  <InlineMath math={stripLatex(value)} />
+                </span>
               </div>
             );
           })}

@@ -106,56 +106,66 @@ const HomePage = () => {
 
 
   return (
+    loading ? (<div className="p-4-400 text-red-500 w-full h-screen flex items-center justify-center">
+      <div className="fading-spinner">
+        {[...Array(12)].map((_, i) => (
+          <div key={i} className={`bar bar${i + 1}`}></div>
+        ))}
+      </div>
+    </div>) : (
+      <div className='w-full'>
 
-    <div className='w-full'>
-      <Header />
-      {
-        homeData && (
+        <Header />
+        {
+          homeData && (
 
-          <HeroBanner banner={homeData?.banner} />
-        )
-      }
-
-
-      <AdBanner
-        imageUrl={ad}
-        linkUrl="/subscription"
-      />
+            <HeroBanner banner={homeData?.banner} />
+          )
+        }
 
 
-      {
-        homeData && (
-          <ExamSelector category={homeData?.exam_category} />
+        <AdBanner
+          imageUrl={ad}
+          linkUrl="/subscription"
+        />
 
-        )
-      }
-      {/* {
+
+        {
+          homeData && (
+            <ExamSelector category={homeData?.exam_category} />
+
+          )
+        }
+        {/* {
         homeData && (
           <TestSeriesViewer testSeriesData={homeData?.test_series_free} />
 
         )
       } */}
-      {
-        homeData && (
-          <TestSeriesViewer testSeriesData={homeData?.test_series_paid} />
+        {
+          homeData && (
+            <TestSeriesViewer testSeriesData={homeData?.test_series_paid} />
 
-        )
-      }
-
-
-      {
-        userInfo && !userInfo?.subscription_status && (
-
-          <SubscriptionPlans />
-        )
-      }
+          )
+        }
 
 
+        {
+          userInfo && !userInfo?.subscription_status && (
+
+            <SubscriptionPlans />
+          )
+        }
 
 
-      {/* <SubscriptionModal /> */}
-      <Footer />
-    </div>
+
+
+        {/* <SubscriptionModal /> */}
+        <Footer />
+      </div>
+    )
+
+
   );
 };
 
