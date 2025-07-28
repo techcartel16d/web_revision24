@@ -23,21 +23,20 @@ const HeroBanner = ({ banner }) => {
                         <div className="text-sm text-gray-600 whitespace-nowrap">Available soon</div>
 
                         {/* Store Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3">
-                            <a
-                                href="#"
-                                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition whitespace-nowrap"
+                        <div className="flex flex-col sm:flex-row gap-3 w-full">
+                            <span
+                                className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition whitespace-nowrap w-full sm:w-auto"
                             >
                                 <FaGooglePlay size={20} />
                                 <span>Google Play</span>
-                            </a>
-                            <a
-                                href="#"
-                                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition whitespace-nowrap"
+                            </span>
+
+                            <span
+                                className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition whitespace-nowrap w-full sm:w-auto"
                             >
                                 <FaApple size={20} />
                                 <span>App Store</span>
-                            </a>
+                            </span>
                         </div>
                     </div>
                 </div>

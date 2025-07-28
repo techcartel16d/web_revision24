@@ -8,6 +8,7 @@ import { getUserDataDecrypted } from '../../helpers/userStorage';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import stripLatex from '../../helpers/cleanMathTags';
+import MathRenderer from '../../utils/MathRenderer';
 
 
 
@@ -29,7 +30,7 @@ const Screen7 = () => {
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [spentTime, setSpentTime] = useState([]);
   const [currentQuestionId, setCurrentQuestionId] = useState(''); // Example
-  const [language, setLanguage] = useState('en')
+  const [language, setLanguage] = useState('hi')
   const [showPauseModal, setShowPauseModal] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
   const [userInfo, setUserInfo] = useState(null)
@@ -275,10 +276,14 @@ const Screen7 = () => {
       .replace(/<img /gi, '<img style="max-width: 100%; height: auto; max-height: 200px;" ');
 
     return (
-      <div
-        className="mt-4 border-t pt-4 text-sm"
-        dangerouslySetInnerHTML={{ __html: cleaned }}
-      />
+      // <div
+      //   className="mt-4 border-t pt-4 text-sm"
+      //   dangerouslySetInnerHTML={{ __html: cleaned }}
+      // />
+       <div className='mt-4'>
+
+      <MathRenderer text={cleaned} />
+       </div>
     );
   }
 
@@ -588,10 +593,14 @@ const Screen7 = () => {
         </div>
       </div>
 
-      <div
+      {/* <div
         className="mb-3 text-base leading-relaxed"
         dangerouslySetInnerHTML={{ __html: questionText }}
-      />
+      /> */}
+      <div className='mb-4'>
+
+      <MathRenderer text={questionText}  />
+      </div>
 
       {/* Options */}
       {Object.entries(options).map(([key, value]) => {
@@ -610,9 +619,10 @@ const Screen7 = () => {
         return (
           <div
             key={key}
-            className={`border-2 p-3 mb-2 rounded ${optionClass}`}
+            className={`border-2 p-3 mb-2 rounded flex items-center gap-1.5 ${optionClass}`}
           >
-            <strong>{key.toUpperCase()}.</strong> {renderOption(value)}
+            <strong>{key.toUpperCase()}.</strong> <MathRenderer text={value}  />
+            
           </div>
         );
       })}

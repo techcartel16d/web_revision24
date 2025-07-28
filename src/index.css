@@ -128,3 +128,12 @@
     transform: translateY(0);
   }
 }
+
+.math-content {
+  text-align: left;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  word-spacing: normal;
+  letter-spacing: 10;
+  /* font-family: 'Times New Roman', serif; */
+}

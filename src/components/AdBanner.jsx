@@ -24,7 +24,7 @@ const AdBanner = ({
         {/* ❌ Close button */}
         <button
           onClick={() => setShowAd(false)}
-          className="absolute -top-4 -right-4 bg-white text-black rounded-full shadow h-8 w-8 font-bold flex items-center justify-center hover:bg-red-500 hover:text-white transition"
+          className="absolute top-3 right-2 bg-white text-black rounded-full shadow h-6 w-6 font-bold flex items-center justify-center hover:bg-red-500 hover:text-white transition"
         >
           ×
         </button>

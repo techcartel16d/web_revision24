@@ -300,8 +300,8 @@ const UserDashboard = () => {
                             </span>
 
                             <div className="flex items-center gap-3 mb-4">
-                              <div className="w-12 h-12 bg-orange-300 rounded-xl flex items-center justify-center text-xl font-bold text-white">
-                                {sub.subscription_name[0]}
+                              <div className="w-12 h-12  rounded-xl flex items-center justify-center text-xl font-bold text-white">
+                               <img src="/logo.jpeg" className="rounded-md" />
                               </div>
                               <div>
                                 <h2 className="text-lg font-semibold capitalize">

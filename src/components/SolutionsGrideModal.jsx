@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { IoMdClose } from 'react-icons/io';
 
 const SolutionsGrideModal = ({
     wrongQuestion = [],
@@ -15,6 +16,7 @@ const SolutionsGrideModal = ({
 }) => {
     const [selectedPartIndex, setSelectedPartIndex] = useState(0);
     const [userChangedPart, setUserChangedPart] = useState(false); // 👈 track manual tab change
+
 
     // 🔁 Auto update selectedPartIndex when currentQuestion changes
     useEffect(() => {
@@ -140,8 +142,8 @@ const SolutionsGrideModal = ({
                         <button
                             key={index}
                             className={`px-3 py-1 text-xs font-semibold rounded ${selectedPartIndex === index
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-gray-700 text-white'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-700 text-white'
                                 }`}
                             onClick={() => {
                                 setSelectedPartIndex(index);
@@ -164,7 +166,7 @@ const SolutionsGrideModal = ({
                             const globalIndex = groupedQuestions
                                 .slice(0, selectedPartIndex)
                                 .reduce((acc, g) => acc + g.questions.length, 0) + qIndex;
-
+                            const wrong = wrongQuestion.includes(q.id)
                             const isMarked = markedForReview.includes(q.id);
                             const isMarkedAns = markedForReviewAns.includes(q.id);
                             const isSelected = optionSelected.includes(q.id);
@@ -172,14 +174,15 @@ const SolutionsGrideModal = ({
 
                             let bg = 'bg-blue-400'; // default = not attempted
                             if (isSelected) bg = 'bg-green-600';
-                            if (isMarkedAns) bg = 'bg-yellow-300 border-2 border-green-500';
+                            if (isMarkedAns) bg = 'bg-yellow-300 border-2 border-black';
                             else if (isMarked) bg = 'bg-red-400';
                             else if (isSkipped) bg = 'bg-red-600';
+                            else if (wrong) bg = "bg-gray-600"
 
                             return (
                                 <button
                                     key={q.id}
-                                    className={`w-10 h-10 text-xs rounded text-white font-bold ${bg} border ${currentQuestion === globalIndex ? 'border-white' : 'border-none'
+                                    className={`w-10 h-10 text-xs rounded text-white font-bold relative ${bg} ${wrong && 'opacity-20'} border-2 ${currentQuestion === globalIndex ? 'border-slate-700' : 'border-none'
                                         }`}
                                     onClick={() => {
                                         setCurrentQuestion(globalIndex);
@@ -187,6 +190,23 @@ const SolutionsGrideModal = ({
                                     }}
                                 >
                                     {globalIndex + 1}
+                                    {
+                                        wrong && (
+                                            <div className='w-full h-full bg-gray-500' style={{
+                                                position: 'absolute',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                top:0,
+                                                left:0,
+                                            
+
+                                            }}>
+                                                <IoMdClose className='text-5xl text-gray-100' />
+                                            </div>
+                                        )
+                                    }
+
                                 </button>
                             );
                         })}
@@ -202,7 +222,7 @@ const SolutionsGrideModal = ({
                             <div className="text-right">({optionSelected.length})</div>
 
                             <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-yellow-300 rounded-sm"></div>
+                                <div className="w-4 h-4 bg-gray-600 rounded-sm"></div>
                                 <span>Wrong Answer</span>
                             </div>
                             <div className="text-right">({wrongQuestion.length})</div>

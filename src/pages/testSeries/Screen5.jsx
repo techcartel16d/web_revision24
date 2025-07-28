@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { attendQuestionSubmitSlice, getSingleCategoryPackageTestseriesQuestionSlice } from '../../redux/HomeSlice';
@@ -18,7 +18,8 @@ import ExamInstructionsModal from '../../components/ExamInstructionsModal';
 import SymbolModal from '../../components/SymbolModal';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
-import stripLatex from '../../helpers/cleanMathTags';
+import MathRenderer from '../../utils/MathRenderer';
+
 
 
 
@@ -42,7 +43,7 @@ const Screen5 = () => {
     const [confirmSubmit, setConfirmSubmit] = useState(false)
     const [openModal, setOpenModal] = useState(false); // Open on mount
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const mathContainerRef = useRef(null);
 
 
     const [selectedOptions, setSelectedOptions] = useState({});
@@ -582,12 +583,13 @@ const Screen5 = () => {
 
 
 
-
-
-
     const questionText = language === 'en' ? current.question_english : current.question_hindi;
+    // console.log("question text", questionText)
 
     const totalTimeSpent = Object.values(spentTime).reduce((sum, val) => sum + val, 0);
+
+
+
 
 
 
@@ -952,12 +954,14 @@ const Screen5 = () => {
                             </select>
                         </div>
                     </div>
-                    <div className="mb-2 text-sm" dangerouslySetInnerHTML={{ __html: questionText }} />
+                    {/* <div className="mb-2 text-sm" dangerouslySetInnerHTML={{ __html: questionText }} /> */}
+                   <MathRenderer text={questionText} />
                     <div className="flex flex-col gap-2">
                         {Object.entries(options).map(([key, value]) => (
                             <label key={key} className="flex items-center gap-2">
                                 <input type="radio" name={`question_${current.id}`} value={key} checked={selectedOptions[current.id] === key} onChange={() => handleOptionChange(current.id, key)} />
-                                <span className="option-content text-sm" dangerouslySetInnerHTML={{ __html: value }} />
+                                {/* <span className="option-content text-sm" dangerouslySetInnerHTML={{ __html: value }} /> */}
+                                 <MathRenderer text={value} />
                             </label>
                         ))}
                     </div>

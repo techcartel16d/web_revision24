@@ -6,6 +6,7 @@ import { logoutSlice } from '../redux/authSlice';
 import { useEffect, useState } from 'react';
 import { IoMdHome } from 'react-icons/io';
 import { clearUserData } from '../helpers/userStorage';
+import { MdDashboard } from 'react-icons/md';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -57,7 +58,7 @@ const Header = () => {
           {auth && (
             <div className="hidden md:flex gap-4 items-center text-gray-700 font-medium ml-6">
               <Link to="/" className="hover:text-sky-600">Home</Link>
-              <Link to="/user-dashboard" className="hover:text-sky-600">User Dashboard</Link>
+              <Link to="/user-dashboard" className="hover:text-sky-600"> User Dashboard</Link>
             </div>
           )}
         </div>
@@ -105,8 +106,8 @@ const Header = () => {
             <IoMdHome /> Home
           </Link>
           {auth && (
-            <Link to="/user-dashboard" onClick={() => setMenuOpen(false)}>
-              User Dashboard
+            <Link className='flex items-center gap-2' to="/user-dashboard" onClick={() => setMenuOpen(false)}>
+             <MdDashboard /> User Dashboard
             </Link>
           )}
         </nav>

@@ -28,6 +28,7 @@ const TestPagesPage = () => {
     const [isPuase, setIsPuase] = useState(false)
     const [resumeData, setResumeData] = useState({})
     const [showModal, setShowModal] = useState(false);
+    const [message, setMessage] = useState('')
 
     const [pauseStatusArray, setPauseStatusArray] = useState([]);
 
@@ -97,6 +98,8 @@ const TestPagesPage = () => {
                 // console.log("error", error)
                 // setRefreshing(false);
                 // setLoading(false)
+                setShowAlert(true)
+                setMessage('Login token has expired. Please sign in again to continue.');
                 await clearUserData()
             } finally {
                 // setRefreshing(false);
@@ -382,7 +385,7 @@ const TestPagesPage = () => {
                                                     )
                                                 )
                                             )
-                                        ) : !subscribe  && test.purchase_type === 'free'? (
+                                        ) : !subscribe && test.purchase_type === 'free' ? (
                                             test.attend_status === '' && isPaused ? (
                                                 // ✅ Show Resume if paused and not started yet
                                                 <button
@@ -426,7 +429,13 @@ const TestPagesPage = () => {
                                                     ) : (
                                                         // ✅ Show Available On button if not available yet
                                                         <button
-                                                            onClick={() => setShowAlert(true)}
+                                                            onClick={() => {
+
+                                                                setShowAlert(true)
+                                                                setMessage("Not Available at this time")
+                                                            }
+
+                                                            }
                                                             className="px-6 py-1.5 cursor-pointer rounded font-semibold text-sm bg-gray-300"
                                                         >
                                                             Available on {formatStartDateTime(test.start_date_time)}
@@ -434,19 +443,15 @@ const TestPagesPage = () => {
                                                     )
                                                 )
                                             )
-                                        ):
-                                        
-                                        
-                                        
-                                        (
-                                            // ✅ Show Buy Now if not subscribed
-                                            <button
-                                                onClick={() => setShowAlert(true)}
-                                                className="px-6 py-1.5 cursor-pointer text-white rounded font-semibold text-sm bg-blue-600"
-                                            >
-                                                Buy Now
-                                            </button>
-                                        )
+                                        ) :(
+                                                // ✅ Show Buy Now if not subscribed
+                                                <button
+                                                    onClick={() => setShowAlert(true)}
+                                                    className="px-6 py-1.5 cursor-pointer text-white rounded font-semibold text-sm bg-blue-600"
+                                                >
+                                                    Buy Now
+                                                </button>
+                                            )
                                     }
                                 </div>
                             </div>
@@ -482,9 +487,11 @@ const TestPagesPage = () => {
 
                 <AlertModal
                     isOpen={showAlert}
-                    onClose={() => setShowAlert(false)}
+                    onClose={() => {setShowAlert(false)
+                        nav('/login')
+                    }}
                     // title="Commin"
-                    message="Not Available at this time"
+                    message={message}
                 />
             </div>
             <Footer />

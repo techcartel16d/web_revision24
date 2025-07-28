@@ -119,7 +119,7 @@ const SubscriptionPlans = ({ userInfo }) => {
                                         ₹{plan.price}
                                     </span>
                                 </div>
-                                <p className="text-sm mb-4 text-gray-200">{plan.duration} months</p>
+                                <p className={`text-sm mb-4 ${isActivePlain ? 'text-gray-300' : 'text-gray-600'}`  }>{plan.duration} months</p>
 
                                 <div
                                     className="text-sm sm:text-base mb-6 space-y-2 leading-relaxed"
