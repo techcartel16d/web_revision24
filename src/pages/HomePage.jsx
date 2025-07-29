@@ -1,54 +1,58 @@
 // HomePage.jsx
-import React, { useEffect, useState } from 'react';
-import SwiperSlider from '../components/SwiperSlider';
-import HeroBanner from '../components/HeroBanner';
-import ExamSelector from '../components/ExamSelector';
-import { useDispatch } from 'react-redux';
-import { getSubscriptionSlice, getUserInfoSlice, homePageSlice } from '../redux/HomeSlice';
-import TestSeriesViewer from '../components/TestSeriesViewer';
-import SubscriptionModal from '../components/SubscriptionModal';
-import AboutUs from '../components/AboutUs';
-import SubscriptionPlans from '../components/SubscriptionPlans';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
-import { checkAllEncryptedTestData } from '../helpers/testStorage';
-import { getUserDataDecrypted, saveUserDataEncrypted } from '../helpers/userStorage';
-import AdBanner from '../components/AdBanner';
+import React, { useEffect, useState } from "react";
+import SwiperSlider from "../components/SwiperSlider";
+import HeroBanner from "../components/HeroBanner";
+import ExamSelector from "../components/ExamSelector";
+import { useDispatch } from "react-redux";
+import {
+  getSubscriptionSlice,
+  getUserInfoSlice,
+  homePageSlice,
+} from "../redux/HomeSlice";
+import TestSeriesViewer from "../components/TestSeriesViewer";
+import SubscriptionModal from "../components/SubscriptionModal";
+import AboutUs from "../components/AboutUs";
+import SubscriptionPlans from "../components/SubscriptionPlans";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import { checkAllEncryptedTestData } from "../helpers/testStorage";
+import {
+  getUserDataDecrypted,
+  saveUserDataEncrypted,
+} from "../helpers/userStorage";
+import AdBanner from "../components/AdBanner";
 
 const HomePage = () => {
-
-  const dispatch = useDispatch()
-  const [homeData, setHomeData] = useState(null)
-  const [bannerData, setBannerData] = useState([])
-  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch();
+  const [homeData, setHomeData] = useState(null);
+  const [bannerData, setBannerData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const [ad, setAd] = useState(null)
-
+  const [ad, setAd] = useState(null);
 
   const getHomeData = async (id) => {
     try {
-      setLoading(true)
-      const res = await dispatch(homePageSlice()).unwrap()
+      setLoading(true);
+      const res = await dispatch(homePageSlice()).unwrap();
       // console.log("response", res)
-      setAd(res.data.popup.image)
+      setAd(res.data.popup.image);
 
-      setHomeData(res.data)
+      setHomeData(res.data);
       // console.log("home data in home screen", res.data)
       // storage.set('home_category', JSON.stringify(res.data.exam_category))
       // console.log("home data in home screen", res.data.exam_category)
-      setBannerData(res.data.banner)
-      setLoading(false)
-      setRefreshing(false)
+      setBannerData(res.data.banner);
+      setLoading(false);
+      setRefreshing(false);
     } catch (error) {
-      setLoading(false)
-      setRefreshing(false)
+      setLoading(false);
+      setRefreshing(false);
     } finally {
-      setLoading(false)
-      setRefreshing(false)
+      setLoading(false);
+      setRefreshing(false);
     }
-
-  }
+  };
 
   const loadUserData = async () => {
     const user = await getUserDataDecrypted();
@@ -58,114 +62,69 @@ const HomePage = () => {
 
   const getUserDetails = async () => {
     try {
-      const res = await dispatch(getUserInfoSlice()).unwrap()
+      const res = await dispatch(getUserInfoSlice()).unwrap();
       if (res.status_code == 200) {
         // console.log("response==>", res)
         const userInfo = {
           ...res.data, // user info
           token: res.token, // add token manually if needed
           subscription_status: res.subscription_status,
-          subscription_details: res.subscription_details
+          subscription_details: res.subscription_details,
         };
 
         await saveUserDataEncrypted(userInfo);
       } else {
-
       }
 
       // console.log("response user info==> ", res)
     } catch (error) {
-      console.log("error in get user profile", error)
-
+      console.log("error in get user profile", error);
     }
-  }
-
-
-
-
-
+  };
 
   useEffect(() => {
-    getHomeData()
+    getHomeData();
     // Call this from a dev tool, admin page, or `useEffect`
     checkAllEncryptedTestData();
-    getUserDetails()
-  }, [])
-
-
-
-
-
-
+    getUserDetails();
+  }, []);
 
   useEffect(() => {
     loadUserData();
   }, []);
 
-
-
-
-  return (
-    loading ? (<div className="p-4-400 text-red-500 w-full h-screen flex items-center justify-center">
+  return loading ? (
+    <div className="p-4-400 text-red-500 w-full h-screen flex items-center justify-center">
       <div className="fading-spinner">
         {[...Array(12)].map((_, i) => (
           <div key={i} className={`bar bar${i + 1}`}></div>
         ))}
       </div>
-    </div>) : (
-      <div className='w-full'>
+    </div>
+  ) : (
+    <div className="w-full">
+      <Header />
+      {homeData && <HeroBanner banner={homeData?.banner} />}
 
-        <Header />
-        {
-          homeData && (
-
-            <HeroBanner banner={homeData?.banner} />
-          )
-        }
-
-
-        <AdBanner
-          imageUrl={ad}
-          linkUrl="/subscription"
-        />
+      {/* <AdBanner imageUrl={ad} linkUrl="/subscription" /> */}
+        {homeData && (
+        <TestSeriesViewer testSeriesData={homeData?.test_series_paid} />
+      )}
 
 
-        {
-          homeData && (
-            <ExamSelector category={homeData?.exam_category} />
-
-          )
-        }
-        {/* {
+      {homeData && <ExamSelector category={homeData?.exam_category} />}
+      {/* {
         homeData && (
           <TestSeriesViewer testSeriesData={homeData?.test_series_free} />
 
         )
       } */}
-        {
-          homeData && (
-            <TestSeriesViewer testSeriesData={homeData?.test_series_paid} />
+    
+      {userInfo && !userInfo?.subscription_status && <SubscriptionPlans />}
 
-          )
-        }
-
-
-        {
-          userInfo && !userInfo?.subscription_status && (
-
-            <SubscriptionPlans />
-          )
-        }
-
-
-
-
-        {/* <SubscriptionModal /> */}
-        <Footer />
-      </div>
-    )
-
-
+      {/* <SubscriptionModal /> */}
+      <Footer />
+    </div>
   );
 };
 

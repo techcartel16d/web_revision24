@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaGooglePlay, FaApple, FaWhatsapp, FaAngleRight } from 'react-icons/fa';
 import SwiperSlider from './SwiperSlider';
+import { useNavigate } from 'react-router-dom';
+import { isAuthenticated } from '../utils/auth';
 
 const HeroBanner = ({ banner }) => {
+    const nav = useNavigate();
+    const [auth, setAuth] = useState(false);
+    useEffect(() => {
+        const checkAuth = async () => {
+            const result = await isAuthenticated();
+            setAuth(result);
+        };
+        checkAuth();
+    }, []);
     return (
         <section className="w-full bg-gradient-to-b from-white to-blue-50">
             <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-16 flex flex-col-reverse md:flex-row items-center justify-between gap-10">
@@ -19,11 +30,24 @@ const HeroBanner = ({ banner }) => {
 
                     {/* Download Buttons */}
                     <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 mt-6">
-                        {/* Text */}
-                        <div className="text-sm text-gray-600 whitespace-nowrap">Available soon</div>
+                        {/* CTA Button */}
+                        {
+                            auth ? (<button
+                                className="px-6 py-2 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 capitalize hover:to-red-800 text-white text-sm rounded-md transition whitespace-nowrap"
+                            >
+                                 Click Here To Start Free Test
+                            </button>) : (
+                                <button onClick={() => nav('/register')}
+                                     className="px-6 py-2 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 capitalize hover:to-red-800 text-white text-sm rounded-md transition whitespace-nowrap"
+                                >
+                                    Click Here To Start Free Test
+                                </button>
+                            )
+                        }
+
 
                         {/* Store Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3 w-full">
+                        <div className="hidden sm:flex flex-col sm:flex-row gap-3 w-full">
                             <span
                                 className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition whitespace-nowrap w-full sm:w-auto"
                             >
@@ -48,7 +72,8 @@ const HeroBanner = ({ banner }) => {
             </div>
 
             {/* Stats Section */}
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div className="hidden sm:grid max-w-6xl mx-auto px-4 sm:px-6 py-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
+
                 <div className="bg-green-100 p-4 rounded-xl shadow">
                     <div className="text-green-600 font-bold text-xl">150K+</div>
                     <div className="text-gray-700 text-sm">Practice Questions</div>
