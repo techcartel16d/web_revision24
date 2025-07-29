@@ -37,6 +37,8 @@ import RefundPolicy from './pages/RefundPolicyPage';
 import Clarity from '@microsoft/clarity';
 import NotFoundPage from './pages/NotFoundPage';
 import ScrollToTop from './components/ScrollToTop';
+import CashfreeCheckoutPage from './pages/CashfreeCheckoutPage';
+import AppPaymentResponse from './pages/AppPaymentResponse';
 
 function App() {
   Clarity.init("sjskd9cztm")
@@ -53,6 +55,7 @@ function App() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
 
+
         {/* PUBLIC ONLY ROUTES */}
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<LoginPage />} />
@@ -63,6 +66,9 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/forgot-password-verify-otp" element={<ForgotPasswordOtpPage />} />
           <Route path="/reset-password" element={<SetNewPasswordPage />} />
+          <Route path="/cashfree-payment" element={<CashfreeCheckoutPage />} />
+          <Route path="/app-payment-response" element={<AppPaymentResponse />} />
+
         </Route>
 
         {/* PROTECTED ROUTES */}
@@ -82,6 +88,7 @@ function App() {
           <Route path="/analysis" element={<Screen6 />} />
           <Route path="/test-solutions" element={<Screen7 />} />
         </Route> */}
+        
         <Route path="/payment-response" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
         <Route path="/user-dashboard" element={<ProtectedRoute> <UserDashboard /></ProtectedRoute>} />
         <Route path="/wallet" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />

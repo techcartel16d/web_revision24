@@ -59,6 +59,7 @@ const Header = () => {
             <div className="hidden md:flex gap-4 items-center text-gray-700 font-medium ml-6">
               <Link to="/" className="hover:text-sky-600">Home</Link>
               <Link to="/user-dashboard" className="hover:text-sky-600"> User Dashboard</Link>
+
             </div>
           )}
         </div>

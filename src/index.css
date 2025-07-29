@@ -140,3 +140,15 @@
 .math-renderer-content p {
   margin-bottom: 0.9rem;
 }
+
+.math-renderer-content img {
+  max-width: 250px; /* or whatever size you prefer */
+  height: auto;
+  display: inline-block;
+}
+
+.option_img img {
+  max-width: 80px; /* or whatever size you prefer */
+  height: auto;
+  display: inline-block;
+}

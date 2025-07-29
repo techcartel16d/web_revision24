@@ -17,6 +17,7 @@ const Screen6 = () => {
     const [testData, setTestData] = useState({})
     // Add below useState
     const [subjectWiseAnalysis, setSubjectWiseAnalysis] = useState([]);
+    const [rankScore,setRankScore]=useState(null)
 
 
 
@@ -32,6 +33,7 @@ const Screen6 = () => {
                 const test = res.data.test_detail;
                 const my = res.data.my_detail;
                 setTestData(res.data)
+
                 // Inside `fetchUserResult` (after setting testData)
                 setSubjectWiseAnalysis(res?.data?.subject_wise_analysis || []);
 
@@ -44,6 +46,7 @@ const Screen6 = () => {
 
                 const markPer_ques = totalMarks / totalQuestions;
                 const calculatedScore = (correct * markPer_ques) - (inCorrect * negativeMark);
+                setRankScore(calculatedScore)
 
                 const accuracy = correct && totalAttempted
                     ? ((correct / totalAttempted) * 100).toFixed(2) + "%"
@@ -270,7 +273,7 @@ const Screen6 = () => {
                     </table>
                 </div>
 
-                <LeaderBoardTable data={testData && testData?.leaderboard || []} />
+                <LeaderBoardTable data={testData && testData?.leaderboard || []} rankScore={rankScore} />
 
 
                 <div className='my-3 w-full flex items-center justify-center'>

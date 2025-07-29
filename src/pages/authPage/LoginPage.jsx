@@ -80,7 +80,7 @@ const LoginPage = () => {
                     setShowSuccess(true)
 
                 } else {
-                     console.log("ERROR IN LOGIN PAGE====>", res);
+                    //  console.log("ERROR IN LOGIN PAGE====>", res);
                     setShowAlert(true)
                     setMessage(res.message)
 

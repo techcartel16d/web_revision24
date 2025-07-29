@@ -20,7 +20,7 @@ const UserDashboard = () => {
   const loadUserData = async () => {
     const user = await getUserDataDecrypted();
     setUserInfo(user);
-    console.log("userinfon in dashboard", user)
+    // console.log("userinfon in dashboard", user)
     setLoading(false);
   };
 

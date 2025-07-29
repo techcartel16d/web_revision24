@@ -597,7 +597,7 @@ const Screen5 = () => {
 
     // HANLDE SUBMIT NEW CODE ====>
     const handleSubmit = async () => {
-        // if (optionSelected.length === 0) return
+
 
         const testId = state?.testInfo?.test_id;
 
@@ -655,15 +655,21 @@ const Screen5 = () => {
 
         try {
             const res = await dispatch(attendQuestionSubmitSlice(submissionData)).unwrap();
-            // console.log("✅ Test Submitted Successfully:", res);
+            if (res.status_code == 200) {
+                // ✅ Clear all encrypted test data
+                await clearAllTestData(testId);
 
-            // ✅ Clear all encrypted test data
-            await clearAllTestData(testId);
+                nav('/analysis', { replace: true, state });
+            } else {
+                alert('please attend minimum one question (save & next) after submit!!')
+            }
 
-            nav('/analysis', { replace: true, state });
+
 
         } catch (error) {
             console.error("❌ Error in Submitting Test:", error);
+        } finally {
+
         }
     };
 
@@ -955,13 +961,13 @@ const Screen5 = () => {
                         </div>
                     </div>
                     {/* <div className="mb-2 text-sm" dangerouslySetInnerHTML={{ __html: questionText }} /> */}
-                   <MathRenderer text={questionText} />
+                    <MathRenderer text={questionText} />
                     <div className="flex flex-col gap-2">
                         {Object.entries(options).map(([key, value]) => (
-                            <label key={key} className="flex items-center gap-2">
+                            <label key={key} className="flex items-center gap-2 option_img">
                                 <input type="radio" name={`question_${current.id}`} value={key} checked={selectedOptions[current.id] === key} onChange={() => handleOptionChange(current.id, key)} />
                                 {/* <span className="option-content text-sm" dangerouslySetInnerHTML={{ __html: value }} /> */}
-                                 <MathRenderer text={value} />
+                                <MathRenderer text={value} />
                             </label>
                         ))}
                     </div>

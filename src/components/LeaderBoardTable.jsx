@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import DataTable from "react-data-table-component";
+import { FaUser } from "react-icons/fa";
 
-const LeaderBoardTable = ({ data }) => {
+const LeaderBoardTable = ({ data, rankScore }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -27,11 +28,17 @@ const LeaderBoardTable = ({ data }) => {
             name: "User",
             cell: row => (
                 <div className="flex items-center gap-2">
-                    <img
-                        src={row.user_image}
-                        alt={row.user_name}
-                        className="w-8 h-8 rounded-full object-cover"
-                    />
+                    {
+                        row.user_image ? (
+                            <img
+                                src={row.user_image}
+                                alt={row.user_name}
+                                className="w-8 h-8 rounded-full object-cover"
+                            />
+                        ) :
+                            <FaUser />
+                    }
+
                     <span>{row.user_name}</span>
                 </div>
             ),
@@ -41,7 +48,7 @@ const LeaderBoardTable = ({ data }) => {
             name: "Score",
             selector: row => row.marks,
             sortable: true,
-            
+
         },
     ];
 
