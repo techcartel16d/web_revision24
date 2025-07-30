@@ -59,6 +59,10 @@ function App() {
         <Route path="/refund-policy" element={<RefundPolicy />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:id" element={<BlogDetailPage />} />
+        <Route path="/cashfree-payment" element={<CashfreeCheckoutPage />} />
+        <Route path="/app-payment-response" element={<AppPaymentResponse />} />
+        <Route path="/app-subscription-checkout" element={<SubscriptionCheckout />} />
+        <Route path="/app-subscription-response" element={<SubscriptionRespose />} />
 
 
         {/* PUBLIC ONLY ROUTES */}
@@ -71,10 +75,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/forgot-password-verify-otp" element={<ForgotPasswordOtpPage />} />
           <Route path="/reset-password" element={<SetNewPasswordPage />} />
-          <Route path="/cashfree-payment" element={<CashfreeCheckoutPage />} />
-          <Route path="/app-payment-response" element={<AppPaymentResponse />} />
-          <Route path="/app-subscription-checkout" element={<SubscriptionCheckout />} />
-          <Route path="/app-subscription-response" element={<SubscriptionRespose />} />
+
 
         </Route>
 
@@ -121,7 +122,7 @@ export default App;
 
 
 
-// NEW CODE 
+// NEW CODE
 
 // import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 // import { useSelector } from 'react-redux';
