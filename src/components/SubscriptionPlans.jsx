@@ -53,7 +53,7 @@ const SubscriptionPlans = ({ userInfo }) => {
             const res = await dispatch(checkoutpaySlice(planData)).unwrap();
             if (res.status && res.payment_session_id) {
                 if (window.Cashfree) {
-                    const cashfree = window.Cashfree({ mode: "production" });
+                    const cashfree = window.Cashfree({ mode: "production" });  //production
                     cashfree.checkout({
                         paymentSessionId: res.payment_session_id,
                         redirectTarget: "_self",

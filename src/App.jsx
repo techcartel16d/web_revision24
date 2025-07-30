@@ -39,12 +39,14 @@ import NotFoundPage from './pages/NotFoundPage';
 import ScrollToTop from './components/ScrollToTop';
 import CashfreeCheckoutPage from './pages/CashfreeCheckoutPage';
 import AppPaymentResponse from './pages/AppPaymentResponse';
+import SubscriptionCheckout from './pages/app_pages/SubscriptionCheckout';
+import SubscriptionRespose from './pages/app_pages/SubscriptionRespose';
 
 function App() {
   Clarity.init("sjskd9cztm")
   return (
     <Router>
-        <ScrollToTop />
+      <ScrollToTop />
       <Routes>
         {/* ALWAYS ACCESSIBLE ROUTE */}
         <Route path="/" element={<HomePage />} />
@@ -68,6 +70,8 @@ function App() {
           <Route path="/reset-password" element={<SetNewPasswordPage />} />
           <Route path="/cashfree-payment" element={<CashfreeCheckoutPage />} />
           <Route path="/app-payment-response" element={<AppPaymentResponse />} />
+          <Route path="/app-subscription-checkout" element={<SubscriptionCheckout />} />
+          <Route path="/app-subscription-response" element={<SubscriptionRespose />} />
 
         </Route>
 
@@ -88,7 +92,7 @@ function App() {
           <Route path="/analysis" element={<Screen6 />} />
           <Route path="/test-solutions" element={<Screen7 />} />
         </Route> */}
-        
+
         <Route path="/payment-response" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
         <Route path="/user-dashboard" element={<ProtectedRoute> <UserDashboard /></ProtectedRoute>} />
         <Route path="/wallet" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
