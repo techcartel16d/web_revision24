@@ -166,6 +166,30 @@ export const getTransactionSlice = createAsyncThunk(
         }
     },
 );
+////////////////////////////blog////////////////////////////////
+export const getBlogSlice = createAsyncThunk(
+    'home/getBlogSlice',
+    async (page = 1, { rejectWithValue }) => {
+        try {
+            const response = await HomeProvider.getBlog(page);
+            return response; // must include pagination fields
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+export const getBlogDetailSlice = createAsyncThunk(
+    'home/getBlogDetailSlice',
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await HomeProvider.getBlogDetail(id);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+
 
 
 const homeSlice = createSlice({

@@ -170,6 +170,25 @@ const HomeProvider = {
             throw error.response?.data || error.message;
         }
     },
+getBlog: async (page = 1) => {
+    try {
+        const response = await api.get(`/exam-info?page=${page}`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+},
+
+  // In HomeProvider.js
+getBlogDetail: async (id) => {
+    try {
+        const response = await api.get(`exam-info-detail/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+},
+
 }
 
 export default HomeProvider

@@ -152,3 +152,14 @@
   height: auto;
   display: inline-block;
 }
+
+.blog-detail svg{
+  position: absolute;
+  left: -25px;
+  top: 4px;
+  display: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; 
+}

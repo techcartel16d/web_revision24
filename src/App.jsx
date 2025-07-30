@@ -41,9 +41,10 @@ import CashfreeCheckoutPage from './pages/CashfreeCheckoutPage';
 import AppPaymentResponse from './pages/AppPaymentResponse';
 import SubscriptionCheckout from './pages/app_pages/SubscriptionCheckout';
 import SubscriptionRespose from './pages/app_pages/SubscriptionRespose';
+import BlogPage from './pages/BlogPage';
+import BlogDetailPage from './pages/BlogDetailPage';
 
 function App() {
-  Clarity.init("sjskd9cztm")
   return (
     <Router>
       <ScrollToTop />
@@ -56,6 +57,8 @@ function App() {
         <Route path="/terms-of-service" element={<TermsOfServicePage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:id" element={<BlogDetailPage />} />
 
 
         {/* PUBLIC ONLY ROUTES */}

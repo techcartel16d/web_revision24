@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import ssclog from '/ssc_log.png'
+import { Link } from 'react-router-dom';
+
 const exams = {
     UPSC: [
         { name: "SSC CHSL", logo: ssclog },
@@ -53,18 +55,19 @@ export default function ExamSelector({ category }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(showAll ? data : data.slice(0, 6)).map((item, index) => (
-                    <div
+                    <Link
+                        to="/blog"
                         key={index}
-                        className="border rounded-lg p-4 flex items-center gap-4 hover:shadow-md"
+                        className="border rounded-lg p-4 flex items-center gap-4 hover:shadow-md transition"
                     >
-                        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                            {/* Replace with actual logo */}
-                            <img src={item.logo} />
+                        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                            <img src={item.logo} alt="logo" className="object-contain w-full h-full" />
                         </div>
                         <div className="text-lg font-medium">{item.name}</div>
-                    </div>
+                    </Link>
                 ))}
             </div>
+
 
             {data.length > 6 && (
                 <div className="mt-4 text-center">

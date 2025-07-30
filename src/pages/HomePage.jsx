@@ -78,7 +78,7 @@ const HomePage = () => {
 
       // console.log("response user info==> ", res)
     } catch (error) {
-      console.log("error in get user profile", error);
+      // console.log("error in get user profile", error);
     }
   };
 
