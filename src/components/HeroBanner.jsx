@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { FaGooglePlay, FaApple, FaWhatsapp, FaAngleRight } from 'react-icons/fa';
 import SwiperSlider from './SwiperSlider';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../utils/auth';
 
-const HeroBanner = ({ banner }) => {
+const HeroBanner = ({ banner , data }) => {
     const nav = useNavigate();
     const [auth, setAuth] = useState(false);
     useEffect(() => {
@@ -32,11 +32,10 @@ const HeroBanner = ({ banner }) => {
                     <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 mt-6">
                         {/* CTA Button */}
                         {
-                            auth ? (<button
-                                className="px-6 py-2 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 capitalize hover:to-red-800 text-white text-sm rounded-md transition whitespace-nowrap"
-                            >
-                                 Click Here To Start Free Test
-                            </button>) : (
+                            auth ? (
+                            ''
+                            
+                        ) : (
                                 <button onClick={() => nav('/register')}
                                      className="px-6 py-2 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 capitalize hover:to-red-800 text-white text-sm rounded-md transition whitespace-nowrap"
                                 >

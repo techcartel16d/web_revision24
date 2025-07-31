@@ -104,7 +104,7 @@ const HomePage = () => {
   ) : (
     <div className="w-full">
       <Header />
-      {homeData && <HeroBanner banner={homeData?.banner} />}
+      {homeData && <HeroBanner banner={homeData?.banner} data={homeData?.test_series_paid} />}
 
       {/* <AdBanner imageUrl={ad} linkUrl="/subscription" /> */}
         {homeData && (
