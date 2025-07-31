@@ -6,6 +6,8 @@ const LeaderBoardTable = ({ data, rankScore }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
+    // console.log("data", data)
+
     const columns = [
         {
             name: "Sr. No.",

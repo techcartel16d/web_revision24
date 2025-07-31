@@ -28,7 +28,7 @@ const Screen5 = () => {
     const dispatch = useDispatch()
     const { state } = useLocation()
     const [userInfo, setUserInfo] = useState(null);
-    // console.log("state==>", state)
+    // console.log("state==>", state?.testDetail[0]?.marks)
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [questionsState, setQuestionsState] = useState([]);
     const [loading, setLoading] = useState(false)
@@ -139,7 +139,7 @@ const Screen5 = () => {
             setLoading(true)
             const res = await dispatch(getSingleCategoryPackageTestseriesQuestionSlice(state?.testInfo?.test_id)).unwrap()
             if (res.status_code == 200) {
-                // console.log("question data fetching", res)
+                console.log("question data fetching", res)
                 setQuestionsState(res.data)
                 setLoading(false)
                 // setRefreshing(false)
@@ -632,7 +632,12 @@ const Screen5 = () => {
         });
 
         const negativeMark = parseFloat(state?.testInfo?.negative_mark || 0);
-        const marksScored = correct - (in_correct * negativeMark);
+        const statMark = parseFloat(state?.testDetail[0]?.marks || 0);
+        // console.log(statMark)
+        const markPer_ques = statMark / questionsState.length
+        // console.log(markPer_ques)
+        //  (correct * markPer_ques) - (inCorrect * negativeMark)
+        const marksScored = (correct * markPer_ques) - (in_correct * negativeMark);
         const totalTimeSpent = spentTime.reduce((acc, item) => acc + (item.time || 0), 0);
 
         const submissionData = {
@@ -661,7 +666,8 @@ const Screen5 = () => {
 
                 nav('/analysis', { replace: true, state });
             } else {
-                alert('please attend minimum one question (save & next) after submit!!')
+                // alert('please attend minimum one question (save & next) after submit!!')
+                console.log(res)
             }
 
 
