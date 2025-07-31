@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { saveUserDataEncrypted } from '../../helpers/userStorage';
 import AlertModal from '../../components/AlertModal';
 import SuccessModal from '../../components/SuccessModal';
+import { showErrorToast, showSuccessToast } from '../../utils/ToastUtil';
 
 const LoginPage = () => {
     const dispatch = useDispatch()
@@ -77,17 +78,18 @@ const LoginPage = () => {
                     await saveUserDataEncrypted(userInfo);
                     setLoading(false);
                     setMessage(res.message)
-                    setShowSuccess(true)
+                    showSuccessToast(res.message)
+                    nav('/')
 
                 } else {
-                    //  console.log("ERROR IN LOGIN PAGE====>", res);
-                    setShowAlert(true)
                     setMessage(res.message)
+                    showErrorToast(res.message)
 
                 }
 
             }
         } catch (error) {
+            console.log(error)
            
             setLoading(false);
         } finally {
@@ -175,7 +177,7 @@ const LoginPage = () => {
                 message={message}
             />
 
-            <SuccessModal
+            {/* <SuccessModal
                 isOpen={showSuccess}
                 onClose={() => {
                     setShowSuccess(false)
@@ -183,7 +185,7 @@ const LoginPage = () => {
                     setMessage('')
                 }}
                 message={message}
-            />
+            /> */}
         </div>
     );
 };

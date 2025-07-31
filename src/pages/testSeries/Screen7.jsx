@@ -270,6 +270,7 @@ const Screen7 = () => {
 
   function renderExplanation() {
     const explanationText = language === 'en' ? current.explanation_english : current.explanation;
+    // console.log(explanationText)
     if (!explanationText) return null;
 
     const cleaned = explanationText
@@ -620,7 +621,7 @@ const Screen7 = () => {
         return (
           <div
             key={key}
-            className={`border-2 p-3 mb-2 rounded flex items-center gap-1.5 ${optionClass}`}
+            className={`border-2 p-3 mb-2 rounded flex items-center gap-1.5 option_img ${optionClass}`}
           >
             <strong>{key.toUpperCase()}.</strong> <MathRenderer text={value}  />
             

@@ -17,7 +17,7 @@ const Screen6 = () => {
     const [testData, setTestData] = useState({})
     // Add below useState
     const [subjectWiseAnalysis, setSubjectWiseAnalysis] = useState([]);
-    const [rankScore,setRankScore]=useState(null)
+    const [rankScore, setRankScore] = useState(null)
 
 
 
@@ -46,6 +46,7 @@ const Screen6 = () => {
 
                 const markPer_ques = totalMarks / totalQuestions;
                 const calculatedScore = (correct * markPer_ques) - (inCorrect * negativeMark);
+
                 setRankScore(calculatedScore)
 
                 const accuracy = correct && totalAttempted
@@ -89,6 +90,7 @@ const Screen6 = () => {
             console.error("ERROR IN RESULT SCREEN", error);
         }
     }, [dispatch, state]);
+    
 
     useEffect(() => {
         fetchUserResult();
@@ -151,6 +153,85 @@ const Screen6 = () => {
                         </thead>
                         <tbody>
                             {sections.map((s, idx) => {
+                                const accuracyNum = parseFloat(s.accuracy);
+
+                                // ✅ Calculate % for score and attempted
+                                const scorePercent = (s.score / s.maxScore) * 100;
+                                const attemptedPercent = (s.attempted / performance.attempted.max) * 100;
+                                // console.log(attemptedPercent)
+
+                                // ✅ Dynamic color based on 25% threshold
+                                const scoreColor = scorePercent > 70 ? 'bg-green-600' : 'bg-red-600';
+                                const scoreColorText = scorePercent > 70 ? 'text-green-600' : 'text-red-600';
+                                const scoreBg = scorePercent > 70 ? 'bg-green-100' : 'bg-red-50';
+                                const scoreTrack = scorePercent > 70 ? 'bg-green-300' : 'bg-red-300';
+
+                                const attemptedColor = attemptedPercent > 70 ? 'bg-green-600' : 'bg-red-600';
+                                const attemptedColorText = attemptedPercent > 70 ? 'text-green-600' : 'text-red-600';
+                                const attemptedBg = attemptedPercent > 70 ? 'bg-green-100' : 'bg-red-50';
+                                const attemptedTrack = attemptedPercent > 70 ? 'bg-green-300' : 'bg-red-300';
+
+                                const accuracyColor = accuracyNum < 70 ? 'bg-red-500' : 'bg-violet-500';
+                                const accuracyBg = accuracyNum < 70 ? 'bg-red-50' : 'bg-green-100';
+                                const accuracyTrack = accuracyNum < 70 ? 'bg-red-300' : 'bg-violet-300';
+
+                                return (
+                                    <tr key={idx} className="border-t">
+                                        {/* Name */}
+                                        <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{s.name}</td>
+
+                                        {/* Score */}
+                                        <td className="px-6 py-4">
+                                            <div className={`${scoreBg} rounded px-2 py-1 relative`}>
+                                                <div className="text-purple-800 font-semibold flex justify-between">
+                                                    <span className={`text-gray-400 font-bold ${scoreColorText}`}> {s.score}/ {s.maxScore}</span>
+                                                    <span>{scorePercent.toFixed(2)} %</span>
+                                                </div>
+                                                <div className={`h-1 ${scoreTrack} rounded mt-1`}>
+                                                    <div className={`h-1 ${scoreColor} rounded`} style={{ width: `${scorePercent}%` }} />
+                                                  
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        {/* Attempted */}
+                                        <td className="px-6 py-4">
+                                            <div className={`${attemptedBg} rounded px-2 py-1 relative`}>
+                                                <div className="text-blue-800 font-semibold flex justify-between">
+                                                    <span className={`text-gray-400 font-bold ${attemptedColorText}`}>{s.attempted} / {performance.attempted.max}</span>
+                                                    <span>{attemptedPercent.toFixed(2)}%</span>
+                                                </div>
+                                                <div className={`h-1 ${attemptedTrack} rounded mt-1`}>
+                                                    <div className={`h-1 ${attemptedColor} rounded`} style={{ width: `${attemptedPercent}%` }} />
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        {/* Accuracy */}
+                                        <td className="px-6 py-4">
+                                            <div className={`${accuracyBg} rounded px-2 py-1 relative`}>
+                                                <div className="text-green-800 font-semibold">{s.accuracy}</div>
+                                                <div className={`h-1 ${accuracyTrack} rounded mt-1`}>
+                                                    <div className={`h-1 ${accuracyColor} rounded`} style={{ width: `${accuracyNum}%` }} />
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        {/* Time */}
+                                        <td className="px-6 py-4">
+                                            <div className="bg-yellow-50 rounded px-2 py-1 relative">
+                                                <div className="text-yellow-800 font-semibold">
+                                                    {s.time} <span className="text-gray-400">/ {testData?.test_detail?.time} min</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+
+                        {/* <tbody>
+                            {sections.map((s, idx) => {
                                 const scoreColor = s.score < 130 ? 'bg-red-600' : 'bg-green-600';
                                 const attemptedColor = s.attempted < 70 ? 'bg-red-500' : 'bg-blue-500';
                                 const accuracyNum = parseFloat(s.accuracy);
@@ -160,7 +241,7 @@ const Screen6 = () => {
                                     <tr key={idx} className="border-t">
                                         <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{s.name}</td>
 
-                                        {/* Score */}
+                                       
                                         <td className="px-6 py-4">
                                             <div className={`${s.score < 130 ? " bg-red-50 " : 'bg-green-100 '} rounded px-2 py-1 relative`}>
                                                 <div className="text-purple-800 font-semibold">
@@ -175,7 +256,7 @@ const Screen6 = () => {
                                             </div>
                                         </td>
 
-                                        {/* Attempted */}
+                                      
                                         <td className="px-6 py-4">
                                             <div className={`${s.attempted < 70 ? 'bg-red-50' : 'bg-blue-50'}  rounded px-2 py-1 relative`}>
                                                 <div className="text-blue-800 font-semibold">
@@ -190,7 +271,7 @@ const Screen6 = () => {
                                             </div>
                                         </td>
 
-                                        {/* Accuracy */}
+                                       
                                         <td className="px-6 py-4">
                                             <div className={`${accuracyNum < 70 ? 'bg-red-50' : 'bg-green-100'} rounded px-2 py-1 relative`}>
                                                 <div className="text-green-800 font-semibold">{s.accuracy}</div>
@@ -203,7 +284,7 @@ const Screen6 = () => {
                                             </div>
                                         </td>
 
-                                        {/* Time */}
+                                      
                                         <td className="px-6 py-4">
                                             <div className="bg-yellow-50 rounded px-2 py-1 relative">
                                                 <div className="text-yellow-800 font-semibold">
@@ -215,8 +296,7 @@ const Screen6 = () => {
                                 );
                             })}
 
-                            {/* Overall row remains unchanged */}
-                            {/* <tr className="border-t bg-gray-50 font-bold text-gray-900">
+                            <tr className="border-t bg-gray-50 font-bold text-gray-900">
                                 <td className="px-6 py-4">Overall</td>
                                 <td className="px-6 py-4">
                                     <div className="text-purple-800">
@@ -233,8 +313,8 @@ const Screen6 = () => {
                                 <td className="px-6 py-4">
                                     {performance.time || sections[0]?.time} <span className="text-gray-500">/ {testData && testData?.test_detail?.time} min</span>
                                 </td>
-                            </tr> */}
-                        </tbody>
+                            </tr>
+                        </tbody> */}
                     </table>
                 </div>
                 <div className="bg-white shadow rounded overflow-x-auto mt-8">

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { saveTestLoginInfo } from '../../helpers/userStorage';
 import AlertModal from '../../components/AlertModal';
 import SuccessModal from '../../components/SuccessModal';
+import { showErrorToast, showSuccessToast } from '../../utils/ToastUtil';
 
 const Screen2 = () => {
     const nav = useNavigate();
@@ -29,13 +30,15 @@ const Screen2 = () => {
 
         if (enteredDob === '') {
             setMessage("Please enter your Date of Birth in DDMMYYYY format.");
-            setShowAlert(true);
+            // setShowAlert(true);
+            showErrorToast("Please enter your Date of Birth in DDMMYYYY format.")
             return;
         }
 
         if (enteredDob !== formattedDOB) {
             setMessage("Please enter the correct Date of Birth to login.");
-            setShowAlert(true);
+            // setShowAlert(true);
+            showErrorToast("Please enter the correct Date of Birth to login.")
             return;
         }
 
@@ -45,7 +48,19 @@ const Screen2 = () => {
         };
 
         await saveTestLoginInfo(userData);
-        setShowSuccess(true);
+        showSuccessToast("Test Login Success")
+         nav('/instructions', {
+                        state: {
+                            userData: {
+                                candidateName: userInfo?.name,
+                                systemNumber,
+                            },
+                            testInfo: state?.testInfo,
+                            testId: state?.testId,
+                            testDetail: state?.testDetail
+                        }
+                    });
+        // setShowSuccess(true);
     };
 
     return (

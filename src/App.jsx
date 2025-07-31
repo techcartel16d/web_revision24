@@ -43,8 +43,21 @@ import SubscriptionCheckout from './pages/app_pages/SubscriptionCheckout';
 import SubscriptionRespose from './pages/app_pages/SubscriptionRespose';
 import BlogPage from './pages/BlogPage';
 import BlogDetailPage from './pages/BlogDetailPage';
+import { useEffect } from 'react';
 
 function App() {
+    useEffect(() => {
+    const handleContextMenu = (e) => {
+      e.preventDefault();
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+
+    // Cleanup on unmount
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
   return (
     <Router>
       <ScrollToTop />

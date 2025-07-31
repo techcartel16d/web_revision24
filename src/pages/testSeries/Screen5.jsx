@@ -139,7 +139,7 @@ const Screen5 = () => {
             setLoading(true)
             const res = await dispatch(getSingleCategoryPackageTestseriesQuestionSlice(state?.testInfo?.test_id)).unwrap()
             if (res.status_code == 200) {
-                console.log("question data fetching", res)
+                // console.log("question data fetching", res)
                 setQuestionsState(res.data)
                 setLoading(false)
                 // setRefreshing(false)
@@ -357,7 +357,8 @@ const Screen5 = () => {
 
         // Navigate to next (circular logic)
         if (currentQuestion === questionsState.length - 1) {
-            setCurrentQuestion(0);
+            // setCurrentQuestion(0);
+            handleSubmit()
         } else {
             setCurrentQuestion(prev => prev + 1);
         }
@@ -551,6 +552,7 @@ const Screen5 = () => {
 
         const currentTestId = state?.testInfo?.test_id;
 
+
         try {
             // 🔁 Always use 'pause_status' as key
             const existingStatus = await secureGetTestData('pause_status', 'pause_status_array') || [];
@@ -598,24 +600,37 @@ const Screen5 = () => {
     // HANLDE SUBMIT NEW CODE ====>
     const handleSubmit = async () => {
 
+        // if (selectedOptions[current.id]) {
 
+        //     handleSaveAndNext()
+        // }
         const testId = state?.testInfo?.test_id;
+        const currentId = questionsState[currentQuestion]?.id;
+
+        // ✅ Ensure current question's answer is saved
+        if (selectedOptions[currentId] && !optionSelected.includes(currentId)) {
+            const updatedSelected = [...optionSelected, currentId];
+            await secureSaveTestData(testId, 'optionSelected', updatedSelected);
+        }
+
 
         // ✅ Use encrypted storage and await the values
         const spentTime = await secureGetTestData(testId, 'spentTime') || [];
-        const optionSelected = await secureGetTestData(testId, 'optionSelected') || [];
-        const selectedOptions = await secureGetTestData(testId, 'selectedOptions') || {};
+        const optionSelected2 = await secureGetTestData(testId, 'optionSelected') || [];
+        const selectedOptions2 = await secureGetTestData(testId, 'selectedOptions') || {};
         const skippedQuestions = await secureGetTestData(testId, 'skippedQuestions') || [];
         const markedForReview = await secureGetTestData(testId, 'markedForReview') || [];
-        const totalAttendedQuestions = optionSelected.length;
+        const totalAttendedQuestions = optionSelected2.length;
         const totalNotAnsweredQuestions = questionsState.length - totalAttendedQuestions;
+
+
 
         let correct = 0;
         let in_correct = 0;
 
         const allAttendedQuestions = optionSelected.map((questionId) => {
             const question = questionsState.find(q => q.id === questionId);
-            const selectedAns = selectedOptions[questionId];
+            const selectedAns = selectedOptions2[questionId];
             const rightAns = question?.hindi_ans;
 
             if (selectedAns === rightAns) {
@@ -630,6 +645,8 @@ const Screen5 = () => {
                 right_ans: rightAns
             };
         });
+
+
 
         const negativeMark = parseFloat(state?.testInfo?.negative_mark || 0);
         const statMark = parseFloat(state?.testDetail[0]?.marks || 0);
@@ -652,13 +669,15 @@ const Screen5 = () => {
             all_attend_question: allAttendedQuestions,
             spent_time: spentTime,
             skip_question: skippedQuestions,
-            attend_question: optionSelected,
+            attend_question: optionSelected2,
             mark_for_review: markedForReview
         };
 
         // console.log("📤 Submission Data:", submissionData);
 
         try {
+
+
             const res = await dispatch(attendQuestionSubmitSlice(submissionData)).unwrap();
             if (res.status_code == 200) {
                 // ✅ Clear all encrypted test data
@@ -682,219 +701,7 @@ const Screen5 = () => {
 
 
     return (
-        // <div className="flex flex-col p-4 text-sm font-sans overflow-hidden">
 
-
-        //     {/* Header */}
-
-        //     <div className="flex justify-between items-center mb-4">
-
-        //         <div className="text-lg font-bold">{state?.testInfo?.title || 'SSC ONLINE MOCK TEST'}</div>
-        //         <div className="m-auto bg-gray-800 text-white rounded-sm">
-        //             {/* <TestTimer timeInMinutes={60} onTimeUp={() => handleSubmit()} /> */}
-
-        //             <TestTimer textleft={'Time Left:'} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
-        //         </div>
-
-        //         <div className="flex items-center gap-5">
-        //             <button
-        //                 onClick={handlePauseClick}
-        //                 className="bg-yellow-400 text-gray-800 px-3 py-2 rounded text-xs"
-        //             >
-        //                 Puase
-        //             </button>
-        //             {
-        //                 isFullScreen ? (
-        //                     <div className=''>
-        //                         <button onClick={() => {
-        //                             setIsFullScreen(false)
-        //                             exitFullScreen()
-        //                         }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Exit Full Screen</button>
-        //                     </div>
-        //                 ) : (
-        //                     <div className=''>
-        //                         <button onClick={() => {
-        //                             setIsFullScreen(true)
-        //                             enterFullScreen()
-        //                         }} className='px-6 py-2 bg-gray-600 rounded-md text-white'>Full Screen</button>
-        //                     </div>
-        //                 )
-        //             }
-        //             <div className="text-sm">Name : <span className="font-semibold"></span>{userInfo.name || 'guest'}</div>
-        //         </div>
-        //     </div>
-
-        //     {/* Top Controls */}
-        //     <div className="flex justify-between items-center border-y py-4 mb-3">
-
-        //         <div className="text-red-600 font-semibold text-center flex text-sm gap-3">
-        //             <button
-        //                 onMouseEnter={() => setIsModalOpen(true)}
-        //                 className="text-orange-600 font-bold px-6 py-2 rounded text-lg"
-        //             >
-        //                 SYMBOLS
-        //             </button>
-        //             <button
-        //                 onMouseEnter={() => setOpenModal(true)}
-        //                 // onMouseLeave={() => setOpenModal(false)}
-        //                 className="text-orange-600 font-bold px-6 py-2 rounded text-lg"
-        //             >
-        //                 INSTRUCTIONS
-        //             </button>
-
-        //         </div>
-
-        //         <div className="flex gap-4 justify-between items-center w-1/2">
-
-        //             <div className="flex gap-1">
-        //                 <div className="flex gap-2">
-        //                     {
-        //                         selectedOptions[current.id] && (
-        //                             <button
-        //                                 onClick={() => handleOptionDeselect(current.id)}
-        //                                 className="bg-red-500 text-white px-3 py-2 rounded text-sm"
-        //                             >
-        //                                 Clear Option
-        //                             </button>
-        //                         )
-        //                     }
-        //                     <button
-        //                         onClick={handleMarkForReview}
-        //                         className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
-        //                     >
-        //                         Mark for Review
-        //                     </button>
-
-        //                     {selectedOptions[current.id] ? (
-        //                         <button
-        //                             onClick={handleSaveAndNext}
-        //                             className="bg-green-600 text-white px-6 py-2 rounded text-sm"
-        //                         >
-        //                             Save & Next
-        //                         </button>
-        //                     ) : (
-        //                         <button
-        //                             onClick={handleNextQuestion}
-        //                             className="bg-blue-500 text-white px-6 py-2 rounded text-sm"
-        //                         >
-        //                             Next
-        //                         </button>
-        //                     )}
-        //                     <button
-        //                         onClick={() => setConfirmSubmit(true)}
-        //                         className="text-white text-sm font-bold bg-green-600 px-4 py-2 rounded"
-        //                     >
-        //                         Submit
-        //                     </button>
-        //                 </div>
-        //             </div>
-        //             <div className="text-right">
-        //                 <TestTimer timeClr='text-blue-800' textleft={'LAST'} textBg='text-red-600' timeTextSize='text-2xl' textRight={'Minutes'} showSeconds={false} testId={state?.testInfo?.test_id} timeInMinutes={state && state?.testInfo?.time} onTimeUp={() => handleSubmit()} />
-        //             </div>
-        //         </div>
-        //     </div>
-
-
-        //     {/* Main Body */}
-        //     <div className="flex gap-4 w-full">
-        //         <QuestionGridModal
-        //             question={questionsState}
-        //             groupedQuestions={groupedQuestions}
-        //             currentQuestion={currentQuestion}
-        //             optionSelected={optionSelected}
-        //             markedForReview={markedForReview}
-        //             markedForReviewAns={markedWithAns}
-        //             skippedQuestions={[12, 25]}
-        //             setCurrentQuestion={(index) => setCurrentQuestion(index)}
-        //             onClose={() => setShowModal(false)}
-        //             onProceed={() => { }}
-        //         />
-
-        //         {/* Right Side - Question Panel */}
-        //         <div className="flex-1 relative border px-4 py-3" id="testBg">
-
-        //             {/* Header */}
-        //             <div className="flex justify-between items-center mb-2">
-        //                 <div className="text-sm font-bold">Question : {currentQuestion + 1}</div>
-        //                 {/* Language Switch */}
-        //                 <div className="flex justify-end flex-col gap-2">
-        //                     {/* ⏱️ Time for current question */}
-        //                     <div className="text-xs text-gray-600 font-semibold">
-        //                         Time: {formatTime(elapsedSeconds)}
-        //                     </div>
-        //                     <select
-        //                         value={language}
-        //                         onChange={(e) => setLanguage(e.target.value)}
-        //                         className="border text-xs px-2 py-1 rounded"
-        //                     >
-        //                         <option value="en">English</option>
-        //                         <option value="hi">Hindi</option>
-        //                     </select>
-
-        //                 </div>
-        //             </div>
-
-        //             {/* Question */}
-        //             <div
-        //                 className="mb-2 text-sm"
-        //                 // dangerouslySetInnerHTML={{ __html: questionText }}
-        //                 dangerouslySetInnerHTML={{ __html: questionText }}
-        //             />
-        //             {/* <div className="mb-2 text-sm">
-        //                 <BlockMath math={stripLatex(questionText)} />
-        //             </div> */}
-
-        //             {/* Options */}
-        //             <div className="flex flex-col gap-2">
-        //                 {Object.entries(options).map(([key, value]) => (
-        //                     <label key={key} className="flex items-center gap-2">
-        //                         <input
-        //                             type="radio"
-        //                             name={`question_${current.id}`}
-        //                             value={key}
-        //                             checked={selectedOptions[current.id] === key}
-        //                             onChange={() => handleOptionChange(current.id, key)}
-        //                         />
-        //                         <span
-        //                             className="option-content text-sm"
-        //                             dangerouslySetInnerHTML={{ __html: value }}
-        //                         />
-
-        //                         {/* <span className="option-content text-sm">
-        //                             <InlineMath math={stripLatex(value)} />
-        //                         </span> */}
-        //                     </label>
-        //                 ))}
-        //             </div>
-
-
-        //         </div>
-        //     </div>
-
-        //     <PauseTestModal
-        //         isOpen={showPauseModal}
-        //         onConfirm={handleConfirmPause}
-        //         onCancel={handleCancelPause}
-        //     />
-
-        //     <ConfirmTestSubmitModal
-        //         show={confirmSubmit}
-        //         onClose={() => setConfirmSubmit(false)}
-        //         onConfirm={handleSubmit}
-        //     />
-
-        //     <ExamInstructionsModal
-        //         isOpen={openModal}
-        //         onClose={() => setOpenModal(false)}
-        //         onAgree={() => {
-        //             setOpenModal(false);
-        //             nav("/symbols", { state });
-        //         }}
-        //         testInfo={state?.testInfo || {}}
-        //         testData={state?.testDetail || []}
-        //     />
-        //     <SymbolModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-        // </div>
 
         <div className="flex flex-col p-4 text-sm font-sans overflow-hidden w-full">
             {/* Header */}

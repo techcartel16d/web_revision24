@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { IoMdHome } from 'react-icons/io';
 import { clearUserData } from '../helpers/userStorage';
 import { MdDashboard } from 'react-icons/md';
+import { showErrorToast, showSuccessToast } from '../utils/ToastUtil';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -18,12 +19,14 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       setLogoutLoading(true);
-      await dispatch(logoutSlice()).unwrap();
+     const res = await dispatch(logoutSlice()).unwrap();
       await clearUserData();
       nav('/login');
+      showSuccessToast(res.message)
     } catch (error) {
       await clearUserData();
       nav('/login');
+      showErrorToast(res.message)
     } finally {
       setLogoutLoading(false);
     }
