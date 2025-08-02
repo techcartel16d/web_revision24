@@ -19,6 +19,7 @@ import SymbolModal from '../../components/SymbolModal';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import MathRenderer from '../../utils/MathRenderer';
+import { secureGet } from '../../helpers/storeValues';
 
 
 
@@ -28,7 +29,7 @@ const Screen5 = () => {
     const dispatch = useDispatch()
     const { state } = useLocation()
     const [userInfo, setUserInfo] = useState(null);
-    // console.log("state==>", state?.testDetail[0]?.marks)
+    // console.log("state==>", state)
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [questionsState, setQuestionsState] = useState([]);
     const [loading, setLoading] = useState(false)
@@ -88,6 +89,9 @@ const Screen5 = () => {
     // LOAD. USER INFO
     const loadUserData = async () => {
         const user = await getUserDataDecrypted();
+        const lang = await secureGet("language");
+        // console.log("lange", lang)
+        setLanguage(lang)
         setUserInfo(user);
     };
 

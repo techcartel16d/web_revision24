@@ -46,7 +46,7 @@ import BlogDetailPage from './pages/BlogDetailPage';
 import { useEffect } from 'react';
 
 function App() {
-    useEffect(() => {
+  useEffect(() => {
     const handleContextMenu = (e) => {
       e.preventDefault();
     };
@@ -58,6 +58,12 @@ function App() {
       document.removeEventListener('contextmenu', handleContextMenu);
     };
   }, []);
+
+
+  useEffect(() => {
+    Clarity.init('sjskd9cztm'); // Replace with your real Clarity ID
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />

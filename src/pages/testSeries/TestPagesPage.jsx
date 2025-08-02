@@ -29,10 +29,11 @@ const TestPagesPage = () => {
     const [resumeData, setResumeData] = useState({})
     const [showModal, setShowModal] = useState(false);
     const [message, setMessage] = useState('')
-      const [pagination, setPagination] = useState({
-            current_page: 1,
-            last_page: 1,
-        });
+    const [pagination, setPagination] = useState({
+        current_page: 1,
+        last_page: 1,
+    });
+    const [pageLoading, setPageLoading] = useState(false)
 
     const [pauseStatusArray, setPauseStatusArray] = useState([]);
 
@@ -76,49 +77,30 @@ const TestPagesPage = () => {
 
 
 
-    const getSigleCategoryData = async (page = 1,) => {
-
-
+    const getSigleCategoryData = async (page = 1) => {
         if (state) {
             try {
-                const res = await dispatch(getSingleCategoryPackageTestseriesSlice({ testId: state.testId,page })).unwrap()
-                if (res.status_code == 200) {
-                    console.log("single category test series data getSingleCategoryPackageTestseries", res)
-                    setTestData(res.data.test_series.data)
+                setPageLoading(true);
+                const res = await dispatch(getSingleCategoryPackageTestseriesSlice({ testId: state.testId, page })).unwrap();
+                if (res.status_code === 200) {
+                    setTestData(prev => [...prev, ...res.data.test_series.data]); // Append mode
                     setPagination({
-                    current_page: res.data.test_series.current_page,
-                    last_page: res.data.test_series.last_page,
-                });
-                    // console.log("res.data.package_detail.id", res.data.package_detail.id)
-                    setTestId(res.data.package_detail.id)
-                } else if (res.status_code == 401) {
-                    await clearUserData()
+                        current_page: res.data.test_series.current_page,
+                        last_page: res.data.test_series.last_page,
+                    });
+                    setTestId(res.data.package_detail.id);
+                } else if (res.status_code === 401) {
+                    await clearUserData();
                 }
-
-
-                // setTestPackageSeries(res.data)
-                // setRefreshing(false);
-                // setLoading(false)
-                // setLastPage(res.data.test_series.last_page)
-                // setCurrentPage(res.data.test_series.current_page)
-
             } catch (error) {
-                // console.log("error", error)
-                // setRefreshing(false);
-                // setLoading(false)
-                setShowAlert(true)
+                setShowAlert(true);
                 setMessage('Login token has expired. Please sign in again to continue.');
-                await clearUserData()
+                await clearUserData();
             } finally {
-                // setRefreshing(false);
-                // setLoading(false)
+                setPageLoading(false);
             }
-
         }
-
-
-        // package_detail
-    }
+    };
 
 
     const fetchTestSeriesDetails = async (item) => {
@@ -193,106 +175,8 @@ const TestPagesPage = () => {
             <Header />
 
             <div className="p-4 bg-white min-h-screen">
-                {/* <div className="my-4">
-                <button onClick={() => nav(-1)} className="px-6 py-2 bg-blue-500 text-white rounded-md cursor-pointer"><MdArrowBackIos className="text-xl" /></button>
-            </div> */}
-                {/* <div className="flex gap-4 mb-4">
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-full font-semibold">
-                    SSC CGL - Graduation Level
-                </button>
-                <button className="border border-gray-300 text-black px-4 py-2 rounded-full font-semibold">
-                    SSC CHSL - 12
-                </button>
-            </div> */}
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {/* {testData.map((test, index) => {
-                    return (
-                        <div
-                            key={index}
-                            className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm"
-                        >
-                            <div className="flex justify-between items-start">
-                                <span className="bg-green-600 text-xs px-2 py-1 rounded text-white font-semibold">
-                                    free
-                                </span>
-                                <span className="text-sm text-blue-500 font-medium">Hindi / English</span>
-                            </div>
-
-                            <div className="text-base font-semibold text-black mt-1">
-                                {test.title}
-                            </div>
-
-                            <div className="text-sm text-gray-600 flex gap-6 mt-1">
-                                <div className="flex items-center gap-1">
-                                    <FaClock /> {test.time}
-                                </div>
-                                <div>Que.{test.questions}</div>
-                                <div>Marks {test.marks}</div>
-                            </div>
-
-                            <div className="flex justify-between items-center pt-4 border-t mt-4">
-                                <div className="flex gap-4 text-xl text-black">
-                                    <FaFilePdf className="cursor-pointer" />
-                                    <FaShareAlt className="cursor-pointer" />
-                                    <FaRegBookmark className="cursor-pointer" />
-                                </div>
-
-                                {
-                                    test.attend_status === '' && isPuase ? (
-                                        <button
-                                            onClick={() => fetchTestSeriesDetails(test)}
-                                            className={`px-6 py-1.5 cursor-pointer rounded font-semibold text-sm ${test.status === "done"
-                                                ? "bg-yellow-400 text-black"
-                                                : "bg-blue-500 text-white"
-                                                }`}
-                                        >
-                                            Resume
-                                        </button>
-                                    ) : test.purchase_type === 'free' && !test.attend ? (
-                                        <button
-                                            onClick={() => fetchTestSeriesDetails(test)}
-                                            className={`px-6 py-1.5 cursor-pointer rounded font-semibold text-sm ${test.status === "done"
-                                                ? "bg-yellow-400 text-black"
-                                                : "bg-blue-500 text-white"
-                                                }`}
-                                        >
-                                            Start
-                                        </button>
-                                    ) : test.attend && test.attend_status === 'done' ? (
-                                        <button
-                                            onClick={() => nav('/screen6', { state: { testId: state?.testId, testInfo: test, userData: userInfo } })}
-                                            className={`px-6 py-1.5 cursor-pointer rounded font-semibold text-sm bg-yellow-500 text-white`}
-                                        >
-                                            Result
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={() => {
-                                                alert("need to purchase REVISION24 PLUS subscription")
-                                            }}
-                                            className={`px-6 py-1.5 cursor-pointer rounded font-semibold text-sm bg-gray-300`}
-                                        >
-                                            Locked
-                                        </button>
-                                    )
-                                }
-
-                            </div>
-                        </div>
-                    )
-                }
-
-
-
-
-                )} */}
-
-
-
-
-
-
                     {testData.map((test, index) => {
                         // Pause Status Check
                         // const pauseStatusRaw = localStorage.getItem('pause_status_array');
@@ -468,27 +352,67 @@ const TestPagesPage = () => {
 
                         )
                     })}
-                    
+
                 </div>
-<div className="flex justify-center w-full ite mt-10 gap-4">
+                {pagination.current_page < pagination.last_page && (
+                    <div className="text-center mt-4">
                         <button
-                            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 cursor-pointer"
-                            disabled={pagination.current_page === 1}
-                            onClick={() => getSigleCategoryData(pagination.current_page - 1)}
-                        >
-                            Previous
-                        </button>
-                        <span className="text-gray-700 mt-2">
-                            Page {pagination.current_page} of {pagination.last_page}
-                        </span>
-                        <button
-                            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 cursor-pointer"
-                            disabled={pagination.current_page === pagination.last_page}
                             onClick={() => getSigleCategoryData(pagination.current_page + 1)}
+                            className="px-6 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 disabled:opacity-60 flex items-center justify-center mx-auto"
+                            disabled={pageLoading}
                         >
-                            Next
+                            {pageLoading ? (
+                                <span className="flex items-center gap-2">
+                                    <svg
+                                        className="animate-spin h-5 w-5 text-white"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        ></circle>
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8v8z"
+                                        ></path>
+                                    </svg>
+                                    Loading...
+                                </span>
+                            ) : (
+                                'Load More'
+                            )}
                         </button>
                     </div>
+                )}
+
+                {/* <div className="flex justify-center w-full ite mt-10 gap-4">
+                    <button
+                        className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 cursor-pointer"
+                        disabled={pagination.current_page === 1 || pageLoading}
+                        onClick={() => getSigleCategoryData(pagination.current_page - 1)}
+                    >
+                        Previous
+                    </button>
+                    <span className="text-gray-700 mt-2">
+                        Page {pagination.current_page} of {pagination.last_page}
+                    </span>
+                    <button
+                        className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 cursor-pointer"
+                        disabled={pagination.current_page === pagination.last_page || pageLoading}
+                        onClick={() => getSigleCategoryData(pagination.current_page + 1)}
+                    >
+                        Next
+                    </button>
+                </div> */}
+
+
+
                 <ResumeTestModal
                     show={showModal}
                     onClose={() => setShowModal(false)}

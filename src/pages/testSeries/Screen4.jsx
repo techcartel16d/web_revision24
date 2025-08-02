@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Checkbox from '../../components/Checkbox';
+import { secureSet } from '../../helpers/storeValues';
 
 const Screen4 = () => {
     const nav = useNavigate();
     const { state } = useLocation();
+    const [isChecked, setIsChecked] = useState(false);
+    const [lang, setLang] = useState('Choose a language')
+
+    const selectedLang = async (e) => {
+        setLang(e.target.value)
+        try {
+            await secureSet('language', e.target.value)
+
+        } catch (error) {
+            console.log("Error in store language", error)
+        }
+
+    }
 
     return (
         <div className="px-4 sm:px-6 md:px-12 py-4 md:py-6">
@@ -127,6 +142,35 @@ const Screen4 = () => {
                 </table>
             </div>
 
+
+            <div className='py-3 flex flex-col gap-3'>
+
+                <select onChange={selectedLang} className='border p-1 rounded-md bg-slate-200 border-slate-300 '>
+                    <option value="Choose a language">Choose a language</option>
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                </select>
+
+                <Checkbox
+                    id="example"
+                    links={[
+                        {
+                            link: '/terms-of-service',
+                            link_name: 'Terms & Conditions'
+                        },
+                        {
+                            link: '/privacy-policy',
+                            link_name: 'Privacy Policy'
+                        },
+
+                    ]}
+                    label={`I agree to the`}
+                    checked={isChecked}
+                    onChange={setIsChecked}
+                />
+            </div>
+
+
             {/* Navigation Buttons */}
             <div className="mt-10 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
                 <button
@@ -137,7 +181,9 @@ const Screen4 = () => {
                 </button>
                 <button
                     onClick={() => nav('/scc-mock-test', { state })}
-                    className="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white font-semibold px-4 sm:px-6 py-2 rounded text-sm sm:text-base"
+                    // onClick={() => alert('hello')}
+                    disabled={lang === 'Choose a language' || !isChecked}
+                    className="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white disabled:bg-gray-300 font-semibold px-4 sm:px-6 py-2 rounded text-sm sm:text-base"
                 >
                     Start Test &gt;&gt;
                 </button>

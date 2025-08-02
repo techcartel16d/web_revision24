@@ -35,7 +35,7 @@ const HomePage = () => {
     try {
       setLoading(true);
       const res = await dispatch(homePageSlice()).unwrap();
-      // console.log("response", res)
+      // console.log("home data response====>", res)
       setAd(res.data.popup.image);
 
       setHomeData(res.data);
@@ -108,7 +108,7 @@ const HomePage = () => {
 
       {/* <AdBanner imageUrl={ad} linkUrl="/subscription" /> */}
         {homeData && (
-        <TestSeriesViewer testSeriesData={homeData?.test_series_paid} />
+        <TestSeriesViewer category={homeData?.category} testSeriesData={homeData?.test_series_paid} />
       )}
 
 
