@@ -29,6 +29,10 @@ const TestPagesPage = () => {
     const [resumeData, setResumeData] = useState({})
     const [showModal, setShowModal] = useState(false);
     const [message, setMessage] = useState('')
+      const [pagination, setPagination] = useState({
+            current_page: 1,
+            last_page: 1,
+        });
 
     const [pauseStatusArray, setPauseStatusArray] = useState([]);
 
@@ -77,10 +81,14 @@ const TestPagesPage = () => {
 
         if (state) {
             try {
-                const res = await dispatch(getSingleCategoryPackageTestseriesSlice({ testId: state.testId })).unwrap()
+                const res = await dispatch(getSingleCategoryPackageTestseriesSlice({ testId: state.testId,page })).unwrap()
                 if (res.status_code == 200) {
-                    // console.log("single category test series data getSingleCategoryPackageTestseries", res)
+                    console.log("single category test series data getSingleCategoryPackageTestseries", res)
                     setTestData(res.data.test_series.data)
+                    setPagination({
+                    current_page: res.data.test_series.current_page,
+                    last_page: res.data.test_series.last_page,
+                });
                     // console.log("res.data.package_detail.id", res.data.package_detail.id)
                     setTestId(res.data.package_detail.id)
                 } else if (res.status_code == 401) {
@@ -177,7 +185,7 @@ const TestPagesPage = () => {
 
 
     useEffect(() => {
-        getSigleCategoryData()
+        getSigleCategoryData(1)
         // fetchTestSeriesDetails()
     }, [])
     return (
@@ -443,15 +451,15 @@ const TestPagesPage = () => {
                                                     )
                                                 )
                                             )
-                                        ) :(
-                                                // ✅ Show Buy Now if not subscribed
-                                                <button
-                                                    onClick={() => setShowAlert(true)}
-                                                    className="px-6 py-1.5 cursor-pointer text-white rounded font-semibold text-sm bg-blue-600"
-                                                >
-                                                    Buy Now
-                                                </button>
-                                            )
+                                        ) : (
+                                            // ✅ Show Buy Now if not subscribed
+                                            <button
+                                                onClick={() => setShowAlert(true)}
+                                                className="px-6 py-1.5 cursor-pointer text-white rounded font-semibold text-sm bg-blue-600"
+                                            >
+                                                Buy Now
+                                            </button>
+                                        )
                                     }
                                 </div>
                             </div>
@@ -460,8 +468,27 @@ const TestPagesPage = () => {
 
                         )
                     })}
+                    
                 </div>
-
+<div className="flex justify-center w-full ite mt-10 gap-4">
+                        <button
+                            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 cursor-pointer"
+                            disabled={pagination.current_page === 1}
+                            onClick={() => getSigleCategoryData(pagination.current_page - 1)}
+                        >
+                            Previous
+                        </button>
+                        <span className="text-gray-700 mt-2">
+                            Page {pagination.current_page} of {pagination.last_page}
+                        </span>
+                        <button
+                            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 cursor-pointer"
+                            disabled={pagination.current_page === pagination.last_page}
+                            onClick={() => getSigleCategoryData(pagination.current_page + 1)}
+                        >
+                            Next
+                        </button>
+                    </div>
                 <ResumeTestModal
                     show={showModal}
                     onClose={() => setShowModal(false)}
@@ -487,7 +514,8 @@ const TestPagesPage = () => {
 
                 <AlertModal
                     isOpen={showAlert}
-                    onClose={() => {setShowAlert(false)
+                    onClose={() => {
+                        setShowAlert(false)
                         nav('/login')
                     }}
                     // title="Commin"
