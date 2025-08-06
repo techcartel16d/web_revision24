@@ -20,7 +20,7 @@ const BlogDetailPage = () => {
             const res = await dispatch(getBlogDetailSlice(id)).unwrap();
             // console.log("res===============>" ,res)
             if (res.status_code == 200) {
-                setBlog(res.data.blog); 
+                setBlog(res.data.blog);
                 setRelatedBlogs(res.data.related);
             } else {
                 console.error('Blog detail fetch error', res);

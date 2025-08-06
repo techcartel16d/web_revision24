@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import InputField from '../../components/InputField';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/authSlice';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { saveUserDataEncrypted } from '../../helpers/userStorage';
 import AlertModal from '../../components/AlertModal';
 import SuccessModal from '../../components/SuccessModal';
@@ -17,6 +17,7 @@ const LoginPage = () => {
     const [message, setMessage] = useState('')
     const [showAlert, setShowAlert] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const location = useLocation();
     const handleChange = (e) => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
@@ -79,7 +80,15 @@ const LoginPage = () => {
                     setLoading(false);
                     setMessage(res.message)
                     showSuccessToast(res.message)
-                    nav('/')
+                    const redirectPath = sessionStorage.getItem('redirect_after_login') || '/';
+                    const stateVal = JSON.parse(sessionStorage.getItem('stateValue')) || {}
+
+                    console.log("redirectPath", redirectPath)
+                    nav(redirectPath, { replace: true, state: stateVal })
+
+                    // ✅ Cleanup after use
+                    sessionStorage.removeItem('redirect_after_login');
+                    sessionStorage.removeItem('stateValue');
 
                 } else {
                     setMessage(res.message)
@@ -90,7 +99,7 @@ const LoginPage = () => {
             }
         } catch (error) {
             console.log(error)
-           
+
             setLoading(false);
         } finally {
             setLoading(false);

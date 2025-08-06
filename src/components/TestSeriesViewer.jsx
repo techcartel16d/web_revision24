@@ -24,8 +24,8 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
               <img className='h-8 w-8 rounded-sm' src={cat.icon} />
               <h2 className="text-xl font-semibold">{cat.title} - Test Series </h2>
               <span className='bg-green-300 px-4 py-1 text-slate-800 text-xs rounded-md'>Free {cat.free}</span>
-              <span className='bg-blue-300 px-4 py-1 text-slate-800 text-xs  rounded-md' >Paid {cat.free}</span>
-              <span className='bg-yellow-300 px-4 py-1 text-slate-800 text-xs  rounded-md' >total {cat.total}</span>
+              <span className='bg-blue-300 px-4 py-1 text-slate-800 text-xs  rounded-md' >Paid {cat.paid}</span>
+              <span className='bg-yellow-300 px-4 py-1 text-slate-800 text-xs  rounded-md' >total {cat.totalSeries}</span>
             </div>
 
 
@@ -33,7 +33,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
               {series.map((item, index) => (
                 <div
                   key={index}
-                  onClick={() => nav('testpakages', { state: { item, testId: item.id } })}
+                  onClick={() => nav('/testpakages', { state: { item, testId: item.id } })}
                   className="bg-white rounded-xl shadow hover:shadow-lg transition border cursor-pointer overflow-hidden"
                 >
                   {/* Header */}

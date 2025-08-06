@@ -421,7 +421,12 @@ const Screen5 = () => {
             await secureSaveTestData(testId, 'markedForReview', updatedMarked);
         }
 
-        setCurrentQuestion(prev => prev + 1);
+        // setCurrentQuestion(prev => prev + 1);
+        if (currentQuestion === questionsState.length - 1) {
+            setCurrentQuestion(0);
+        } else {
+            setCurrentQuestion(prev => prev + 1);
+        }
     };
 
 

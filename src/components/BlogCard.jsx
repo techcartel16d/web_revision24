@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const BlogCard = ({ data }) => {
+    // console.log("data print ", data)
     return (
         <Link
-            to={`/blog/${data.id}`}
+            to={`/blog/${data.slug}`}
             className="bg-white rounded-xl shadow hover:shadow-md p-4 flex flex-col transition"
         >
             <img

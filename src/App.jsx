@@ -46,18 +46,48 @@ import BlogDetailPage from './pages/BlogDetailPage';
 import { useEffect } from 'react';
 
 function App() {
-  useEffect(() => {
-    const handleContextMenu = (e) => {
-      e.preventDefault();
-    };
+  // useEffect(() => {
+  //   const handleContextMenu = (e) => {
+  //     e.preventDefault();
+  //   };
 
-    document.addEventListener('contextmenu', handleContextMenu);
+  //   const handleKeyDown = (e) => {
+  //     const key = e.key.toUpperCase();
 
-    // Cleanup on unmount
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-    };
-  }, []);
+  //     // Disable Right Click
+  //     if (e.type === 'contextmenu') {
+  //       e.preventDefault();
+  //     }
+
+  //     // Disable F12
+  //     if (key === 'F12') {
+  //       e.preventDefault();
+  //     }
+
+  //     // Disable Ctrl/Cmd + Shift + [I, J, C]
+  //     if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I', 'J', 'C'].includes(key)) {
+  //       e.preventDefault();
+  //     }
+
+  //     // Disable Ctrl/Cmd + U (view source)
+  //     if ((e.ctrlKey || e.metaKey) && key === 'U') {
+  //       e.preventDefault();
+  //     }
+
+  //     // ✅ Mac-specific: Shift + Command + C (again handled above, but extra sure)
+  //     if (e.metaKey && e.shiftKey && key === 'C') {
+  //       e.preventDefault();
+  //     }
+  //   };
+
+  //   document.addEventListener('contextmenu', handleContextMenu);
+  //   document.addEventListener('keydown', handleKeyDown);
+
+  //   return () => {
+  //     document.removeEventListener('contextmenu', handleContextMenu);
+  //     document.removeEventListener('keydown', handleKeyDown);
+  //   };
+  // }, []);
 
 
   useEffect(() => {
