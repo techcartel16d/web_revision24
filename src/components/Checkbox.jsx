@@ -16,7 +16,7 @@ const Checkbox = ({ id, label, checked, onChange, disabled = false, links = [] }
                 disabled={disabled}
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded-md focus:ring-blue-500 "
             />
-            <span className="text-sm text-gray-700 flex gap-1">
+            <span className="text-sm text-gray-700  flex gap-1">
 
                 {label}
                 {

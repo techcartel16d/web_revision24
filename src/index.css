@@ -142,18 +142,20 @@
 }
 
 .math-renderer-content img {
-  max-width: 250px; /* or whatever size you prefer */
+  max-width: 200px;
+  /* or whatever size you prefer */
   height: auto;
   display: inline-block;
 }
 
 .option_img img {
-  max-width: 80px; /* or whatever size you prefer */
+  max-width: 100px;
+  /* or whatever size you prefer */
   height: auto;
   display: inline-block;
 }
 
-.blog-detail svg{
+.blog-detail svg {
   position: absolute;
   left: -25px;
   top: 4px;
@@ -161,5 +163,33 @@
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  display: none; 
+  display: none;
+}
+
+/* Sidebar Scrollbar Styling */
+.sidebar {
+  scrollbar-width: thin;
+  /* Firefox */
+  /* scrollbar-color: #374151 #1f2937; */
+  /* thumb color | track color */
+}
+
+/* Chrome, Edge, Safari */
+.sidebar::-webkit-scrollbar {
+  width: 0px;
+  /* scrollbar width */
+}
+
+.sidebar::-webkit-scrollbar-track {
+  /* background: #1f2937; */
+  /* track (bg-gray-900) */
+  /* border-radius: 10px; */
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  /* background-color: #374151; */
+  /* thumb (bg-gray-700) */
+  /* border-radius: 10px; */
+  /* border: 2px solid #1f2937; */
+  /* padding effect */
 }

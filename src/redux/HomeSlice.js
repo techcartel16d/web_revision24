@@ -189,6 +189,17 @@ export const getBlogDetailSlice = createAsyncThunk(
         }
     },
 );
+export const helpAndSupportSlice = createAsyncThunk(
+    'home/helpAndSupportSlice',
+    async (queryData, { rejectWithValue }) => {
+        try {
+            const response = await HomeProvider.helpAndSupport(queryData);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
 
 
 

@@ -1,13 +1,14 @@
 import { Menu, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../utils/auth';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logoutSlice } from '../redux/authSlice';
 import { useEffect, useState } from 'react';
 import { IoMdHome } from 'react-icons/io';
 import { clearUserData } from '../helpers/userStorage';
 import { MdDashboard } from 'react-icons/md';
 import { showErrorToast, showSuccessToast } from '../utils/ToastUtil';
+import { sidebarToggle } from '../redux/globleSlice';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -16,10 +17,11 @@ const Header = () => {
   const [auth, setAuth] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const { isSideBar } = useSelector(state => state.toggleSlice)
   const handleLogout = async () => {
     try {
       setLogoutLoading(true);
-     const res = await dispatch(logoutSlice()).unwrap();
+      const res = await dispatch(logoutSlice()).unwrap();
       await clearUserData();
       nav('/login');
       showSuccessToast(res.message)
@@ -40,35 +42,48 @@ const Header = () => {
     checkAuth();
   }, []);
 
+  const toggleSidebar = () => {
+    dispatch(sidebarToggle())
+
+  }
+
+
+
+
+
+
   return (
     <header className="bg-white shadow-md w-full px-4 py-3 md:px-6  relative">
       <div className="flex justify-between items-center">
         {/* Left Side: Logo + Nav */}
         <div className="flex items-center gap-4">
           {/* Mobile Menu Button */}
-          <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-gray-700">
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          <button onClick={() => {
+            // setMenuOpen(!menuOpen)
+            toggleSidebar()
+          }} className="md:hidden text-gray-700 cursor-pointer">
+            {isSideBar ? <X size={24} /> : <Menu size={24} />}
           </button>
 
           {/* Logo */}
-          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => nav('/')}>
+          {/* <div className="flex items-center space-x-2 cursor-pointer" onClick={() => nav('/')}>
             <img src="/logo.jpeg" alt="Logo" className="w-6 h-6" />
             <span className="text-sky-500 text-xs md:text-sm lg:text-xl font-bold">Revision24</span>
 
-          </div>
+          </div> */}
 
           {/* Desktop Nav */}
           {auth && (
             <div className="hidden md:flex gap-4 items-center text-gray-700 font-medium ml-6">
-              <Link to="/" className="hover:text-sky-600">Home</Link>
-              <Link to="/user-dashboard" className="hover:text-sky-600"> User Dashboard</Link>
+              {/* <Link to="/" className="hover:text-sky-600">Home</Link> */}
+              {/* <Link to="/user-dashboard" className="hover:text-sky-600"> User Dashboard</Link> */}
 
             </div>
           )}
         </div>
 
         {/* Right Side: Subscription + Buttons */}
-        <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
+        {/* <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
           <Link to="/subscription">
             <img
               src="/plain-icon.png"
@@ -100,11 +115,11 @@ const Header = () => {
               </button>
             </>
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* Mobile Nav (Visible only in mobile) */}
-      {menuOpen && (
+      {/* {menuOpen && (
         <nav className="block md:hidden mt-4 bg-white shadow rounded-md py-4 px-6 space-y-3 text-gray-700 text-base font-medium animate-slide-in">
           <Link to="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
             <IoMdHome /> Home
@@ -115,7 +130,7 @@ const Header = () => {
             </Link>
           )}
         </nav>
-      )}
+      )} */}
 
 
     </header>

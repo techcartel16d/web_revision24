@@ -1,6 +1,8 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { isAuthenticated } from '../utils/auth';
 import { useEffect, useState } from 'react';
+import Sidebar from './Sidebar';
+import Header from './Header';
 
 const ProtectedRoute = ({ children }) => {
   const [authChecked, setAuthChecked] = useState(false);
@@ -27,7 +29,14 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  return children ? children : <Outlet />;
+  return children ? <div className='flex h-screen w-full overflow-y-auto'>
+    <Sidebar />
+    <div className='overflow-y-auto w-full'>
+<Header />
+    {children}
+    </div>
+
+  </div> : <Outlet />;
 };
 
 export default ProtectedRoute;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaClock, FaFilePdf, FaShareAlt, FaRegBookmark } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ import SuccessModal from "../../components/SuccessModal";
 import ConfirmModal from "../../components/ConfirmModal";
 import AlertModal from "../../components/AlertModal";
 import { formatStartDateTime, isQuizStartAvailable, isQuizUpcoming } from "../../helpers/checkTestStartDate";
+import { debounce } from "lodash";
 
 
 
@@ -29,6 +30,7 @@ const TestPagesPage = () => {
     const [resumeData, setResumeData] = useState({})
     const [showModal, setShowModal] = useState(false);
     const [message, setMessage] = useState('')
+    const [searchTerm, setSearchTerm] = useState('');
     const [pagination, setPagination] = useState({
         current_page: 1,
         last_page: 1,
@@ -74,16 +76,62 @@ const TestPagesPage = () => {
     }, []);
 
 
+    
 
 
 
-    const getSigleCategoryData = async (page = 1) => {
+
+
+    // const getSigleCategoryData = async (page = 1, query = '') => {
+    //     if (state) {
+    //         try {
+    //             setPageLoading(true);
+    //             const res = await dispatch(
+    //                 getSingleCategoryPackageTestseriesSlice({
+    //                     testId: state.testId,
+    //                     page,
+    //                     search: query // make sure your API accepts this param
+    //                 })
+    //             ).unwrap();
+
+    //             if (res.status_code === 200) {
+    //                 setTestData(res.data.test_series.data); // Replace (not append)
+    //                 setPagination({
+    //                     current_page: res.data.test_series.current_page,
+    //                     last_page: res.data.test_series.last_page,
+    //                 });
+    //                 setTestId(res.data.package_detail.id);
+    //             } else if (res.status_code === 401) {
+    //                 await clearUserData();
+    //             }
+    //         } catch (error) {
+    //             setShowAlert(true);
+    //             setMessage('Login token has expired. Please sign in again to continue.');
+    //             await clearUserData();
+    //         } finally {
+    //             setPageLoading(false);
+    //         }
+    //     }
+    // };
+
+
+    const getSigleCategoryData = async (page = 1, query = '') => {
         if (state) {
             try {
                 setPageLoading(true);
-                const res = await dispatch(getSingleCategoryPackageTestseriesSlice({ testId: state.testId, page })).unwrap();
+                const res = await dispatch(
+                    getSingleCategoryPackageTestseriesSlice({
+                        testId: state.testId,
+                        page,
+                        search: query // make sure your API accepts this param
+                    })
+                ).unwrap();
+
                 if (res.status_code === 200) {
-                    setTestData(prev => [...prev, ...res.data.test_series.data]); // Append mode
+console.log(res)
+                    setTestData(prev =>
+                        page === 1 ? res.data.test_series.data : [...prev, ...res.data.test_series.data]
+                    );
                     setPagination({
                         current_page: res.data.test_series.current_page,
                         last_page: res.data.test_series.last_page,
@@ -170,12 +218,46 @@ const TestPagesPage = () => {
         getSigleCategoryData(1)
         // fetchTestSeriesDetails()
     }, [])
+
+
+
+
+    // Debounced function (called after 500ms of no typing)
+    const debouncedSearch = useCallback(
+        debounce((query) => {
+            onSearch(query);
+        }, 200),
+        []
+    );
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+        debouncedSearch(value);
+    };
+
+    const onSearch = async (query) => {
+        await getSigleCategoryData(1, query); // Call with search input
+    };
+
+
+
+
+
     return (
         <>
-            <Header />
+            {/* <Header /> */}
 
-            <div className="p-4 bg-white min-h-screen">
+            <div className="p-4 h-screen bg-white ">
 
+                <div className="flex items-center justify-end w-full p-3">
+                    <input className="border-2 border-blue-700 bg-gray-50 rounded-md px-4 py-1" type="text" placeholder="search.."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+
+
+                    />
+                </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {testData.map((test, index) => {
                         // Pause Status Check
@@ -338,7 +420,10 @@ const TestPagesPage = () => {
                                         ) : (
                                             // ✅ Show Buy Now if not subscribed
                                             <button
-                                                onClick={() => setShowAlert(true)}
+                                                onClick={() => {
+                                                    setShowAlert(true)
+                                                    setMessage("Purches")
+                                                }}
                                                 className="px-6 py-1.5 cursor-pointer text-white rounded font-semibold text-sm bg-blue-600"
                                             >
                                                 Buy Now
@@ -446,7 +531,7 @@ const TestPagesPage = () => {
                     message={message}
                 />
             </div>
-            <Footer />
+            {/* <Footer /> */}
         </>
     );
 };

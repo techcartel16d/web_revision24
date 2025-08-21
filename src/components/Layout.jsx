@@ -11,9 +11,7 @@ const Layout = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      {isSidebarOpen && (
         <Sidebar isOpen={isSidebarOpen} toggle={toggleSidebar} />
-      )}
 
       {/* Main Content */}
       <div

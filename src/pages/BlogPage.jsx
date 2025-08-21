@@ -6,6 +6,7 @@ import { getUserDataDecrypted } from '../helpers/userStorage';
 import { useDispatch } from 'react-redux';
 import { getBlogSlice } from '../redux/HomeSlice';
 import BlogCard from '../components/BlogCard';
+import Sidebar from '../components/Sidebar';
 
 
 const BlogPage = () => {
@@ -44,58 +45,62 @@ const BlogPage = () => {
     }, []);
 
     return (
-        <>
-            <Header />
-            <section className="py-10 px-4 bg-gray-100 min-h-[70vh]">
-                <h2 className="text-center text-3xl font-bold text-blue-600 mb-10">Our Blogs</h2>
+        <div className='flex h-screen'>
+            <Sidebar />
+            <div className='h-screen w-full overflow-y-auto'>
+                <Header />
+                <section className="py-10 px-4 bg-gray-100 min-h-[70vh]">
+                    <h2 className="text-center text-3xl font-bold text-blue-600 mb-10">Our Blogs</h2>
 
-                {loading ? (
-                    <p className="text-center text-gray-500">Loading...</p>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                    {loading ? (
+                        <p className="text-center text-gray-500">Loading...</p>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
 
-                        {
-                            blogList.length > 0 ? (
+                            {
+                                blogList.length > 0 ? (
 
-                                blogList.map((blog, idx) => (
-                                    <BlogCard key={idx} data={blog} />
-                                ))
+                                    blogList.map((blog, idx) => (
+                                        <BlogCard key={idx} data={blog} />
+                                    ))
 
-                            ) : (
-                                <div>
-                                    Data Not Found
-                                </div>
-                            )
-                        }
+                                ) : (
+                                    <div>
+                                        Data Not Found
+                                    </div>
+                                )
+                            }
 
 
+                        </div>
+
+
+                    )}
+                    <div className="flex justify-center mt-10 gap-4">
+                        <button
+                            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+                            disabled={pagination.current_page === 1}
+                            onClick={() => fetchBlogs(pagination.current_page - 1)}
+                        >
+                            Previous
+                        </button>
+                        <span className="text-gray-700 mt-2">
+                            Page {pagination.current_page} of {pagination.last_page}
+                        </span>
+                        <button
+                            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+                            disabled={pagination.current_page === pagination.last_page}
+                            onClick={() => fetchBlogs(pagination.current_page + 1)}
+                        >
+                            Next
+                        </button>
                     </div>
 
+                </section>
+                {/* <Footer /> */}
+            </div>
+        </div>
 
-                )}
-                <div className="flex justify-center mt-10 gap-4">
-                    <button
-                        className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-                        disabled={pagination.current_page === 1}
-                        onClick={() => fetchBlogs(pagination.current_page - 1)}
-                    >
-                        Previous
-                    </button>
-                    <span className="text-gray-700 mt-2">
-                        Page {pagination.current_page} of {pagination.last_page}
-                    </span>
-                    <button
-                        className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-                        disabled={pagination.current_page === pagination.last_page}
-                        onClick={() => fetchBlogs(pagination.current_page + 1)}
-                    >
-                        Next
-                    </button>
-                </div>
-
-            </section>
-            <Footer />
-        </>
     );
 };
 

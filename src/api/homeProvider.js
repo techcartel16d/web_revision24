@@ -189,6 +189,15 @@ getBlogDetail: async (id) => {
     }
 },
 
+ helpAndSupport: async (queryData) => {
+        try {
+            const response = await api.post(`/contact-us-store`, queryData);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
 }
 
 export default HomeProvider

@@ -24,7 +24,7 @@ const SubscriptionPage = () => {
         <>
             <Header />
             <SubscriptionPlans userInfo={subscribe} />
-            <Footer />
+            {/* <Footer /> */}
         </>
     )
 }

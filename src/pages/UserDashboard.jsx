@@ -174,8 +174,8 @@ const UserDashboard = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
+    <div className="flex flex-col h-screen w-full">
+
 
       <main className="flex-grow bg-gray-100 py-8 px-4">
         <div className="max-w-6xl mx-auto space-y-6">
@@ -371,68 +371,6 @@ const UserDashboard = () => {
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">
                   💰 Transaction History
                 </h2>
-                {/* <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left border">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th className="p-2 border">#</th>
-                        <th className="p-2 border">Date</th>
-                        <th className="p-2 border">Order Id</th>
-                        <th className="p-2 border">Payment Id</th>
-                        <th className="p-2 border">Amount</th>
-                        <th className="p-2 border">Description</th>
-                        <th className="p-2 border">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {transactions.length === 0 ? (
-                        <tr>
-                          <td className="p-2 border text-center" colSpan="4">
-                            No Transactions Found
-                          </td>
-                        </tr>
-                      ) : (
-                        transactions.map((item, index) => (
-                          <tr key={item.id}>
-                            <td className="p-2 border">{index + 1}</td>
-                            <td className="p-2 border">
-                              {new Date(item.created_at).toLocaleDateString(
-                                "en-IN",
-                                {
-                                  year: "numeric",
-                                  month: "2-digit",
-                                  day: "2-digit",
-                                }
-                              )}
-                            </td>
-                            <td className="p-2 border">{item.order_id}</td>
-                            <td className="p-2 border"> {item.payment_id}</td>
-                            <td className="p-2 border text-green-600 font-bold">
-                              ₹{parseFloat(item.amount).toFixed(2)}
-                            </td>
-                            <td className="p-2 border">
-                              {getTransactionDescription(item)}
-                            </td>
-                            <td className={"p-2 border"}>
-                              <div
-                                className={
-                                  item.paying_status === "true"
-                                    ? "p-2 text-white text-center bg-green-500 rounded-sm"
-                                    : "p-2 text-white text-center bg-red-500 rounded-sm"
-                                }
-                              >
-                                {item.paying_status === "true"
-                                  ? "Success"
-                                  : "Failed"}
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div> */}
-
                 <DataTable
                   columns={columns}
                   data={transactions}
@@ -447,8 +385,6 @@ const UserDashboard = () => {
           )}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };

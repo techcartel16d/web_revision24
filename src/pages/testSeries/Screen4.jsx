@@ -153,18 +153,18 @@ const Screen4 = () => {
 
                 <Checkbox
                     id="example"
-                    links={[
-                        {
-                            link: '/terms-of-service',
-                            link_name: 'Terms & Conditions'
-                        },
-                        {
-                            link: '/privacy-policy',
-                            link_name: 'Privacy Policy'
-                        },
+                    // links={[
+                    //     {
+                    //         link: '/terms-of-service',
+                    //         link_name: 'Terms & Conditions'
+                    //     },
+                    //     {
+                    //         link: '/privacy-policy',
+                    //         link_name: 'Privacy Policy'
+                    //     },
 
-                    ]}
-                    label={`I agree to the`}
+                    // ]}
+                    label={`I have carefully read and fully understood all the instructions. I agree to follow them honestly and will not use any unfair means during this examination. I understand that attempting to gain an advantage for myself or others through dishonest practices will result in immediate disqualification.The decision of Revision24.com will be final in these matters and cannot be appealed.`}
                     checked={isChecked}
                     onChange={setIsChecked}
                 />

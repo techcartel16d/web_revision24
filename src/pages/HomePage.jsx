@@ -21,6 +21,7 @@ import {
   saveUserDataEncrypted,
 } from "../helpers/userStorage";
 import AdBanner from "../components/AdBanner";
+import Sidebar from "../components/Sidebar";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -94,7 +95,7 @@ const HomePage = () => {
   }, []);
 
   return loading ? (
-    <div className="p-4-400 text-red-500 w-full h-screen flex items-center justify-center">
+    <div className="p-4-400  w-full flex items-center justify-center">
       <div className="fading-spinner">
         {[...Array(12)].map((_, i) => (
           <div key={i} className={`bar bar${i + 1}`}></div>
@@ -102,31 +103,38 @@ const HomePage = () => {
       </div>
     </div>
   ) : (
-    <div className="w-full">
-      <Header />
-      {homeData && <HeroBanner banner={homeData?.banner} data={homeData?.test_series_paid} />}
+    <>
 
-      {/* <AdBanner imageUrl={ad} linkUrl="/subscription" /> */}
-        {homeData && (
-        <TestSeriesViewer category={homeData?.category} testSeriesData={homeData?.test_series_paid} />
-      )}
+      <div className="w-full flex h-screen">
+        <Sidebar />
+        <div className="w-full h-screen overflow-y-auto">
+          <Header />
+          {homeData && <HeroBanner banner={homeData?.banner} data={homeData?.test_series_paid} />}
+
+          {/* <AdBanner imageUrl={ad} linkUrl="/subscription" /> */}
+          {homeData && (
+            <TestSeriesViewer category={homeData?.category} testSeriesData={homeData?.test_series_paid} />
+          )}
 
 
 
 
-      {homeData && <ExamSelector category={homeData?.exam_category} />}
-      {/* {
+          {homeData && <ExamSelector category={homeData?.exam_category} />}
+          {/* {
         homeData && (
           <TestSeriesViewer testSeriesData={homeData?.test_series_free} />
 
         )
       } */}
-    
-      {userInfo && !userInfo?.subscription_status && <SubscriptionPlans />}
 
-      {/* <SubscriptionModal /> */}
-      <Footer />
-    </div>
+          {userInfo && !userInfo?.subscription_status && <SubscriptionPlans />}
+
+          {/* <SubscriptionModal /> */}
+        </div>
+        {/* <Footer /> */}
+      </div>
+      {/* <Footer /> */}
+    </>
   );
 };
 

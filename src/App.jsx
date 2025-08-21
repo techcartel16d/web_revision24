@@ -44,6 +44,10 @@ import SubscriptionRespose from './pages/app_pages/SubscriptionRespose';
 import BlogPage from './pages/BlogPage';
 import BlogDetailPage from './pages/BlogDetailPage';
 import { useEffect } from 'react';
+import MyTransactionPage from './pages/MyTransactionPage';
+import MySavedCollectionPage from './pages/MySavedCollectionPage';
+import HelpAndSupportPage from './pages/HelpAndSupportPage';
+import LiveTestQuizePage from './pages/liveTest/LiveTestQuizePage';
 
 function App() {
   // useEffect(() => {
@@ -157,6 +161,10 @@ function App() {
         <Route path="/analysis" element={<ProtectedRoute><Screen6 /></ProtectedRoute>} />
         <Route path="/scc-mock-test" element={<ProtectedRoute><Screen5 /></ProtectedRoute>} />
         <Route path="/test-solutions" element={<ProtectedRoute><Screen7 /></ProtectedRoute>} />
+        <Route path="/my-transaction" element={<ProtectedRoute><MyTransactionPage /></ProtectedRoute>} />
+        <Route path="/saved-items" element={<ProtectedRoute><MySavedCollectionPage /></ProtectedRoute>} />
+        <Route path="/help-support" element={<ProtectedRoute><HelpAndSupportPage /></ProtectedRoute>} />
+        <Route path="/live-quiz-test" element={<ProtectedRoute><LiveTestQuizePage /></ProtectedRoute>} />
 
         {/* ❗️ Catch-all route outside PublicRoute */}
         <Route path="*" element={<NotFoundPage />} />
