@@ -682,7 +682,8 @@ const Screen5 = () => {
             mark_for_review: markedForReview
         };
 
-        // console.log("📤 Submission Data:", submissionData);
+        console.log("📤 Submission Data:", submissionData);
+        return
 
         try {
 

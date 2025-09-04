@@ -7,6 +7,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import { Navigation, Pagination } from 'swiper/modules'
 import LiveQuizCard from './LiveQuizCard'
+import Loading from '../../components/globle/Loading'
 
 const LiveTestQuizePage = () => {
     const dispatch = useDispatch()
@@ -15,15 +16,17 @@ const LiveTestQuizePage = () => {
     const [selectedType, setSelectedType] = useState('')
     const [categoryKeys, setCategoryKeys] = useState([])
     const [selectedCategory, setSelectedCategory] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const getLiveQuiz = async () => {
+        setLoading(true)
         try {
             const res = await dispatch(getLiveQuizSlice()).unwrap();
-            console.log("response live quiz ===>", res);
+            // console.log("response live quiz ===>", res);
 
             if (res?.status_code == 200) {
                 const data = res.data?.not_attended_quizzes
-                console.log(data)
+                // console.log(data)
 
                 if (data && typeof data === 'object' && Object.keys(data).length > 0) {
                     const typeKeys = Object.keys(data)
@@ -40,7 +43,7 @@ const LiveTestQuizePage = () => {
                     // console.log("🎯 Quiz Types:", typeKeys)
                     // console.log("📂 Categories for", defaultType, ":", catKeys)
                 } else {
-                    console.log("❌ No quizzes found")
+                    // console.log("❌ No quizzes found")
                     setQuizTypeKeys([])
                     setCategoryKeys([])
                     setQuizData({})
@@ -48,6 +51,8 @@ const LiveTestQuizePage = () => {
             }
         } catch (error) {
             console.error("❌ ERROR:", error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -101,18 +106,30 @@ const LiveTestQuizePage = () => {
             </div>
 
             {/* Show Quizzes */}
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {quizData[selectedType] && quizData[selectedType][selectedCategory]?.length > 0 ? (
-                    quizData[selectedType][selectedCategory].map((quiz, index) => {
-                        return(
-                        <LiveQuizCard key={quiz.id} data={quiz} index={index} />
-                    )
-                    })
+            {
+                loading ? (
+                    <Loading />
                 ) : (
-                    <p>No quizzes available</p>
-                )}
-            </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                        {
+
+                            quizData[selectedType] && quizData[selectedType][selectedCategory]?.length > 0 ? (
+                                quizData[selectedType][selectedCategory].map((quiz, index) => {
+                                    return (
+                                        <LiveQuizCard key={quiz.id} data={quiz} index={index} />
+                                    )
+                                })
+                            ) : (
+                                <p>No quizzes available</p>
+                            )
+
+                        }
+                    </div>
+                )
+            }
+
+
         </div>
     )
 }

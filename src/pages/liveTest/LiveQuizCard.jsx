@@ -46,7 +46,7 @@ const LiveQuizCard = ({ data, index }) => {
   const getButtonConfig = () => {
     switch (status) {
       case "upcoming":
-        return { label: "Upcoming", color: "bg-gray-400 cursor-not-allowed", disabled: true };
+        return { label: "Register", color: "bg-green-400 cursor-pointer", disabled: false };
       case "active":
         return { label: "Start Now", color: "bg-sky-500 hover:bg-sky-600", disabled: false };
       case "expired":

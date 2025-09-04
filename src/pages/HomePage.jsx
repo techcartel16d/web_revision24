@@ -22,6 +22,12 @@ import {
 } from "../helpers/userStorage";
 import AdBanner from "../components/AdBanner";
 import Sidebar from "../components/Sidebar";
+import { secureSet } from "../helpers/storeValues";
+
+
+
+
+
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -38,9 +44,12 @@ const HomePage = () => {
       const res = await dispatch(homePageSlice()).unwrap();
       // console.log("home data response====>", res)
       setAd(res.data.popup.image);
+      let previousStr = JSON.stringify(res.data.previous_year_exam)
 
+      secureSet("previouseYearTest", previousStr)
       setHomeData(res.data);
       // console.log("home data in home screen", res.data)
+
       // storage.set('home_category', JSON.stringify(res.data.exam_category))
       // console.log("home data in home screen", res.data.exam_category)
       setBannerData(res.data.banner);
@@ -119,13 +128,15 @@ const HomePage = () => {
 
 
 
-          {homeData && <ExamSelector category={homeData?.exam_category} />}
-          {/* {
-        homeData && (
-          <TestSeriesViewer testSeriesData={homeData?.test_series_free} />
-
-        )
-      } */}
+          {/* {homeData && <ExamSelector category={homeData?.exam_category} />} */}
+          {
+            /* {
+          homeData && (
+            <TestSeriesViewer testSeriesData={homeData?.test_series_free} />
+  
+          )
+        } */
+          }
 
           {userInfo && !userInfo?.subscription_status && <SubscriptionPlans />}
 

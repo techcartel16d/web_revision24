@@ -154,7 +154,7 @@ const HomeProvider = {
 
     userProfileGet: async () => {
         try {
-       
+
 
             const response = await api.post(`/profile-get`);
             return response.data;
@@ -170,26 +170,26 @@ const HomeProvider = {
             throw error.response?.data || error.message;
         }
     },
-getBlog: async (page = 1) => {
-    try {
-        const response = await api.get(`/exam-info?page=${page}`);
-        return response.data;
-    } catch (error) {
-        throw error.response?.data || error.message;
-    }
-},
+    getBlog: async (page = 1) => {
+        try {
+            const response = await api.get(`/exam-info?page=${page}`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
 
-  // In HomeProvider.js
-getBlogDetail: async (id) => {
-    try {
-        const response = await api.get(`exam-info-detail/${id}`);
-        return response.data;
-    } catch (error) {
-        throw error.response?.data || error.message;
-    }
-},
+    // In HomeProvider.js
+    getBlogDetail: async (id) => {
+        try {
+            const response = await api.get(`exam-info-detail/${id}`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
 
- helpAndSupport: async (queryData) => {
+    helpAndSupport: async (queryData) => {
         try {
             const response = await api.post(`/contact-us-store`, queryData);
             return response.data;
@@ -198,6 +198,43 @@ getBlogDetail: async (id) => {
         }
     },
 
+    saveCollection: async (collectionData) => {
+        try {
+            const response = await api.post(`/user-collection`, {collection: collectionData});
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+    removeUserCollection: async (collection) => {
+        // console.log("collection in user Provider========>", { collection })
+        try {
+            const res = await api.post(`/user-collection-remove`, {collection});
+            return res.data;
+        } catch (error) {
+            console.log("ERROR IN USER COLLECTION ADD API ", error)
+        }
+    },
+
+
+    // GET USER COLLECTION DETAILS API
+    getUserCollectionDetails: async () => {
+        try {
+            const res = await api.get(`/user-collection-detail-get`);
+            return res.data;
+        } catch (error) {
+            console.log("ERROR IN USER COLLECTION DETAILS API ", error)
+        }
+    },
+    // GET USER COLLECTION DETAILS API
+    getLiveVideo: async () => {
+        try {
+            const res = await api.get(`/live-classes`);
+            return res.data;
+        } catch (error) {
+            console.log("ERROR IN USER COLLECTION DETAILS API ", error)
+        }
+    },
 }
 
 export default HomeProvider

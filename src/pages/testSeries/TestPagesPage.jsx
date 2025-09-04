@@ -64,7 +64,7 @@ const TestPagesPage = () => {
             // return
             try {
                 const data = await secureGetTestData('pause_status', 'pause_status_array');
-                // // console.log("🔐 Encrypted pause_status_array:", data);
+                console.log("🔐 Encrypted pause_status_array:", data);
                 setPauseStatusArray(data || []);
             } catch (error) {
                 // console.error("❌ Failed to load pause status:", error);
@@ -76,7 +76,7 @@ const TestPagesPage = () => {
     }, []);
 
 
-    
+
 
 
 
@@ -128,7 +128,6 @@ const TestPagesPage = () => {
                 ).unwrap();
 
                 if (res.status_code === 200) {
-console.log(res)
                     setTestData(prev =>
                         page === 1 ? res.data.test_series.data : [...prev, ...res.data.test_series.data]
                     );
@@ -199,10 +198,9 @@ console.log(res)
 
 
 
-    const getUserInfo = () => {
-        const strUser = localStorage.getItem("user");
-        const parsedUser = JSON.parse(strUser) || {};
-        setUserInfo(parsedUser);
+    const getUserInfo = async () => {
+        const userData = await getUserDataDecrypted("user");
+        setUserInfo(userData);
 
 
     };
@@ -437,8 +435,8 @@ console.log(res)
 
                         )
                     })}
-
                 </div>
+
                 {pagination.current_page < pagination.last_page && (
                     <div className="text-center mt-4">
                         <button

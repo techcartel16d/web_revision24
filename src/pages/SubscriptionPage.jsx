@@ -6,24 +6,37 @@ import { getUserDataDecrypted } from '../helpers/userStorage'
 
 const SubscriptionPage = () => {
     const [subscribe, setSubscribe] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const getUserData = async () => {
+        setLoading(true)
         try {
             const user = await getUserDataDecrypted()
             setSubscribe(user)
-            console.log()
+            console.log(user)
         } catch (error) {
             console.log("ERROR IN SUBSCRIBE PAGE", error)
+        } finally {
+            setLoading(false)
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getUserData()
-    },[])
+    }, [])
+
     return (
         <>
             <Header />
-            <SubscriptionPlans userInfo={subscribe} />
+
+{
+    subscribe && (
+
+        <SubscriptionPlans userInfo={subscribe} />
+    )
+}
+
+
             {/* <Footer /> */}
         </>
     )

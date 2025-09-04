@@ -189,12 +189,66 @@ export const getBlogDetailSlice = createAsyncThunk(
         }
     },
 );
+
+
+
 export const helpAndSupportSlice = createAsyncThunk(
     'home/helpAndSupportSlice',
     async (queryData, { rejectWithValue }) => {
         try {
             const response = await HomeProvider.helpAndSupport(queryData);
             return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+
+// SAVE COLLECTION SLICE
+export const saveCollectionSlice = createAsyncThunk(
+    'home/saveCollectionSlice',
+    async (collectionData, { rejectWithValue }) => {
+        try {
+            const response = await HomeProvider.saveCollection(collectionData);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+
+export const removeUserCollectionSlice = createAsyncThunk(
+    'home/removeUserCollectionSlice',
+    async (collection, { rejectWithValue }) => {
+        console.log('collectionData in userSlice ======>', collection);
+        try {
+            const res = await HomeProvider.removeUserCollection(collection);
+            return res;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+
+// GET USER COLLECTION DETAILS
+export const getUserCollectionDetailSlice = createAsyncThunk(
+    'home/getUserCollectionDetailSlice',
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await HomeProvider.getUserCollectionDetails();
+            return res;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+// GET USER COLLECTION DETAILS
+export const getLiveVideoSlice = createAsyncThunk(
+    'home/getLiveViewSlice',
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await HomeProvider.getLiveVideo();
+            return res;
         } catch (error) {
             return rejectWithValue(error);
         }

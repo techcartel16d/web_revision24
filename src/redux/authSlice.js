@@ -234,6 +234,7 @@ export const addUserCollectionSlice = createAsyncThunk(
 );
 
 //REMOVE USER COLLECTION
+
 export const removeUserCollectionSlice = createAsyncThunk(
   'user/removeUserCollectionSlice',
   async (collection, { rejectWithValue }) => {
@@ -246,6 +247,7 @@ export const removeUserCollectionSlice = createAsyncThunk(
     }
   },
 );
+
 //REPORTED QUESTION
 export const reportedQuestionSlice = createAsyncThunk(
   'user/reportedQuestionSlice',

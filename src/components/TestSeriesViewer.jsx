@@ -1,13 +1,99 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineGTranslate } from 'react-icons/md';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation, Pagination } from 'swiper/modules';
+import { Bookmark, BookmarkCheck, PlusSquare } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { getUserCollectionDetailSlice, removeUserCollectionSlice, saveCollectionSlice } from '../redux/HomeSlice';
+import { showErrorToast, showSuccessToast } from '../utils/ToastUtil';
+import { toggleBookmark } from '../helpers/Add_RemoveBookmark';
 
 const TestSeriesViewer = ({ testSeriesData, category }) => {
   const nav = useNavigate();
+  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
+  const [packageIds, setPackageIds] = useState([])
+  const [bookmarkedIds, setBookmarkedIds] = useState([]);
+  // const addBookmarkedPackage = async () => {
+  //   const collection = {
+  //     video_id: [],
+  //     lession_id: [],
+  //     class_note_id: [],
+  //     study_note_id: [],
+  //     article_id: [],
+  //     news_id: [],
+  //     question_id: [],
+  //     test_series_id: [],
+  //     package_id: []
+  //   };
+  //   setLoading(true)
+  //   try {
+  //     const res = await dispatch(saveCollectionSlice(collection)).unwrap();
+  //     if (res.status_code == 200) {
+  //       showSuccessToast(res.message)
+  //     } else {
+  //       showErrorToast(res.message)
+  //     }
+
+  //   } catch (error) {
+  //     showErrorToast(error.message)
+
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
+
+  // const collectPackageIds = () => {
+
+  // }
+
+
+  const fetchBookMarkTestSeries = async () => {
+    try {
+      const res = await dispatch(getUserCollectionDetailSlice()).unwrap();
+      // console.log("book mark test series fetch", res);
+
+      if (res.status_code == 200) {
+        // showSuccessToast(res.message)
+        // Toast.show({
+        //     text1: res.message || "Bookmarks fetched",
+        //     type: 'success',
+        //     position: 'bottom'
+        // });
+
+        const dataArray = Array.isArray(res.data.package_id?.data)
+          ? res.data.package_id.data
+          : [];
+
+        const ids = dataArray.map(item => item.id); // extract only IDs
+        // console.log(ids)
+
+        // console.log("Extracted IDs:", ids);
+        setBookmarkedIds(ids);
+      } else {
+         showSuccessToast(res.message)
+        // Toast.show({
+        //     text1: "No bookmarks found",
+        //     type: 'info',
+        //     position: 'bottom'
+        // });
+      }
+    } catch (error) {
+      console.error("Bookmark fetch error", error);
+    //  showErrorToast()
+    }
+  };
+
+
+  useEffect(() => {
+    fetchBookMarkTestSeries(); // just fetch bookmarks once on load
+  }, []);
+
+
 
   if (!Array.isArray(category) || category.length === 0) {
     return <p className="text-gray-600 p-4">No categories available to show test series.</p>;
@@ -52,7 +138,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
               {series.map((item, index) => (
                 <SwiperSlide key={index}>
                   <div
-                    onClick={() => nav('/testpakages', { state: { item, testId: item.id } })}
+
                     className="bg-white rounded-xl shadow hover:shadow-lg transition border cursor-pointer overflow-hidden"
                   >
                     {/* Header */}
@@ -92,10 +178,30 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                           </li>
                         )}
                       </ul>
+                      <div className='flex gap-1.5 items-center justify-center'>
 
-                      <button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-2 text-sm rounded-md font-semibold">
-                        View Test Series
-                      </button>
+                        <button onClick={() => nav('/testpakages', { state: { item, testId: item.id } })} className="w-[80%] bg-cyan-500 hover:bg-cyan-600 text-white py-2 text-sm rounded-sm font-semibold cursor-pointer">
+                          View Test Series
+                        </button>
+
+                        <button onClick={() =>
+                          toggleBookmark({
+                            type: 'package_id',
+                            id: item.id,
+                            bookmarkedIds,
+                            setBookmarkedIds,
+                            dispatch,
+                            saveCollectionSlice,
+                            removeUserCollectionSlice
+                          })
+                        } className="w-[15%] border bg-cyan-500 border-white text-white py-1 text-sm rounded-sm flex items-center justify-center cursor-pointer">
+                          {
+                            bookmarkedIds.includes(item.id) ? <BookmarkCheck /> : <Bookmark className='text-xs' />
+                          }
+                         
+                          
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </SwiperSlide>

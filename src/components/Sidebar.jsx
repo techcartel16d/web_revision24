@@ -15,7 +15,8 @@ import {
   HelpCircleIcon,
   Settings,
   X,
-  Menu
+  Menu,
+  Home
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
@@ -47,9 +48,16 @@ const Sidebar = () => {
 
   const menu = [
     {
+      section: '',
+      items: [
+        { name: 'Home', icon: <Home size={18} />, path: '/' },
+        // { name: 'Skill Academy', icon: <GraduationCap size={18} />, path: '/skill-academy' },
+      ],
+    },
+    {
       section: 'LEARN',
       items: [
-        { name: 'Calculation Booster', icon: <Calculator size={18} />, path: '/supercoaching' },
+        // { name: 'Calculation Booster', icon: <Calculator size={18} />, path: '#' },
         { name: 'Live Classes', icon: <Calendar size={18} />, path: '/live-classes', badge: 'FREE' },
         // { name: 'Skill Academy', icon: <GraduationCap size={18} />, path: '/skill-academy' },
       ],
@@ -60,11 +68,12 @@ const Sidebar = () => {
         { name: 'Test Series', icon: <FileText size={18} />, path: '/test-series' },
         { name: 'Live Tests & Quizzes', icon: <Calendar size={18} />, path: '/live-quiz-test' },
         { name: 'Previous Year Papers', icon: <FileText size={18} />, path: '/previous-papers' },
-        { name: 'Practice', icon: <RefreshCcw size={18} />, path: '/practice' },
+        { name: 'Practice', icon: <RefreshCcw size={18} />, path: '/practice', badge:'FREE' },
         { name: 'Free Quizzes', icon: <HelpCircle size={18} />, path: '/free-quizzes', badge: 'NEW' },
         { name: 'Attempted Tests', icon: <CheckCircle size={18} />, path: '/attempted-tests' },
         { name: 'Focus+', icon: <Award size={18} />, path: '/subscription', badge: 'NEW' },
-        { name: 'Exams', icon: <FileText size={18} />, path: '/exams' },
+        { name: 'Exams Blog', icon: <FileText size={18} />, path: '/blog' },
+        // { name: 'Exams', icon: <FileText size={18} />, path: '/exams' },
         // { name: 'Pass Pro', icon: <Award size={18} />, path: '/pass-pro' },
         // { name: 'Pass Elite', icon: <Award size={18} />, path: '/pass-elite' },
         // { name: 'Rank Predictor', icon: <Award size={18} />, path: '/rank-predictor', badge: 'NEW' },
