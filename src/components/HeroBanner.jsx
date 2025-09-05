@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../utils/auth';
 
 const HeroBanner = ({ banner , data }) => {
+    // console.log(banner)
     const nav = useNavigate();
     const [auth, setAuth] = useState(false);
     useEffect(() => {

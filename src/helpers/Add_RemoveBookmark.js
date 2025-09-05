@@ -36,11 +36,11 @@ export const toggleBookmark = async ({
 
         try {
             const res = await dispatch(removeUserCollectionSlice(collection)).unwrap(); // ✅ FIXED
-             cb()
+            cb()
             showSuccessToast(res.message)
         } catch (error) {
             showErrorToast('Bookmark remove error')
-          
+
             setBookmarkedIds(bookmarkedIds);
         }
     } else {
@@ -57,7 +57,7 @@ export const toggleBookmark = async ({
             showSuccessToast(res.message || "Bookmarked")
         } catch (error) {
             console.error("Bookmark add error", error);
-        
+
             showErrorToast("Failed to add bookmark")
             setBookmarkedIds(bookmarkedIds);
         }

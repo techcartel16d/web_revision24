@@ -9,6 +9,7 @@ import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import stripLatex from '../../helpers/cleanMathTags';
 import MathRenderer from '../../utils/MathRenderer';
+import { previouseYearSolutionGetSlice } from '../../redux/freeTestSlice';
 
 
 
@@ -16,8 +17,9 @@ const PreviouseYearExamSolutionsPage = () => {
   const nav = useNavigate()
   const dispatch = useDispatch()
   const { state } = useLocation()
-  console.log("state==>", state)
-  return
+  // console.log("state==>", state?.state?.testId)
+  
+  
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [questionsState, setQuestionsState] = useState([]);
   const [loading, setLoading] = useState(false)
@@ -36,10 +38,12 @@ const PreviouseYearExamSolutionsPage = () => {
   const [showSolution, setShowSolution] = useState(false);
   const [userInfo, setUserInfo] = useState(null)
   const [isFullScreen, setIsFullScreen] = useState(false)
+
+  // not use 
   const getTestSeriesQuestion = async () => {
     try {
       setLoading(true)
-      const res = await dispatch(getSingleCategoryPackageTestseriesQuestionSlice(state?.testData?.my_detail?.test_id)).unwrap()
+      const res = await dispatch(previouseYearSolutionGetSlice(state?.state?.testId)).unwrap()
       if (res.status_code == 200) {
         // console.log("question data fetching", res)
         setQuestionsState(res.data)
@@ -59,6 +63,8 @@ const PreviouseYearExamSolutionsPage = () => {
 
 
   }
+
+
   const [wrongQuestions, setWrongQuestions] = useState([]);
 
 
@@ -105,14 +111,13 @@ const PreviouseYearExamSolutionsPage = () => {
 
   const fetchUserSolution = async () => {
     try {
-      const res = await dispatch(fetchUserTestSeriesSolution(state?.testData?.my_detail?.test_id)).unwrap();
-      // console.log("res", res)
+      const res = await dispatch(previouseYearSolutionGetSlice(state?.state?.testId)).unwrap();
 
       if (res.status_code === 200) {
-        setQuestionsState(res.data.all_question_list);
-        setSkippedQuestions(res.data.skip_question);
-        setMarkedForReview(res.data.mark_for_review);
-        setOptionSelected(res.data.attend_question);
+        setQuestionsState(res.data.all_question_list || []);
+        setSkippedQuestions(res.data.skip_question || []);
+        setMarkedForReview(res.data.mark_for_review || []);
+        setOptionSelected(res.data.attend_question || []);
 
         // ✅ Detect wrong answered questions properly
         const wrong = res.data.all_question_list?.filter(q => {
@@ -193,8 +198,6 @@ const PreviouseYearExamSolutionsPage = () => {
   useEffect(() => {
     setQuestionStartTime(Date.now());
   }, [currentQuestion]);
-
-
 
 
 

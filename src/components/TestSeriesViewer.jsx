@@ -12,6 +12,8 @@ import { showErrorToast, showSuccessToast } from '../utils/ToastUtil';
 import { toggleBookmark } from '../helpers/Add_RemoveBookmark';
 
 const TestSeriesViewer = ({ testSeriesData, category }) => {
+  // console.log("testSeriesData", testSeriesData)
+
   const nav = useNavigate();
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)

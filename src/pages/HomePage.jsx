@@ -33,6 +33,7 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const [homeData, setHomeData] = useState(null);
   const [bannerData, setBannerData] = useState([]);
+  const [category, setCategory] = useState([])
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
@@ -42,17 +43,18 @@ const HomePage = () => {
     try {
       setLoading(true);
       const res = await dispatch(homePageSlice()).unwrap();
-      // console.log("home data response====>", res)
-      setAd(res.data.popup.image);
+
+      setCategory(res.data.category)
+      // setAd(res.data.popup.image);
       let previousStr = JSON.stringify(res.data.previous_year_exam)
 
-      secureSet("previouseYearTest", previousStr)
       setHomeData(res.data);
+      setBannerData(res.data.banner);
+      secureSet("previouseYearTest", previousStr)
       // console.log("home data in home screen", res.data)
 
       // storage.set('home_category', JSON.stringify(res.data.exam_category))
       // console.log("home data in home screen", res.data.exam_category)
-      setBannerData(res.data.banner);
       setLoading(false);
       setRefreshing(false);
     } catch (error) {
@@ -92,6 +94,8 @@ const HomePage = () => {
     }
   };
 
+  
+
   useEffect(() => {
     getHomeData();
     // Call this from a dev tool, admin page, or `useEffect`
@@ -103,6 +107,7 @@ const HomePage = () => {
     loadUserData();
   }, []);
 
+
   return loading ? (
     <div className="p-4-400  w-full flex items-center justify-center">
       <div className="fading-spinner">
@@ -113,16 +118,16 @@ const HomePage = () => {
     </div>
   ) : (
     <>
-
       <div className="w-full flex h-screen">
         <Sidebar />
         <div className="w-full h-screen overflow-y-auto">
-          <Header />
-          {homeData && <HeroBanner banner={homeData?.banner} data={homeData?.test_series_paid} />}
+
+          {/* <Header /> */}
+          {bannerData && <HeroBanner banner={bannerData} data={homeData?.test_series_paid} />}
 
           {/* <AdBanner imageUrl={ad} linkUrl="/subscription" /> */}
-          {homeData && (
-            <TestSeriesViewer category={homeData?.category} testSeriesData={homeData?.test_series_paid} />
+          {category.length > 0 && (
+            <TestSeriesViewer category={category} testSeriesData={homeData?.test_series_paid} />
           )}
 
 
@@ -130,12 +135,12 @@ const HomePage = () => {
 
           {/* {homeData && <ExamSelector category={homeData?.exam_category} />} */}
           {
-            /* {
-          homeData && (
-            <TestSeriesViewer testSeriesData={homeData?.test_series_free} />
+
+          // homeData && (
+          //   <TestSeriesViewer testSeriesData={homeData?.test_series_free} />
   
-          )
-        } */
+          // )
+
           }
 
           {userInfo && !userInfo?.subscription_status && <SubscriptionPlans />}

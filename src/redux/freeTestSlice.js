@@ -70,14 +70,41 @@ export const attendPreviouseYearQuestionSlice = createAsyncThunk(
   },
 );
 
+// Async Thunks attendPreviouseYearQuestionSlice
+export const previouseYearSolutionGetSlice = createAsyncThunk(
+  'user/previouseYearSolutionGetSlice',
+  async (id, { rejectWithValue }) => {
+    console.log("previouseYearSubmitData", id)
+    try {
+      const response = await freeTestProvider.previouseYearSolutionGet(
+        id,
+      );
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
+
 // Async Thunks getPreviouseYearPaperRankSlice
 export const getPreviouseYearPaperRankSlice = createAsyncThunk(
   'user/getPreviouseYearPaperRankSlice',
   async (previousPaperId, { rejectWithValue }) => {
     try {
       const response = await freeTestProvider.getPreviouseYearPaperRank(
-        previousPaperId,
-      );
+previousPaperId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  },
+);
+// Async Thunks getCurrentAffairesSlice
+export const getCurrentAffairesSlice = createAsyncThunk(
+  'user/getCurrentAffairesSlice',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await freeTestProvider.getCurrentAffairsData();
       return response;
     } catch (error) {
       return rejectWithValue(error);

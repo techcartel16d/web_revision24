@@ -1,8 +1,22 @@
 export const isQuizStartAvailable = (startDateTime) => {
-    if (!startDateTime) return false;
-    const now = new Date();
-    const start = new Date(startDateTime);
-    return now >= start;
+  if (!startDateTime) return false;
+
+  const now = new Date();
+  let start;
+
+  // ✅ Check if string is only "YYYY-MM-DD"
+  if (/^\d{4}-\d{2}-\d{2}$/.test(startDateTime)) {
+    // add time as 00:00:00
+    start = new Date(`${startDateTime}T00:00:00`);
+  } else {
+    // try parsing normally (for "00:00 am, 26 Jul 2025" or ISO string)
+    start = new Date(startDateTime);
+  }
+
+  // ✅ Invalid date fallback
+  if (isNaN(start.getTime())) return false;
+
+  return now >= start;
 };
 
 export const isQuizUpcoming = (startDateTime) => {

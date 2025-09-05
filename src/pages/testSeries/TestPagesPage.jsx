@@ -127,7 +127,8 @@ const TestPagesPage = () => {
                     })
                 ).unwrap();
 
-                if (res.status_code === 200) {
+                if (res.status_code == 200) {
+                    // console.log()
                     setTestData(prev =>
                         page === 1 ? res.data.test_series.data : [...prev, ...res.data.test_series.data]
                     );

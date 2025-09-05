@@ -17,6 +17,48 @@ export const getLiveQuizSlice = createAsyncThunk(
     },
 );
 
+export const getMegaQuizAttendQuetionGetSlice = createAsyncThunk(
+    'megaQuize/getMegaQuizAttendQuetionGetSlice',
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await liveQuizeTest.getMegaQuizAttendQuestion(id);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+export const megaQuizAttendSubmitSlice = createAsyncThunk(
+    'megaQuize/megaQuizAttendSubmitSlice',
+    async (megaQuizData, { rejectWithValue }) => {
+        try {
+            const response = await liveQuizeTest.megaQuizAttendSubmit(
+                megaQuizData,
+            );
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+
+export const megaQuizResultSlice = createAsyncThunk(
+    'megaQuize/megaQuizResultSlice',
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await liveQuizeTest.megaQuizResult(id);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+
+
+
+
+
+
 // Slice
 const liveQuize = createSlice({
     name: 'liveQuizeSlice',
@@ -25,7 +67,7 @@ const liveQuize = createSlice({
     },
 
     reducers: {
-        
+
     }
 
 }

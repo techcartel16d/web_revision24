@@ -7,7 +7,7 @@ const ExamInstructionsModal = ({ isOpen, onClose, onAgree, testData = [], testIn
   const totalQuestions = subjects.reduce((sum, s) => sum + parseInt(s.no_of_question || 0), 0);
   const totalMarks = subjects.reduce((sum, s) => sum + parseInt(s.marks || 0), 0);
   const negativeMark = subjects[0]?.negative_mark || testInfo?.negative_mark || '0';
-  const duration = testInfo?.time || 60;
+  const duration = testInfo?.duration || 0;
   return (
     <div onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.5)] bg-opacity-50 px-4">
       <div className="bg-white max-w-5xl w-full max-h-[90vh] overflow-y-auto rounded-lg shadow-lg p-6 relative">

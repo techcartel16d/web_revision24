@@ -56,6 +56,28 @@ const freeTestProvider = {
     }
   },
 
+  previouseYearSolutionGet: async (previousPaperId) => {
+    console.log("previousPaperId", previousPaperId)
+    try {
+      const response = await api.get(`/user-attend-previous-year-exam-question-solution?previous_year_exam_id=${previousPaperId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+
+    getCurrentAffairsData: async () => {
+        try {
+          
+
+            const response = await api.get(`/news`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
 }
 
 export default freeTestProvider

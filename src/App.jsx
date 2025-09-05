@@ -57,6 +57,10 @@ import PreviouseYearSymbolPage from './pages/pyp_test/PreviouseYearSymbolPage';
 import PreviouseYearExamPage from './pages/pyp_test/PreviouseYearExamPage';
 import PreviouseYearResultPage from './pages/pyp_test/PreviouseYearResultPage';
 import PreviouseYearExamSolutionsPage from './pages/pyp_test/PreviouseYearExamSolutionsPage';
+import LiveQuizeInstructionsPage from './pages/liveTest/LiveQuizeInstructionsPage';
+import LiveQuizAttendPage from './pages/liveTest/LiveQuizAttendPage';
+import CurrentAffairesPage from './pages/freeTests/CurrentAffairesPage';
+import CurrentAffairesdetailsPage from './pages/freeTests/CurrentAffairesdetailsPage';
 
 function App() {
   // useEffect(() => {
@@ -114,7 +118,7 @@ function App() {
         {/* ALWAYS ACCESSIBLE ROUTE */}
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutUsPage />} />
-        <Route path="/subscription" element={<SideBarLayout><SubscriptionPage /></SideBarLayout> } />
+        <Route path="/subscription" element={<SideBarLayout><SubscriptionPage /></SideBarLayout>} />
         {/* <Route path="/test-series" element={<TestSeriesPage />} /> */}
         <Route path="/terms-of-service" element={<TermsOfServicePage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -173,7 +177,6 @@ function App() {
         <Route path="/my-transaction" element={<SideBarLayout><MyTransactionPage /></SideBarLayout>} />
         <Route path="/saved-items" element={<SideBarLayout><MySavedCollectionPage /></SideBarLayout>} />
         <Route path="/help-support" element={<SideBarLayout><HelpAndSupportPage /></SideBarLayout>} />
-        <Route path="/live-quiz-test" element={<SideBarLayout><LiveTestQuizePage /></SideBarLayout>} />
         <Route path="/live-classes" element={<SideBarLayout><LiveClassesPage /></SideBarLayout>} />
         <Route path="/test-series" element={<SideBarLayout><TestSeriesPage /></SideBarLayout>} />
         <Route path="/practice" element={<SideBarLayout><TopicsWiseTestPage /></SideBarLayout>} />
@@ -183,8 +186,23 @@ function App() {
         <Route path="/previous-instruction" element={<ProtectedRoute><PreviouseYearInstructionPage /></ProtectedRoute>} />
         <Route path="/previous-symbol" element={<ProtectedRoute><PreviouseYearSymbolPage /></ProtectedRoute>} />
         <Route path="/previous-test" element={<ProtectedRoute><PreviouseYearExamPage /></ProtectedRoute>} />
-        <Route path="/previous-analysis" element={<ProtectedRoute><PreviouseYearResultPage/></ProtectedRoute>} />
-         <Route path="/previouse-year-exam-solutions" element={<ProtectedRoute><PreviouseYearExamSolutionsPage /></ProtectedRoute>} />
+        <Route path="/previous-analysis" element={<ProtectedRoute><PreviouseYearResultPage /></ProtectedRoute>} />
+        <Route path="/previouse-year-exam-solutions" element={<ProtectedRoute><PreviouseYearExamSolutionsPage /></ProtectedRoute>} />
+
+        {/* LIVE QUIZ TEST PRACTICE */}
+        <Route path="/live-quiz-test" element={<SideBarLayout><LiveTestQuizePage /></SideBarLayout>} />
+        <Route path="/live-quiz-instruction" element={<ProtectedRoute><LiveQuizeInstructionsPage /></ProtectedRoute>} />
+        <Route path="/live-quiz-attends" element={<ProtectedRoute><LiveQuizAttendPage /></ProtectedRoute>} />
+
+
+        {/* FREE TEST ROUTES */}
+
+
+        <Route path="/current-affairs" element={<SideBarLayout><CurrentAffairesPage /></SideBarLayout>} />
+        <Route path="/current-affairs-details" element={<SideBarLayout><CurrentAffairesdetailsPage /></SideBarLayout>} />
+  
+
+
 
         {/* ❗️ Catch-all route outside PublicRoute */}
         <Route path="*" element={<NotFoundPage />} />

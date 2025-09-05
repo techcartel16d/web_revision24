@@ -6,7 +6,7 @@ import { getAllPreviouseYearDataSlice } from "../../redux/freeTestSlice";
 import Loading from "../../components/globle/Loading";
 import { getUserDataDecrypted } from "../../helpers/userStorage";
 import { secureGetTestData } from "../../helpers/testStorage";
-import { isQuizStartAvailable } from "../../helpers/checkTestStartDate";
+import { formatStartDateTime, isQuizStartAvailable } from "../../helpers/checkTestStartDate";
 import { useNavigate } from "react-router-dom";
 import { secureGet } from "../../helpers/storeValues";
 import ResumeTestModal from "../../components/ResumeTestModal";
@@ -19,9 +19,10 @@ const PreviousYearTestSeries = () => {
     const [years, setYears] = useState([])
     const [userInfo, setUserInfo] = useState({});
     const [activeYear, setActiveYear] = useState('');
+    const [activeCategory, setActiveCategory] = useState('');
     const [loading, setLoading] = useState(false)
     const [previous_year_exam, setPreviousYearExam] = useState(null)
-    const [subscribe, setSubscribe] = useState(null);
+    const [subscribe, setSubscribe] = useState(false);
     const [pauseStatusArray, setPauseStatusArray] = useState([]);
     const loadUserData = async () => {
         const user = await getUserDataDecrypted();
@@ -62,6 +63,11 @@ const PreviousYearTestSeries = () => {
         loadPauseStatus();
     }, []);
 
+    const examCategory  = [
+        "SSC CGL - Graduation Level",
+        "SSC CHSL - 12th Level"
+    ]
+
 
 
     const getPreviouseExam = async (page = 1) => {
@@ -72,8 +78,9 @@ const PreviousYearTestSeries = () => {
             if (res.status_code == 200) {
                 let years = Object.keys(res.data);
                 setYears(years);
+                setActiveCategory(examCategory[0])
                 setPreviousYearExam(res.data);
-                console.log("res.data", res.data)
+                // console.log("res.data", res.data)
 
                 // Set first active year
                 setActiveYear(years[0]);
@@ -138,6 +145,23 @@ const PreviousYearTestSeries = () => {
                     <>
                         <div className="sticky top-0 z-20 bg-white py-4">
                             <Swiper slidesPerView="auto" spaceBetween={12} className="mb-4">
+                                {examCategory.map((cat) => (
+                                    <SwiperSlide key={cat} style={{ width: "auto" }}>
+                                        <button
+                                        onClick={() => setActiveCategory(cat)}
+                                            className={`px-6 py-2 rounded-lg font-semibold transition ${activeCategory == cat
+                                                ? "bg-blue-600 text-white"
+                                                : "bg-gray-100 text-gray-700"
+                                                }`}
+                                        >
+                                            {cat}
+                                        </button>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </div>
+                        <div className="sticky top-0 z-20 bg-white py-4">
+                            <Swiper slidesPerView="auto" spaceBetween={12} className="mb-4">
                                 {years.map((year) => (
                                     <SwiperSlide key={year} style={{ width: "auto" }}>
                                         <button
@@ -159,8 +183,10 @@ const PreviousYearTestSeries = () => {
                             {previous_year_exam && previous_year_exam[activeYear]?.map((exam) => {
                                 // console.log(exam)
                                 const isPaused = pauseStatusArray.some(item => item.test_id === exam.id && item.isPaused);
+                                const bg = exam.exam_type === 'free' ? "#" : '#fff'
+                                const text = exam.exam_type === 'free' ? "#fff" : '#000'
                                 return (
-                                    <div key={exam.id} className="p-4 rounded-xl relative border overflow-hidden border-gray-200 shadow-sm bg-white hover:shadow-md transition">
+                                    <div key={exam.id} className={exam.exam_type === 'free' ?  `bg-gradient-to-b from-[#00C950] via-[#4dff88] to-[#b3ffcc] p-4 rounded-xl relative border overflow-hidden  border-gray-200 shadow-sm hover:shadow-md transition` :`p-4 rounded-xl relative border overflow-hidden bg-white border-gray-200 shadow-sm hover:shadow-md transition` }>
                                         {
                                             exam.status == "inactive" && (
                                                 <div className="absolute top-0 left-0 bg-[rgba(0,0,0,0.6)] w-full h-full">  </div>
@@ -168,8 +194,9 @@ const PreviousYearTestSeries = () => {
                                             )
 
                                         }
-
-                                        <p className="text-sm font-bold text-green-600 uppercase mb-1">
+                                        <p style={{
+                                            color:text
+                                        }} className="text-sm font-bold uppercase mb-1">
                                             {exam.exam_type}
                                         </p>
                                         <h3 className="text-lg font-semibold mb-2">{exam.title}</h3>
@@ -233,7 +260,7 @@ const PreviousYearTestSeries = () => {
                                                         )
                                                     )
                                                 )
-                                            ) : !subscribe && exam.purchase_type === 'free' ? (
+                                            ) : !subscribe && exam.exam_type === 'free' ? (
                                                 exam.attend_status === '' && isPaused ? (
                                                     // ✅ Show Resume if paused and not started yet
                                                     <button
@@ -250,22 +277,22 @@ const PreviousYearTestSeries = () => {
                                                     isQuizStartAvailable(exam.start_date_time) &&
                                                         !exam.attend &&
                                                         !isPaused &&
-                                                        test.attend_status === '' ? (
+                                                        exam.attend_status === '' ? (
                                                         <button
-                                                            onClick={() => nav('/system-info', { state: { testInfo: res.data.test_series_info, testId: state?.testId, testDetail: res.data.details } })}
+                                                            onClick={() => nav('/previous-instruction', { state: { testInfo: exam } })}
                                                             className="px-6 py-1.5 cursor-pointer rounded font-semibold text-sm bg-blue-500 text-white"
                                                         >
                                                             Start
                                                         </button>
                                                     ) : (
                                                         // ✅ Show Result if test is completed
-                                                        test.attend && test.attend_status === 'done' ? (
+                                                        exam.attend && exam.attend_status === 'done' ? (
                                                             <button
                                                                 onClick={() =>
                                                                     nav('/analysis', {
                                                                         state: {
-                                                                            testId: test.id,
-                                                                            testInfo: test,
+                                                                            testId: exam.id,
+                                                                            testInfo: exam,
                                                                             userData: userInfo,
                                                                         },
                                                                     })
@@ -286,7 +313,7 @@ const PreviousYearTestSeries = () => {
                                                                 }
                                                                 className="px-6 py-1.5 cursor-pointer rounded font-semibold text-sm bg-gray-300"
                                                             >
-                                                                Available on {formatStartDateTime(test.start_date_time)}
+                                                                Available on {formatStartDateTime(exam.start_date_time)}
                                                             </button>
                                                         )
                                                     )
@@ -295,12 +322,11 @@ const PreviousYearTestSeries = () => {
                                                 // ✅ Show Buy Now if not subscribed
                                                 <button
                                                     onClick={() => {
-                                                        setShowAlert(true)
-                                                        setMessage("Purches")
+                                                        nav("/subscription")
                                                     }}
                                                     className="px-6 py-1.5 cursor-pointer text-white rounded font-semibold text-sm bg-blue-600"
                                                 >
-                                                    Buy Now
+                                                    Attempt Now
                                                 </button>
                                             )
                                         }

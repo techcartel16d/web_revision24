@@ -16,7 +16,10 @@ import {
   Settings,
   X,
   Menu,
-  Home
+  Home,
+  Newspaper,
+  BookOpenCheck,
+  SquarePlay
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
@@ -59,7 +62,10 @@ const Sidebar = () => {
       items: [
         // { name: 'Calculation Booster', icon: <Calculator size={18} />, path: '#' },
         { name: 'Live Classes', icon: <Calendar size={18} />, path: '/live-classes', badge: 'FREE' },
-        // { name: 'Skill Academy', icon: <GraduationCap size={18} />, path: '/skill-academy' },
+        { name: 'Current Affairs', icon: <Newspaper size={18} />, path: '/current-affairs', badge: 'FREE' },
+        { name: 'Monthly Magazines', icon: <BookOpenCheck size={18} />, path: '/live-classes', badge: '' },
+        { name: 'Practice Batch', icon: <SquarePlay size={18} />, path: '/live-classes', badge: 'PAID' },
+        { name: 'Skill Academy', icon: <GraduationCap size={18} />, path: '/skill-academy' },
       ],
     },
     {
@@ -68,7 +74,7 @@ const Sidebar = () => {
         { name: 'Test Series', icon: <FileText size={18} />, path: '/test-series' },
         { name: 'Live Tests & Quizzes', icon: <Calendar size={18} />, path: '/live-quiz-test' },
         { name: 'Previous Year Papers', icon: <FileText size={18} />, path: '/previous-papers' },
-        { name: 'Practice', icon: <RefreshCcw size={18} />, path: '/practice', badge:'FREE' },
+        { name: 'Practice', icon: <RefreshCcw size={18} />, path: '/practice', badge: 'FREE' },
         { name: 'Free Quizzes', icon: <HelpCircle size={18} />, path: '/free-quizzes', badge: 'NEW' },
         { name: 'Attempted Tests', icon: <CheckCircle size={18} />, path: '/attempted-tests' },
         { name: 'Focus+', icon: <Award size={18} />, path: '/subscription', badge: 'NEW' },

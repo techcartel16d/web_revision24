@@ -33,7 +33,7 @@ const TestPackageCollection = () => {
                 // showErrorToast(res.message)
             }
         } catch (error) {
-            console.error("Bookmark fetch error", error);
+            // console.error("Bookmark fetch error", error);
         } finally {
             setLoading(false)
             setShowDeleteAlert(false)
