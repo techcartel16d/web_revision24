@@ -61,6 +61,8 @@ import LiveQuizeInstructionsPage from './pages/liveTest/LiveQuizeInstructionsPag
 import LiveQuizAttendPage from './pages/liveTest/LiveQuizAttendPage';
 import CurrentAffairesPage from './pages/freeTests/CurrentAffairesPage';
 import CurrentAffairesdetailsPage from './pages/freeTests/CurrentAffairesdetailsPage';
+import LiveQuizAnalysisPage from './pages/liveTest/LiveQuizAnalysisPage';
+import LiveQuizSokutionPage from './pages/liveTest/LiveQuizSokutionPage';
 
 function App() {
   // useEffect(() => {
@@ -192,7 +194,9 @@ function App() {
         {/* LIVE QUIZ TEST PRACTICE */}
         <Route path="/live-quiz-test" element={<SideBarLayout><LiveTestQuizePage /></SideBarLayout>} />
         <Route path="/live-quiz-instruction" element={<ProtectedRoute><LiveQuizeInstructionsPage /></ProtectedRoute>} />
-        <Route path="/live-quiz-attends" element={<ProtectedRoute><LiveQuizAttendPage /></ProtectedRoute>} />
+        <Route path="/live-quiz-attends" element={<ProtectedRoute><LiveQuizAttendPage /></ProtectedRoute>} /> 
+        <Route path="/live-quiz-analysis" element={<ProtectedRoute><LiveQuizAnalysisPage /></ProtectedRoute>} />
+        <Route path="/live-quiz-solution" element={<ProtectedRoute><LiveQuizSokutionPage /></ProtectedRoute>} />
 
 
         {/* FREE TEST ROUTES */}

@@ -17,6 +17,15 @@ const liveQuizeTest = {
         }
     },
 
+  getMegaQuizResult: async (id) => {
+    // console.log("getMegaQuizAttendQuestion", id)
+    try {
+      const response = await api.post(`/user-attend-mega-quiz-rank-get?quiz_id=${id}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
   megaQuizResult: async (id) => {
     // console.log("getMegaQuizAttendQuestion", id)
     try {

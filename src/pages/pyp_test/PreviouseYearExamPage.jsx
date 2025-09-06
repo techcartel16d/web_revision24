@@ -21,6 +21,7 @@ import 'katex/dist/katex.min.css';
 import MathRenderer from '../../utils/MathRenderer';
 import { secureGet } from '../../helpers/storeValues';
 import { attendPreviouseYearQuestionSlice, getPreviouseYearGetQuestionSlice } from '../../redux/freeTestSlice';
+import { showErrorToast } from '../../utils/ToastUtil';
 
 
 
@@ -713,8 +714,10 @@ if (!current || questionsState.length === 0) {
         // ✅ Clear all encrypted test data
         await clearAllTestData(testId);
 
-        nav('/analysis', { replace: true, state });
+        nav('/previous-analysis', { replace: true, state });
       } else {
+         showErrorToast("please attend minimum one question (save & next) after submit!!")
+         setConfirmSubmit(false)
         // alert('please attend minimum one question (save & next) after submit!!')
         console.log(res)
       }

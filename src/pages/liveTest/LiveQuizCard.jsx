@@ -19,6 +19,7 @@ const formatDateTime = (dateString) => {
 };
 
 const LiveQuizCard = ({ data, index, callBack, currentUserId }) => {
+  // console.log("Data",data)
   const dispatch = useDispatch();
   const nav = useNavigate()
   const [countdown, setCountdown] = useState("");
@@ -192,7 +193,7 @@ const LiveQuizCard = ({ data, index, callBack, currentUserId }) => {
         <div className="mt-auto flex justify-end">
           {status === "upcoming1" ? (
             // 🔸 Upcoming: Register or Joined
-            data?.join_data && data?.join_data[0]?.status !== "" ? (
+            data?.join_data && data?.join_data[0]?.attend_status !== "" ? (
               <button
                 className="px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-green-800 to-green-400 text-white"
                 disabled
@@ -211,8 +212,15 @@ const LiveQuizCard = ({ data, index, callBack, currentUserId }) => {
               </button>
             )
           ) : (
-            // 🔸 Active or Expired
-            data?.join_data && data?.join_data[0]?.status === "done" ? (
+            // 🔸 Active, Expired, or Done
+            data?.attend === true && data?.attend_status === "done" ? (
+              <button
+                onClick={() => nav("/live-quiz-analysis", { state: { testInfo: data } })}
+                className="px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-green-600 via-green-400 to-green-600 text-white hover:opacity-90"
+              >
+                View Result
+              </button>
+            ) : status === "active" ? (
               <button
                 onClick={() => nav("/live-quiz-instruction", { state: { testInfo: data } })}
                 className="px-4 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600 text-white hover:opacity-90"

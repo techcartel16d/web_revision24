@@ -690,7 +690,7 @@ if (!current || questionsState.length === 0) {
     const totalTimeSpent = spentTime.reduce((acc, item) => acc + (item.time || 0), 0);
 
     const submissionData = {
-      previous_year_exam_id: testId,
+      quiz_id: testId,
       total_attend_question: totalAttendedQuestions,
       total_not_answer_question: totalNotAnsweredQuestions,
       correct,
@@ -706,8 +706,6 @@ if (!current || questionsState.length === 0) {
     };
 
     console.log("📤 Submission Data:", submissionData);
-    // return
-
     try {
 
 

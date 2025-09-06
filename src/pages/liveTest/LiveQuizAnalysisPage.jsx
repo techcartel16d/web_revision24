@@ -5,6 +5,7 @@ import { fetchUserTestSeriesRankSlice } from '../../redux/HomeSlice';
 import Header from '../../components/Header';
 import LeaderBoardTable from '../../components/LeaderBoardTable';
 import { getPreviouseYearPaperRankSlice } from '../../redux/freeTestSlice';
+import { megaQuizResulGettSlice, megaQuizResultSlice } from '../../redux/LiveQuizeSlice';
 
 const LiveQuizAnalysisPage = () => {
     const nav = useNavigate()
@@ -12,7 +13,7 @@ const LiveQuizAnalysisPage = () => {
     const { state } = useLocation();
 
     console.log("state==>", state)
-    return
+
 
     const [performance, setPerformance] = useState(null);
     const [sections, setSections] = useState([]);
@@ -28,15 +29,15 @@ const LiveQuizAnalysisPage = () => {
 
         let testId = state?.testInfo?.test_id || state?.testInfo?.id;
         try {
-            const res = await dispatch(getPreviouseYearPaperRankSlice(testId)).unwrap();
-            // console.log("response===>", res);
+            const res = await dispatch(megaQuizResulGettSlice(testId)).unwrap();
+            console.log("response===>", res);
 
             if (res.status_code === 200) {
-                const test = res.data.previous_year_exam_detail; // ✅ change
-                const my = res.data.my_detail; // ✅ same
+                const test = res.data.quiz_detail;   // ✅ your API has quiz_detail
+                const my = res.data.my_detail;       // ✅ your API has my_detail
                 setTestData(res.data);
 
-                // Inside `fetchUserResult` (after setting testData)
+                // ✅ Subject wise analysis (if available)
                 setSubjectWiseAnalysis(res?.data?.subject_wise_analysis || []);
 
                 const totalAttempted = parseInt(my?.total_attend_question || 0);
@@ -75,7 +76,7 @@ const LiveQuizAnalysisPage = () => {
 
                 // ✅ Spent Time
                 const parsedSpent = JSON.parse(my.spent_time || '[]');
-                const totalTimeSpent = parsedSpent.reduce((acc, item) => acc + (item?.time || 0), 0);
+                const totalTimeSpent = parsedSpent.reduce((acc, item) => acc + (parseInt(item?.time) || 0), 0);
 
                 setSections([
                     {
@@ -112,7 +113,7 @@ const LiveQuizAnalysisPage = () => {
         <>
             <Header />
             <div className="p-6 bg-gray-100 min-h-screen text-gray-800">
-                <h2 className="text-xl font-semibold mb-4 text-center">{testData && testData?.test_detail?.title}</h2>
+                <h2 className="text-xl font-semibold mb-4 text-center"> {testData?.quiz_detail?.title}</h2>
                 <h2 className="text-xl mb-4">Overall Performance Summary</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-10">
@@ -223,7 +224,7 @@ const LiveQuizAnalysisPage = () => {
                                         <td className="px-6 py-4">
                                             <div className="bg-yellow-50 rounded px-2 py-1 relative">
                                                 <div className="text-yellow-800 font-semibold">
-                                                    {s.time} <span className="text-gray-400">/ {testData?.test_detail?.time} min</span>
+                                                    {s.time} <span className="text-gray-400">/ {testData?.quiz_detail?.duration} min</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -234,48 +235,53 @@ const LiveQuizAnalysisPage = () => {
 
                     </table>
                 </div>
-                <div className="bg-white shadow rounded overflow-x-auto mt-8">
-                    <h3 className="text-lg font-semibold px-6 py-4 border-b">Subject Wise Analysis</h3>
-                    <table className="w-full text-sm text-left">
-                        <thead className="bg-gray-100 text-gray-600">
-                            <tr>
-                                <th className="px-6 py-3">Subject</th>
-                                <th className="px-6 py-3">Total Questions</th>
-                                <th className="px-6 py-3">Attempted</th>
-                                <th className="px-6 py-3">Correct</th>
-                                <th className="px-6 py-3">Incorrect</th>
-                                <th className="px-6 py-3">Accuracy</th>
-                                <th className="px-6 py-3">Spent Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {subjectWiseAnalysis.map((item, index) => {
-                                const accuracy = item.total_question_attempted > 0
-                                    ? ((item.correct_count / item.total_question_attempted) * 100).toFixed(2) + '%'
-                                    : '0%';
-
-                                return (
-                                    <tr key={index} className="border-t">
-                                        <td className="px-6 py-4 whitespace-nowrap">{item.subject_name}</td>
-                                        <td className="px-6 py-4">{item.total_assign_question}</td>
-                                        <td className="px-6 py-4">{item.total_question_attempted}</td>
-                                        <td className="px-6 py-4">{item.correct_count}</td>
-                                        <td className="px-6 py-4">{item.incorrect_count}</td>
-                                        <td className="px-6 py-4">{accuracy}</td>
-                                        <td className="px-6 py-4">{item.spent_time} min</td>
+                {
+                    subjectWiseAnalysis.length > 0 && (
+                        <div className="bg-white shadow rounded overflow-x-auto mt-8">
+                            <h3 className="text-lg font-semibold px-6 py-4 border-b">Subject Wise Analysis</h3>
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-gray-100 text-gray-600">
+                                    <tr>
+                                        <th className="px-6 py-3">Subject</th>
+                                        <th className="px-6 py-3">Total Questions</th>
+                                        <th className="px-6 py-3">Attempted</th>
+                                        <th className="px-6 py-3">Correct</th>
+                                        <th className="px-6 py-3">Incorrect</th>
+                                        <th className="px-6 py-3">Accuracy</th>
+                                        <th className="px-6 py-3">Spent Time</th>
                                     </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
+                                </thead>
+                                <tbody>
+                                    {subjectWiseAnalysis.map((item, index) => {
+                                        const accuracy = item.total_question_attempted > 0
+                                            ? ((item.correct_count / item.total_question_attempted) * 100).toFixed(2) + '%'
+                                            : '0%';
+
+                                        return (
+                                            <tr key={index} className="border-t">
+                                                <td className="px-6 py-4 whitespace-nowrap">{item.subject_name}</td>
+                                                <td className="px-6 py-4">{item.total_assign_question}</td>
+                                                <td className="px-6 py-4">{item.total_question_attempted}</td>
+                                                <td className="px-6 py-4">{item.correct_count}</td>
+                                                <td className="px-6 py-4">{item.incorrect_count}</td>
+                                                <td className="px-6 py-4">{accuracy}</td>
+                                                <td className="px-6 py-4">{item.spent_time} min</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    )
+                }
+
 
                 <LeaderBoardTable data={testData && testData?.leaderboard || []} rankScore={rankScore} />
 
 
-                <div className='my-3 w-full flex items-center justify-center'>
-                    <button onClick={() => nav('/previouse-year-exam-solutions', { state: { testData, state } })} className='px-4 py-2 bg-blue-400 cursor-pointer text-white rounded-sm'>View Solutions</button>
-                </div>
+                {/* <div className='my-3 w-full flex items-center justify-center'>
+                    <button onClick={() => nav('/live-quiz-solution', { state: { testData, state } })} className='px-4 py-2 bg-blue-400 cursor-pointer text-white rounded-sm'>View Solutions</button>
+                </div> */}
             </div>
         </>
 

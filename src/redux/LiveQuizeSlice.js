@@ -42,6 +42,17 @@ export const megaQuizAttendSubmitSlice = createAsyncThunk(
     },
 );
 
+export const megaQuizResulGettSlice = createAsyncThunk(
+    'megaQuize/megaQuizResulGettSlice',
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await liveQuizeTest.getMegaQuizResult(id);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
 export const megaQuizResultSlice = createAsyncThunk(
     'megaQuize/megaQuizResultSlice',
     async (id, { rejectWithValue }) => {

@@ -63,9 +63,9 @@ const Sidebar = () => {
         // { name: 'Calculation Booster', icon: <Calculator size={18} />, path: '#' },
         { name: 'Live Classes', icon: <Calendar size={18} />, path: '/live-classes', badge: 'FREE' },
         { name: 'Current Affairs', icon: <Newspaper size={18} />, path: '/current-affairs', badge: 'FREE' },
-        { name: 'Monthly Magazines', icon: <BookOpenCheck size={18} />, path: '/live-classes', badge: '' },
-        { name: 'Practice Batch', icon: <SquarePlay size={18} />, path: '/live-classes', badge: 'PAID' },
-        { name: 'Skill Academy', icon: <GraduationCap size={18} />, path: '/skill-academy' },
+        // { name: 'Monthly Magazines', icon: <BookOpenCheck size={18} />, path: '/live-classes', badge: '' },
+        // { name: 'Practice Batch', icon: <SquarePlay size={18} />, path: '/live-classes', badge: 'PAID' },
+        // { name: 'Skill Academy', icon: <GraduationCap size={18} />, path: '/skill-academy' },
       ],
     },
     {
