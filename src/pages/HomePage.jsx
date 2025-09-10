@@ -118,37 +118,37 @@ const HomePage = () => {
     </div>
   ) : (
     <>
-      <div className="w-full flex h-screen">
-        <Sidebar />
-        <div className="w-full h-screen overflow-y-auto">
+     <div className="w-full flex h-screen">
+  {/* Sirf jab user login ho tab Sidebar show kare */}
+  {userInfo ? <Sidebar /> : null}
 
-          {/* <Header /> */}
-          {bannerData && <HeroBanner banner={bannerData} data={homeData?.test_series_paid} />}
+  <div className="w-full h-screen overflow-y-auto">
+    {/* <Header /> */}
+    {bannerData && (
+      <HeroBanner
+        banner={bannerData}
+        data={homeData?.test_series_paid}
+      />
+    )}
 
-          {/* <AdBanner imageUrl={ad} linkUrl="/subscription" /> */}
-          {category.length > 0 && (
-            <TestSeriesViewer category={category} testSeriesData={homeData?.test_series_paid} />
-          )}
+    {/* <AdBanner imageUrl={ad} linkUrl="/subscription" /> */}
+    {category.length > 0 && (
+      <TestSeriesViewer
+        category={category}
+        testSeriesData={homeData?.test_series_paid}
+      />
+    )}
 
+    {/* Agar login hua hai aur subscription nahi hai to plans dikhaye */}
+    {userInfo && !userInfo?.subscription_status && (
+      <SubscriptionPlans />
+    )}
 
+    {/* <SubscriptionModal /> */}
+  </div>
+  {/* <Footer /> */}
+</div>
 
-
-          {/* {homeData && <ExamSelector category={homeData?.exam_category} />} */}
-          {
-
-          // homeData && (
-          //   <TestSeriesViewer testSeriesData={homeData?.test_series_free} />
-  
-          // )
-
-          }
-
-          {userInfo && !userInfo?.subscription_status && <SubscriptionPlans />}
-
-          {/* <SubscriptionModal /> */}
-        </div>
-        {/* <Footer /> */}
-      </div>
       {/* <Footer /> */}
     </>
   );
