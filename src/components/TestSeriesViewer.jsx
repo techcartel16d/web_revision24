@@ -77,7 +77,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
         // console.log("Extracted IDs:", ids);
         setBookmarkedIds(ids);
       } else {
-         showSuccessToast(res.message)
+        //  showSuccessToast(res.message)
         // Toast.show({
         //     text1: "No bookmarks found",
         //     type: 'info',

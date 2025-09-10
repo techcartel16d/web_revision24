@@ -64,10 +64,10 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-semibold mb-3">Our App</h3>
             <div className="flex gap-3">
-              <a href="#"  rel="noreferrer">
+              <a href="https://play.google.com/store/apps/details?id=com.edurevision24&pcampaignid=web_share"  rel="noreferrer">
                 <img src="/googlePay.png" alt="App Store" className="w-8" />
               </a>
-              <a href="#"  rel="noreferrer">
+              <a href="https://apps.apple.com/in/app/edurevision24/id6751642229"  rel="noreferrer">
                 <img src="/app_store.png" alt="Google Play" className="w-8" />
               </a>
             </div>

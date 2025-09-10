@@ -66,11 +66,11 @@ const Header = () => {
           </button>
 
           {/* Logo */}
-          {/* <div className="flex items-center space-x-2 cursor-pointer" onClick={() => nav('/')}>
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => nav('/')}>
             <img src="/logo.jpeg" alt="Logo" className="w-6 h-6" />
             <span className="text-sky-500 text-xs md:text-sm lg:text-xl font-bold">Revision24</span>
 
-          </div> */}
+          </div>
 
           {/* Desktop Nav */}
           {auth && (

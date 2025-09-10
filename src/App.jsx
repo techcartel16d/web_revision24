@@ -63,6 +63,11 @@ import CurrentAffairesPage from './pages/freeTests/CurrentAffairesPage';
 import CurrentAffairesdetailsPage from './pages/freeTests/CurrentAffairesdetailsPage';
 import LiveQuizAnalysisPage from './pages/liveTest/LiveQuizAnalysisPage';
 import LiveQuizSokutionPage from './pages/liveTest/LiveQuizSokutionPage';
+import AccountDeletePage from './pages/AccountDeletePage';
+import NotesPdfPage from './pages/freeTests/NotesPdfPage';
+import TopicTestInstructions from './pages/freeTests/topictest/TopicTestInstructions';
+import TopicTestAttendQuiz from './pages/freeTests/topictest/TopicTestAttendQuiz';
+import TopicTestResult from './pages/freeTests/topictest/TopicTestResult';
 
 function App() {
   // useEffect(() => {
@@ -121,6 +126,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/subscription" element={<SideBarLayout><SubscriptionPage /></SideBarLayout>} />
+        <Route path="/user-account-delete" element={<AccountDeletePage />} />
         {/* <Route path="/test-series" element={<TestSeriesPage />} /> */}
         <Route path="/terms-of-service" element={<TermsOfServicePage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -181,7 +187,6 @@ function App() {
         <Route path="/help-support" element={<SideBarLayout><HelpAndSupportPage /></SideBarLayout>} />
         <Route path="/live-classes" element={<SideBarLayout><LiveClassesPage /></SideBarLayout>} />
         <Route path="/test-series" element={<SideBarLayout><TestSeriesPage /></SideBarLayout>} />
-        <Route path="/practice" element={<SideBarLayout><TopicsWiseTestPage /></SideBarLayout>} />
 
         {/* PREVIOUS YEAR ROUTES */}
         <Route path="/previous-papers" element={<SideBarLayout><PreviousYearTestSeries /></SideBarLayout>} />
@@ -194,18 +199,21 @@ function App() {
         {/* LIVE QUIZ TEST PRACTICE */}
         <Route path="/live-quiz-test" element={<SideBarLayout><LiveTestQuizePage /></SideBarLayout>} />
         <Route path="/live-quiz-instruction" element={<ProtectedRoute><LiveQuizeInstructionsPage /></ProtectedRoute>} />
-        <Route path="/live-quiz-attends" element={<ProtectedRoute><LiveQuizAttendPage /></ProtectedRoute>} /> 
+        <Route path="/live-quiz-attends" element={<ProtectedRoute><LiveQuizAttendPage /></ProtectedRoute>} />
         <Route path="/live-quiz-analysis" element={<ProtectedRoute><LiveQuizAnalysisPage /></ProtectedRoute>} />
         <Route path="/live-quiz-solution" element={<ProtectedRoute><LiveQuizSokutionPage /></ProtectedRoute>} />
 
 
         {/* FREE TEST ROUTES */}
-
-
         <Route path="/current-affairs" element={<SideBarLayout><CurrentAffairesPage /></SideBarLayout>} />
         <Route path="/current-affairs-details" element={<SideBarLayout><CurrentAffairesdetailsPage /></SideBarLayout>} />
-  
+        <Route path="/pdf-notes" element={<SideBarLayout><NotesPdfPage /></SideBarLayout>} />
 
+{/* Topic test */}
+        <Route path="/practice" element={<SideBarLayout><TopicsWiseTestPage /></SideBarLayout>} />
+        <Route path="/practice-test-instruction" element={<SideBarLayout><TopicTestInstructions /></SideBarLayout>} />
+        <Route path="/practice-test-attend-quiz" element={<SideBarLayout><TopicTestAttendQuiz /></SideBarLayout>} />
+        <Route path="/practice-test-result" element={<SideBarLayout><TopicTestResult /></SideBarLayout>} />
 
 
         {/* ❗️ Catch-all route outside PublicRoute */}

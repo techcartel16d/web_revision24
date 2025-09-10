@@ -48,19 +48,19 @@ const HeroBanner = ({ banner , data }) => {
 
                         {/* Store Buttons */}
                         <div className="hidden sm:flex flex-col sm:flex-row gap-3 w-full">
-                            <span
+                            <Link to="https://play.google.com/store/apps/details?id=com.edurevision24" target='_blank'
                                 className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition whitespace-nowrap w-full sm:w-auto"
                             >
                                 <FaGooglePlay size={20} />
                                 <span>Google Play</span>
-                            </span>
+                            </Link>
 
-                            <span
+                            <Link to="https://apps.apple.com/in/app/edurevision24/id6751642229" target='_blank'
                                 className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition whitespace-nowrap w-full sm:w-auto"
                             >
                                 <FaApple size={20} />
                                 <span>App Store</span>
-                            </span>
+                            </Link>
                         </div>
                     </div>
                 </div>

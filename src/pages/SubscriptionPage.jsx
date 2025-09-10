@@ -27,14 +27,12 @@ const SubscriptionPage = () => {
 
     return (
         <>
-            <Header />
+            {
+                subscribe && (
 
-{
-    subscribe && (
-
-        <SubscriptionPlans userInfo={subscribe} />
-    )
-}
+                    <SubscriptionPlans userInfo={subscribe} />
+                )
+            }
 
 
             {/* <Footer /> */}

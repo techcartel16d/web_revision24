@@ -4,17 +4,13 @@ import { getCurrentAffairesSlice } from "../../redux/freeTestSlice";
 import { useNavigate } from "react-router-dom";
 import LanguageToggle from "../../components/LanguageToggle";
 import { Bookmark, BookmarkCheck } from "lucide-react";
-import { addUserCollectionSlice } from "../../redux/authSlice";
-import { removeUserCollectionSlice, saveCollectionSlice } from "../../redux/HomeSlice";
-import { toggleBookmark } from "../../helpers/Add_RemoveBookmark";
+import { motion } from "framer-motion"; // ✅ import framer-motion
 
 const CurrentAffairesPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [currentAffairsData, setCurrentAffairsData] = useState([]);
-
     const [bookmarkedIds, setBookmarkedIds] = useState([]);
-
     const [language, setLanguage] = useState("Hindi");
 
     // Load bookmarks from localStorage
@@ -31,18 +27,6 @@ const CurrentAffairesPage = () => {
     useEffect(() => {
         fetchCurrentAffairs();
     }, []);
-
-    // Save / Remove bookmark
-    // const toggleBookmark = (id) => {
-    //     let updated = [];
-    //     if (bookmarkedIds.includes(id)) {
-    //         updated = bookmarkedIds.filter((b) => b !== id);
-    //     } else {
-    //         updated = [...bookmarkedIds, id];
-    //     }
-    //     setBookmarkedIds(updated);
-    //     localStorage.setItem("bookmarks", JSON.stringify(updated));
-    // };
 
     // Share function
     const handleShare = (item) => {
@@ -61,11 +45,6 @@ const CurrentAffairesPage = () => {
         }
     };
 
-    // Navigate to details page
-    const handleReadMore = (slug) => {
-        navigate(`/current-affairs/${slug}`);
-    };
-
     return (
         <div className="w-full min-h-screen bg-gray-50 px-4 py-6">
             {/* Header */}
@@ -74,7 +53,6 @@ const CurrentAffairesPage = () => {
                 <div className="flex items-center gap-2">
                     <div className="p-4">
                         <LanguageToggle language={language} setLanguage={setLanguage} />
-
                         <h1 className="mt-6 text-xl font-bold">
                             {language === "Hindi" ? "करेंट अफेयर्स" : "Current Affairs"}
                         </h1>
@@ -84,24 +62,27 @@ const CurrentAffairesPage = () => {
 
             {/* Cards */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {currentAffairsData.map((item) => (
-                    <div
+                {currentAffairsData.map((item, index) => (
+                    <motion.div
                         key={item.id}
-                        className="bg-white rounded-2xl shadow p-4 flex flex-col justify-between"
+                        className="bg-white rounded-2xl shadow p-4 flex flex-col justify-between cursor-pointer"
+                        initial={{ opacity: 0, y: 40 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: index * 0.1 }}
+                        whileHover={{ scale: 1.03, boxShadow: "0px 8px 24px rgba(0,0,0,0.15)" }}
                     >
                         {/* Image */}
-                        <img
-                            src={
-                                item.image ||
-                                "https://via.placeholder.com/600x300?text=Current+Affairs"
-                            }
+                        <motion.img
+                            src={item.image || "https://via.placeholder.com/600x300?text=Current+Affairs"}
                             alt={item.title}
                             className="rounded-xl mb-3 h-80 w-full object-cover"
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ duration: 0.3 }}
                         />
 
                         {/* Date */}
                         <p className="text-sm text-gray-500 mb-1">
-                            Date :{" "}
+                            Date:{" "}
                             {item.created_at
                                 ? new Date(item.created_at).toLocaleDateString("en-GB")
                                 : "N/A"}
@@ -122,30 +103,13 @@ const CurrentAffairesPage = () => {
                                     language === "Hindi"
                                         ? item.short_description_hindi || "No description available"
                                         : item.short_description_english ||
-                                        item.short_description_hindi ||
-                                        "No description available",
+                                          item.short_description_hindi ||
+                                          "No description available",
                             }}
                         />
 
                         {/* Footer Actions */}
                         <div className="flex justify-between items-center mt-auto pt-3 border-t">
-                            {/* <button onClick={() =>
-                                toggleBookmark({
-                                    type: 'news_id',
-                                    id: item.id,
-                                    bookmarkedIds,
-                                    setBookmarkedIds,
-                                    dispatch,
-                                    saveCollectionSlice,
-                                    removeUserCollectionSlice
-                                })
-                            } className="w-[15%] border bg-cyan-500 border-white text-white py-1 text-sm rounded-sm flex items-center justify-center cursor-pointer">
-                                {
-                                    bookmarkedIds.includes(item.id) ? <BookmarkCheck /> : <Bookmark className='text-xs' />
-                                }
-
-
-                            </button> */}
                             <button
                                 className="text-sm text-green-600 hover:underline"
                                 onClick={() => handleShare(item)}
@@ -153,13 +117,13 @@ const CurrentAffairesPage = () => {
                                 Share
                             </button>
                             <button
-                                className="text-sm text-white hover:underline bg-blue-500 py-2 px-6 rounded-md"
+                                className="text-sm text-white bg-blue-500 py-2 px-6 rounded-md hover:bg-blue-600 transition-all"
                                 onClick={() => navigate("/current-affairs-details", { state: item })}
                             >
                                 Read More →
                             </button>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
         </div>

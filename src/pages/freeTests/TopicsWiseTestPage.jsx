@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getFreeTopicWisePaperSlice } from "../../redux/freeTestSlice";
+import { useNavigate } from "react-router-dom";
 
 const TopicsWiseTestPage = () => {
   const dispatch = useDispatch();
   const [freeQuizData, setFreeQuizData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const nav = useNavigate()
   // PDF modal state
   const [openPdf, setOpenPdf] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
@@ -29,6 +30,7 @@ const TopicsWiseTestPage = () => {
   }, []);
 
   const openPdfModal = (url) => {
+    console.log(url)
     setPdfUrl(url);
     setOpenPdf(true);
   };
@@ -74,7 +76,7 @@ const TopicsWiseTestPage = () => {
               )}
 
               {test.is_start && !test.attend && (
-                <button className="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                <button className="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" onClick={() => nav("/practice-test-instruction")}>
                   Start Test
                 </button>
               )}

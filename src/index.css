@@ -1,9 +1,11 @@
+
+@import "tailwindcss";
+
 * {
   user-select: none;
   scroll-behavior: smooth
 }
 
-@import "tailwindcss";
 
 .question-content img,
 .option-content img {

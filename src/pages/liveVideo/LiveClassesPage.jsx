@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getLiveVideoSlice } from "../../redux/HomeSlice";
+import { motion } from "framer-motion"; // ✅ import framer-motion
 
 const LiveClassesPage = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,6 @@ const LiveClassesPage = () => {
     try {
       const res = await dispatch(getLiveVideoSlice()).unwrap();
       if (res.status_code === 200) {
-        // console.log(res);
         setLiveVideo(res.live?.length ? res.live[0] : null);
         setRecentVideos(res.videos || []);
       }
@@ -36,9 +36,18 @@ const LiveClassesPage = () => {
         <>
           {/* ✅ LIVE Video Section */}
           {liveVideo && (
-            <div className="mb-6">
+            <motion.div
+              className="mb-6"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
               <h2 className="text-xl font-bold mb-3 text-red-600">🔴 Live Now</h2>
-              <div className="bg-white shadow rounded-lg overflow-hidden border">
+              <motion.div
+                className="bg-white shadow rounded-lg overflow-hidden border"
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.3 }}
+              >
                 <div className="aspect-video">
                   <iframe
                     className="w-full h-full"
@@ -48,8 +57,6 @@ const LiveClassesPage = () => {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                   ></iframe>
-
-
                 </div>
                 <div className="p-3">
                   <h3 className="text-sm font-semibold line-clamp-2">
@@ -59,8 +66,8 @@ const LiveClassesPage = () => {
                     {liveVideo.snippet.channelTitle}
                   </p>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           )}
 
           {/* ✅ Recent Videos Section */}
@@ -68,9 +75,13 @@ const LiveClassesPage = () => {
           {recentVideos.length > 0 ? (
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {recentVideos.map((item, index) => (
-                <div
+                <motion.div
                   key={index}
                   className="bg-white shadow rounded-lg overflow-hidden border"
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
                 >
                   <div className="aspect-video">
                     <iframe
@@ -81,7 +92,6 @@ const LiveClassesPage = () => {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
-
                   </div>
                   <div className="p-3">
                     <h3 className="text-sm font-semibold line-clamp-2">
@@ -91,7 +101,7 @@ const LiveClassesPage = () => {
                       {item.snippet.channelTitle}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           ) : (

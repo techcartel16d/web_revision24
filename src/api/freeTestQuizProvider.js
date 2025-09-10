@@ -67,16 +67,27 @@ const freeTestProvider = {
   },
 
 
-    getCurrentAffairsData: async () => {
-        try {
-          
+  getCurrentAffairsData: async () => {
+    try {
 
-            const response = await api.get(`/news`);
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || error.message;
-        }
-    },
+
+      const response = await api.get(`/news`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+
+  getMindMap: async () => {
+    try {
+
+      const response = await api.get(`/mind-maps`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
 
 }
 
