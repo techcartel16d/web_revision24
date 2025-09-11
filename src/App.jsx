@@ -120,7 +120,7 @@ function App() {
 
   return (
     <Router>
-      <ScrollToTop />
+      <ScrollToTop  />
       <Routes>
         {/* ALWAYS ACCESSIBLE ROUTE */}
         <Route path="/" element={<HomePage />} />
