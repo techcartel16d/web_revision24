@@ -212,7 +212,7 @@ function App() {
 {/* Topic test */}
         <Route path="/practice" element={<SideBarLayout><TopicsWiseTestPage /></SideBarLayout>} />
         <Route path="/practice-test-instruction" element={<SideBarLayout><TopicTestInstructions /></SideBarLayout>} />
-        <Route path="/practice-test-attend-quiz" element={<SideBarLayout><TopicTestAttendQuiz /></SideBarLayout>} />
+        <Route path="/practice-test-attend-quiz" element={<ProtectedRoute><TopicTestAttendQuiz /></ProtectedRoute>} />
         <Route path="/practice-test-result" element={<SideBarLayout><TopicTestResult /></SideBarLayout>} />
 
 

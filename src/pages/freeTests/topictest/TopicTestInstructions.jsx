@@ -6,7 +6,7 @@ import { getUserDataDecrypted } from '../../../helpers/userStorage';
 const TopicTestInstructions = () => {
   const nav = useNavigate();
   const { state } = useLocation();
-  // console.log(state)
+  console.log(state)
   const [userInfo, setUserInfo] = useState(null);
   const getUserInfo = async () => {
     const user = await getUserDataDecrypted();
@@ -19,7 +19,7 @@ const TopicTestInstructions = () => {
   }, []);
 
   const subjects = state?.testInfo || {};
-  const totalQuestions = subjects?.total_question || 0
+  const totalQuestions = subjects?.no_of_question || 0
   const totalMarks = parseInt(subjects.marks_per_question || 0)
   const negativeMark = state?.testInfo?.negative_marks || '0';
   const duration = state?.testInfo?.time || 60;
@@ -129,7 +129,7 @@ const TopicTestInstructions = () => {
       <div className="flex justify-center my-6">
         <button
           className="bg-blue-700 text-white px-6 py-2 cursor-pointer rounded hover:bg-blue-800"
-          onClick={() => nav("/previous-symbol", { state })}
+          onClick={() => nav("/practice-test-attend-quiz", { state })}
           // onClick={()=> console.log(userInfo)}
         >
           Agree

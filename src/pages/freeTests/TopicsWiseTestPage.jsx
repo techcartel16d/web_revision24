@@ -76,7 +76,7 @@ const TopicsWiseTestPage = () => {
               )}
 
               {test.is_start && !test.attend && (
-                <button className="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" onClick={() => nav("/practice-test-instruction")}>
+                <button className="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" onClick={() => nav("/practice-test-instruction",{state:{testInfo:test}})}>
                   Start Test
                 </button>
               )}

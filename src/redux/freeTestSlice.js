@@ -125,6 +125,19 @@ export const getMindMapSlice = createAsyncThunk(
   },
 );
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Slice
 const freeTestQuiz = createSlice({
   name: 'freeTestSlice',
