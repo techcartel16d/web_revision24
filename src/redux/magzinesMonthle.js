@@ -11,7 +11,7 @@ export const getMonthlymagazine = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await monthlyMagazinesProvider.monthlyMagazineGet();
-      console.log('magzineslice res',response.data);
+      // console.log('magzineslice res',response.data);
       return response.data; // Should be array of magazines
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
