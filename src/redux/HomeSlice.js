@@ -135,6 +135,7 @@ export const checkoutpaySlice = createAsyncThunk(
     async (subscibeData, { rejectWithValue }) => {
         try {
             const response = await HomeProvider.checkoutpay(subscibeData);
+            console.log("checkoutpaySlice", response)
             return response;
         } catch (error) {
             return rejectWithValue(error);

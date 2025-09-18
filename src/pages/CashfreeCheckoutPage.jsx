@@ -7,6 +7,7 @@ const CashfreeCheckoutPage = () => {
     const [sdkLoaded, setSdkLoaded] = useState(false);
 
     const queryParams = new URLSearchParams(location.search);
+    console.log("queryParams", queryParams)
     const orderId = queryParams.get('order_id');
     const sessionId = queryParams.get('session_id');
     const userId = queryParams.get('user_id');
@@ -15,7 +16,7 @@ const CashfreeCheckoutPage = () => {
     // Load Cashfree SDK
     useEffect(() => {
         const script = document.createElement('script');
-        script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
+        script.src = "https://sdk.cashfree.com/js/ui/2.0.0/cashfree.prod.js";
         script.async = true;
 
         script.onload = () => {
@@ -40,16 +41,26 @@ const CashfreeCheckoutPage = () => {
             return;
         }
 
-        if (sdkLoaded && window.Cashfree) {
-            const cashfree = window.Cashfree({ mode: "production" }); // Change to "production" for live
-            cashfree.checkout({
-                paymentSessionId: sessionId,
-                redirectTarget: "_self",
-                redirectUrl: `/api/payment/cashfree/success?order_id=${orderId}`
-            });
+       useEffect(() => {
+  if (sdkLoaded && sessionId) {
+    const cashfree = new window.Cashfree({
+      mode: "production", // or "sandbox"
+    });
 
+    cashfree.checkout({
+      paymentSessionId: sessionId,
+      redirectTarget: "_self"
+    }).then((result) => {
+      console.log("Payment result:", result);
+      if (result.error) {
+        navigate(`/payment-response?status=failed&reason=${result.error.message}`);
+      } else {
+        navigate(`/payment-response?status=success&order_id=${orderId}`);
+      }
+    });
+  }
+}, [sdkLoaded, sessionId]);
 
-        }
     }, [sdkLoaded, orderId, sessionId, userId, amount, navigate]);
 
     return (

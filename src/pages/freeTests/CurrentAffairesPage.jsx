@@ -3,131 +3,138 @@ import { useDispatch } from "react-redux";
 import { getCurrentAffairesSlice } from "../../redux/freeTestSlice";
 import { useNavigate } from "react-router-dom";
 import LanguageToggle from "../../components/LanguageToggle";
-import { Bookmark, BookmarkCheck } from "lucide-react";
-import { motion } from "framer-motion"; // ✅ import framer-motion
+import { Bookmark, BookmarkCheck, Share2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const CurrentAffairesPage = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [currentAffairsData, setCurrentAffairsData] = useState([]);
-    const [bookmarkedIds, setBookmarkedIds] = useState([]);
-    const [language, setLanguage] = useState("Hindi");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [currentAffairsData, setCurrentAffairsData] = useState([]);
+  const [bookmarkedIds, setBookmarkedIds] = useState([]);
+  const [language, setLanguage] = useState("Hindi");
 
-    // Load bookmarks from localStorage
-    useEffect(() => {
-        const savedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
-        setBookmarkedIds(savedBookmarks);
-    }, []);
+  // Load bookmarks from localStorage
+  useEffect(() => {
+    const savedBookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+    setBookmarkedIds(savedBookmarks);
+  }, []);
 
-    const fetchCurrentAffairs = async () => {
-        const res = await dispatch(getCurrentAffairesSlice()).unwrap();
-        setCurrentAffairsData(res.data.data || []);
-    };
+  const fetchCurrentAffairs = async () => {
+    const res = await dispatch(getCurrentAffairesSlice()).unwrap();
+    setCurrentAffairsData(res.data.data || []);
+  };
 
-    useEffect(() => {
-        fetchCurrentAffairs();
-    }, []);
+  useEffect(() => {
+    fetchCurrentAffairs();
+  }, []);
 
-    // Share function
-    const handleShare = (item) => {
-        const url = `${window.location.origin}/current-affairs/${item.slug}`;
-        if (navigator.share) {
-            navigator
-                .share({
-                    title: item.title,
-                    text: "Check this Current Affairs update",
-                    url,
-                })
-                .catch((err) => console.log("Share failed:", err));
-        } else {
-            navigator.clipboard.writeText(url);
-            alert("Link copied to clipboard!");
-        }
-    };
+  const toggleBookmark = (id) => {
+    let updated = [];
+    if (bookmarkedIds.includes(id)) {
+      updated = bookmarkedIds.filter((i) => i !== id);
+    } else {
+      updated = [...bookmarkedIds, id];
+    }
+    setBookmarkedIds(updated);
+    localStorage.setItem("bookmarks", JSON.stringify(updated));
+  };
 
-    return (
-        <div className="w-full min-h-screen bg-gray-50 px-4 py-6">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Current Affairs</h1>
-                <div className="flex items-center gap-2">
-                    <div className="p-4">
-                        <LanguageToggle language={language} setLanguage={setLanguage} />
-                        <h1 className="mt-6 text-xl font-bold">
-                            {language === "Hindi" ? "करेंट अफेयर्स" : "Current Affairs"}
-                        </h1>
-                    </div>
+  const handleShare = (item) => {
+    const url = `${window.location.origin}/current-affairs/${item.slug}`;
+    if (navigator.share) {
+      navigator
+        .share({ title: item.title, text: "Check this Current Affairs update", url })
+        .catch((err) => console.log("Share failed:", err));
+    } else {
+      navigator.clipboard.writeText(url);
+      alert("Link copied to clipboard!");
+    }
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-gray-50 px-2 py-6 sm:px-4">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800"
+        >
+          {language === "Hindi" ? "करेंट अफेयर्स" : "Current Affairs"}
+        </motion.h1>
+        <LanguageToggle language={language} setLanguage={setLanguage} />
+      </div>
+
+      {/* Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {currentAffairsData.map((item, index) => (
+          <motion.div
+            key={item.id}
+            className="bg-white border border-black rounded-lg overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-all duration-300"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+          >
+            {/* Image */}
+            <motion.img
+              src={item.image || "https://via.placeholder.com/300x200?text=Current+Affairs"}
+              alt={item.title}
+              className="w-full h-32 object-cover"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            />
+
+            {/* Content */}
+            <div className="p-3 flex flex-col flex-grow">
+              <div className="flex justify-between items-start mb-1">
+                <p className="text-xs text-gray-500">
+                  {item.created_at
+                    ? new Date(item.created_at).toLocaleDateString("en-GB")
+                    : "N/A"}
+                </p>
+                <button onClick={() => toggleBookmark(item.id)} className="focus:outline-none">
+                  {bookmarkedIds.includes(item.id) ? (
+                    <BookmarkCheck className="text-blue-500 w-4 h-4" />
+                  ) : (
+                    <Bookmark className="text-gray-400 w-4 h-4 hover:text-blue-500" />
+                  )}
+                </button>
+              </div>
+
+              <h2 className="font-semibold text-xs sm:text-sm mb-1 line-clamp-2">
+                {language === "Hindi" ? item.title : item.title_english || item.title}
+              </h2>
+
+              {/* Footer Actions */}
+              <div className="flex justify-between items-center mt-auto pt-2">
+                {/* <button
+                  onClick={() => handleShare(item)}
+                  className="flex items-center gap-1 text-xs sm:text-sm text-green-600 hover:text-green-700 font-medium"
+                >
+                  <Share2 className="w-3 h-3 sm:w-4 sm:h-4" /> Share
+                </button> */}
+                <div>
+                    
                 </div>
+                <button
+                  onClick={() => navigate("/current-affairs-details", { state: item })}
+                  className="text-xs sm:text-sm text-blue-600 py-1 px-2 rounded hover:bg-blue-100 transition-all font-medium"
+                >
+                  Read More →
+                </button>
+              </div>
             </div>
+          </motion.div>
+        ))}
+      </div>
 
-            {/* Cards */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {currentAffairsData.map((item, index) => (
-                    <motion.div
-                        key={item.id}
-                        className="bg-white rounded-2xl shadow p-4 flex flex-col justify-between cursor-pointer"
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
-                        whileHover={{ scale: 1.03, boxShadow: "0px 8px 24px rgba(0,0,0,0.15)" }}
-                    >
-                        {/* Image */}
-                        <motion.img
-                            src={item.image || "https://via.placeholder.com/600x300?text=Current+Affairs"}
-                            alt={item.title}
-                            className="rounded-xl mb-3 h-80 w-full object-cover"
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.3 }}
-                        />
-
-                        {/* Date */}
-                        <p className="text-sm text-gray-500 mb-1">
-                            Date:{" "}
-                            {item.created_at
-                                ? new Date(item.created_at).toLocaleDateString("en-GB")
-                                : "N/A"}
-                        </p>
-
-                        {/* Title */}
-                        <h2 className="font-semibold text-lg mb-2">
-                            {language === "Hindi"
-                                ? item.title
-                                : item.title_english || item.title}
-                        </h2>
-
-                        {/* Description */}
-                        <p
-                            className="text-gray-600 text-sm mb-3 line-clamp-3"
-                            dangerouslySetInnerHTML={{
-                                __html:
-                                    language === "Hindi"
-                                        ? item.short_description_hindi || "No description available"
-                                        : item.short_description_english ||
-                                          item.short_description_hindi ||
-                                          "No description available",
-                            }}
-                        />
-
-                        {/* Footer Actions */}
-                        <div className="flex justify-between items-center mt-auto pt-3 border-t">
-                            <button
-                                className="text-sm text-green-600 hover:underline"
-                                onClick={() => handleShare(item)}
-                            >
-                                Share
-                            </button>
-                            <button
-                                className="text-sm text-white bg-blue-500 py-2 px-6 rounded-md hover:bg-blue-600 transition-all"
-                                onClick={() => navigate("/current-affairs-details", { state: item })}
-                            >
-                                Read More →
-                            </button>
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
-        </div>
-    );
+      {/* Empty State */}
+      {currentAffairsData.length === 0 && (
+        <div className="text-center text-gray-600 text-lg mt-8">No current affairs available.</div>
+      )}
+    </div>
+  );
 };
 
 export default CurrentAffairesPage;

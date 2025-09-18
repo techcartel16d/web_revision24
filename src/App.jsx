@@ -47,7 +47,7 @@ import { useEffect } from 'react';
 import MyTransactionPage from './pages/MyTransactionPage';
 import MySavedCollectionPage from './pages/MySavedCollectionPage';
 import HelpAndSupportPage from './pages/HelpAndSupportPage';
-import LiveTestQuizePage from './pages/liveTest/LiveTestQuizePage';
+// import LiveTestQuizePage from './pages/liveTest/LiveTestQuizePage';
 import LiveClassesPage from './pages/liveVideo/LiveClassesPage';
 import TopicsWiseTestPage from './pages/freeTests/TopicsWiseTestPage';
 import PreviousYearTestSeries from './pages/pyp_test/PreviousYearTestSeries';
@@ -68,6 +68,7 @@ import NotesPdfPage from './pages/freeTests/NotesPdfPage';
 import TopicTestInstructions from './pages/freeTests/topictest/TopicTestInstructions';
 import TopicTestAttendQuiz from './pages/freeTests/topictest/TopicTestAttendQuiz';
 import TopicTestResult from './pages/freeTests/topictest/TopicTestResult';
+import Allmaganizes from './pages/maganizes/Allmaganizes';
 
 function App() {
   // useEffect(() => {
@@ -120,7 +121,7 @@ function App() {
 
   return (
     <Router>
-      <ScrollToTop  />
+      <ScrollToTop />
       <Routes>
         {/* ALWAYS ACCESSIBLE ROUTE */}
         <Route path="/" element={<HomePage />} />
@@ -197,7 +198,7 @@ function App() {
         <Route path="/previouse-year-exam-solutions" element={<ProtectedRoute><PreviouseYearExamSolutionsPage /></ProtectedRoute>} />
 
         {/* LIVE QUIZ TEST PRACTICE */}
-        <Route path="/live-quiz-test" element={<SideBarLayout><LiveTestQuizePage /></SideBarLayout>} />
+        {/* <Route path="/live-quiz-test" element={<SideBarLayout><LiveTestQuizePage /></SideBarLayout>} /> */}
         <Route path="/live-quiz-instruction" element={<ProtectedRoute><LiveQuizeInstructionsPage /></ProtectedRoute>} />
         <Route path="/live-quiz-attends" element={<ProtectedRoute><LiveQuizAttendPage /></ProtectedRoute>} />
         <Route path="/live-quiz-analysis" element={<ProtectedRoute><LiveQuizAnalysisPage /></ProtectedRoute>} />
@@ -209,11 +210,17 @@ function App() {
         <Route path="/current-affairs-details" element={<SideBarLayout><CurrentAffairesdetailsPage /></SideBarLayout>} />
         <Route path="/pdf-notes" element={<SideBarLayout><NotesPdfPage /></SideBarLayout>} />
 
-{/* Topic test */}
+        {/* Topic test */}
         <Route path="/practice" element={<SideBarLayout><TopicsWiseTestPage /></SideBarLayout>} />
         <Route path="/practice-test-instruction" element={<SideBarLayout><TopicTestInstructions /></SideBarLayout>} />
         <Route path="/practice-test-attend-quiz" element={<ProtectedRoute><TopicTestAttendQuiz /></ProtectedRoute>} />
         <Route path="/practice-test-result" element={<SideBarLayout><TopicTestResult /></SideBarLayout>} />
+
+
+
+
+        {/* Maganizes routes */}
+        <Route path="/all-magazies" element={<SideBarLayout><Allmaganizes /></SideBarLayout>} />
 
 
         {/* ❗️ Catch-all route outside PublicRoute */}
@@ -290,7 +297,7 @@ export default App;
 //         <Route path="/test-login" element={<ProtectedRoute><Screen2 /></ProtectedRoute>} />
 //         <Route path="/instructions" element={<ProtectedRoute><Screen3 /></ProtectedRoute>} />
 //         <Route path="/symbols" element={<ProtectedRoute><Screen4 /></ProtectedRoute>} />
-//         <Route path="/scc-mock-test" element={<ProtectedRoute><Screen5 /></ProtectedRoute>} />
+// <Route path="/scc-mock-test" element={<ProtectedRoute><Screen5 /></ProtectedRoute>} />
 //         <Route path="/analysis" element={<ProtectedRoute><Screen6 /></ProtectedRoute>} />
 //         <Route path="/test-solutions" element={<ProtectedRoute><Screen7 /></ProtectedRoute>} />
 

@@ -708,7 +708,7 @@ if (!current || questionsState.length === 0) {
     console.log("📤 Submission Data:", submissionData);
     try {
 
-
+nav('/analysis', { replace: true, state })
       const res = await dispatch(megaQuizAttendSubmitSlice(submissionData)).unwrap();
       if (res.status_code == 200) {
         // ✅ Clear all encrypted test data

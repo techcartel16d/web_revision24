@@ -33,6 +33,7 @@ const Screen6 = () => {
                 const test = res.data.test_detail;
                 const my = res.data.my_detail;
                 setTestData(res.data)
+                console.log("api response", res)
 
                 // Inside `fetchUserResult` (after setting testData)
                 setSubjectWiseAnalysis(res?.data?.subject_wise_analysis || []);

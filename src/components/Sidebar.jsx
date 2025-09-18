@@ -63,10 +63,10 @@ const Sidebar = () => {
         // { name: 'Calculation Booster', icon: <Calculator size={18} />, path: '#' },
         { name: 'Live Classes', icon: <Calendar size={18} />, path: '/live-classes', badge: 'FREE' },
         { name: 'Current Affairs', icon: <Newspaper size={18} />, path: '/current-affairs', badge: 'FREE' },
-        { name: 'Monthly Magazines', icon: <BookOpenCheck size={18} />, path: '/live-classes', badge: '' },
-        { name: 'Practice Batch', icon: <SquarePlay size={18} />, path: '/live-classes', badge: 'PAID' },
+        { name: 'Monthly Magazines', icon: <BookOpenCheck size={18} />, path: '/all-magazies', badge: '' },
+        // { name: 'Practice Batch', icon: <SquarePlay size={18} />, path: '/live-classes', badge: 'PAID' },
         { name: 'Notes & PDFs', icon: <SquarePlay size={18} />, path: '/pdf-notes', badge: '' },
-        // { name: 'Skill Academy', icon: <GraduationCap size={18} />, path: '/skill-academy' },
+        
       ],
     },
     {
@@ -76,8 +76,8 @@ const Sidebar = () => {
         { name: 'Live Tests & Quizzes', icon: <Calendar size={18} />, path: '/live-quiz-test' },
         { name: 'Previous Year Papers', icon: <FileText size={18} />, path: '/previous-papers' },
         { name: 'Practice', icon: <RefreshCcw size={18} />, path: '/practice', badge: 'FREE' },
-        { name: 'Free Quizzes', icon: <HelpCircle size={18} />, path: '/free-quizzes', badge: 'NEW' },
-        { name: 'Attempted Tests', icon: <CheckCircle size={18} />, path: '/attempted-tests' },
+        // { name: 'Free Quizzes', icon: <HelpCircle size={18} />, path: '/free-quizzes', badge: 'NEW' },
+        // { name: 'Attempted Tests', icon: <CheckCircle size={18} />, path: '/attempted-tests' },
         { name: 'Focus+', icon: <Award size={18} />, path: '/subscription', badge: 'NEW' },
         { name: 'Exams Blog', icon: <FileText size={18} />, path: '/blog' },
         // { name: 'Exams', icon: <FileText size={18} />, path: '/exams' },
@@ -175,7 +175,7 @@ const Sidebar = () => {
 
             ) : (
 
-              <button className='cursor-pointer w-full h-9' onClick={handleLogout}>Logoout</button>
+              <button className='cursor-pointer w-full h-9' onClick={handleLogout}>Logout</button>
             )
           }
         </div>
