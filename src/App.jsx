@@ -47,7 +47,7 @@ import { useEffect } from 'react';
 import MyTransactionPage from './pages/MyTransactionPage';
 import MySavedCollectionPage from './pages/MySavedCollectionPage';
 import HelpAndSupportPage from './pages/HelpAndSupportPage';
-// import LiveTestQuizePage from './pages/liveTest/LiveTestQuizePage';
+import LiveTestQuizePage from './pages/liveTest/LiveTestQuizePage';
 import LiveClassesPage from './pages/liveVideo/LiveClassesPage';
 import TopicsWiseTestPage from './pages/freeTests/TopicsWiseTestPage';
 import PreviousYearTestSeries from './pages/pyp_test/PreviousYearTestSeries';
@@ -69,6 +69,7 @@ import TopicTestInstructions from './pages/freeTests/topictest/TopicTestInstruct
 import TopicTestAttendQuiz from './pages/freeTests/topictest/TopicTestAttendQuiz';
 import TopicTestResult from './pages/freeTests/topictest/TopicTestResult';
 import Allmaganizes from './pages/maganizes/Allmaganizes';
+import PdfViewerEditor from './pages/pdfView/PdfViewers';
 
 function App() {
   // useEffect(() => {
@@ -198,7 +199,7 @@ function App() {
         <Route path="/previouse-year-exam-solutions" element={<ProtectedRoute><PreviouseYearExamSolutionsPage /></ProtectedRoute>} />
 
         {/* LIVE QUIZ TEST PRACTICE */}
-        {/* <Route path="/live-quiz-test" element={<SideBarLayout><LiveTestQuizePage /></SideBarLayout>} /> */}
+        <Route path="/live-quiz-test" element={<SideBarLayout><LiveTestQuizePage /></SideBarLayout>} />
         <Route path="/live-quiz-instruction" element={<ProtectedRoute><LiveQuizeInstructionsPage /></ProtectedRoute>} />
         <Route path="/live-quiz-attends" element={<ProtectedRoute><LiveQuizAttendPage /></ProtectedRoute>} />
         <Route path="/live-quiz-analysis" element={<ProtectedRoute><LiveQuizAnalysisPage /></ProtectedRoute>} />
@@ -209,6 +210,7 @@ function App() {
         <Route path="/current-affairs" element={<SideBarLayout><CurrentAffairesPage /></SideBarLayout>} />
         <Route path="/current-affairs-details" element={<SideBarLayout><CurrentAffairesdetailsPage /></SideBarLayout>} />
         <Route path="/pdf-notes" element={<SideBarLayout><NotesPdfPage /></SideBarLayout>} />
+        <Route path="/pdf-viewer" element={<SideBarLayout><PdfViewerEditor /></SideBarLayout>} />
 
         {/* Topic test */}
         <Route path="/practice" element={<SideBarLayout><TopicsWiseTestPage /></SideBarLayout>} />

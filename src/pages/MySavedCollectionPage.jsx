@@ -26,8 +26,8 @@ const MySavedCollectionPage = () => {
     <div>
 
 
-      <div className="p-4 border-b">
-        {/* ✅ Horizontal Scroll with Swiper */}
+      {/* <div className="p-4 border-b">
+     
         <Swiper
           slidesPerView={1}
           spaceBetween={10}
@@ -49,14 +49,19 @@ const MySavedCollectionPage = () => {
           ))}
         </Swiper>
 
-        {/* नीचे आप अपनी collection component call कर सकते हैं */}
-      </div>
+    
+      </div> */}
 
       {
         selectedItems === "Save-Packages" ? (
 
           <TestPackageCollection />
-        ) : ('No Quiz Save items find')
+        ) : (
+        <div className="flex items-center justify-center h-screen">
+  <h3>You haven't saved anything yet!</h3>
+</div>
+
+        )
       }
 
     </div>
