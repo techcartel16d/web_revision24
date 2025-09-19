@@ -97,7 +97,7 @@ const RegisterOtpVerifyPage = () => {
           type="text"
           value={otp}
           onChange={handleOtpChange}
-          placeholder="Enter 6-digit OTP"
+          placeholder="Enter 4-digit OTP"
           className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 

@@ -24,7 +24,9 @@ import {
   Loader2,
   Crown,
   Sparkles,
-  Star
+  Star,
+  NotebookPen,
+  CircleQuestionMark
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
@@ -68,7 +70,8 @@ const Sidebar = () => {
         { name: 'Live Classes', icon: <Calendar size={18} />, path: '/live-classes', badge: 'FREE' },
         { name: 'Current Affairs', icon: <Newspaper size={18} />, path: '/current-affairs', badge: 'FREE' },
         { name: 'Monthly Magazines', icon: <BookOpenCheck size={18} />, path: '/all-magazies', badge: '' },
-        { name: 'Notes & PDFs', icon: <SquarePlay size={18} />, path: '/pdf-notes', badge: '' },
+        { name: 'Notes & PDFs', icon: <NotebookPen size={18} />, path: '/pdf-notes', badge: '' },
+         { name: 'Practice Batch', icon: <SquarePlay size={18} />, path: '/', badge: '' },
       ],
     },
     {
@@ -78,12 +81,14 @@ const Sidebar = () => {
         { name: 'Live Tests & Quizzes', icon: <Calendar size={18} />, path: '/live-quiz-test' },
         { name: 'Previous Year Papers', icon: <FileText size={18} />, path: '/previous-papers' },
         { name: 'Practice', icon: <RefreshCcw size={18} />, path: '/practice', badge: 'FREE' },
+         { name: 'Free Quiz', icon: <CircleQuestionMark size={18} />, path: '/free-quizes', badge: 'FREE' },
+          { name: 'GK & Current Affairs', icon: <RefreshCcw size={18} />, path: '/', badge: '' },
         { 
           name: 'Focus+', 
           icon: <Crown size={18} />, 
           path: '/subscription', 
           badge: 'PREMIUM',
-          isPremium: true // ✅ Special flag for premium item
+          isPremium: true 
         },
         { name: 'Exams Blog', icon: <FileText size={18} />, path: '/blog' },
       ],

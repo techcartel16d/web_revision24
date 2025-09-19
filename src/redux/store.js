@@ -5,6 +5,7 @@ import globleSlice from './globleSlice';
 import liveQuizeReducer from "./LiveQuizeSlice";
 import freeTest from "./freeTestSlice";
 import Monthlymagzines from "./magzinesMonthle";
+import FreeQuizeSlice from "./freeQuizeSlice"
 
 const store = configureStore({
     reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
         toggleSlice: globleSlice,
         liveQuize: liveQuizeReducer,
         monthlyMagazines: Monthlymagzines,
+        getFreeQuizeData: FreeQuizeSlice,
         freeTest
     },
 });
