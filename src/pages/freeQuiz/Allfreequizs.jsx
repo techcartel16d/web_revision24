@@ -60,48 +60,32 @@ const Allfreequizs = () => {
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Free Quizes</h2>
 
-      {/* Category Filter */}
-      {/* {categories.length > 0 && (
+
+
+      {/* Filter for Categories */}
+      {categories.length > 0 && (
         <div className="mb-4">
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="border rounded px-3 py-2"
+          <Swiper
+            spaceBetween={10}
+            slidesPerView="auto"
+            className="!overflow-visible"
           >
             {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-      )} */}
-
-       {/* Filter for Categories */}
-            {categories.length > 0 && (
-              <div className="mb-4">
-                <Swiper
-                  spaceBetween={10}
-                  slidesPerView="auto"
-                  className="!overflow-visible"
+              <SwiperSlide key={cat} style={{ width: "auto" }}>
+                <button
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2 rounded ${selectedCategory === cat
+                      ? "bg-green-500 text-white"
+                      : "bg-gray-200"
+                    }`}
                 >
-                  {categories.map((cat) => (
-                    <SwiperSlide key={cat} style={{ width: "auto" }}>
-                      <button
-                        onClick={() => setSelectedCategory(cat)}
-                        className={`px-4 py-2 rounded ${
-                          selectedCategory === cat
-                            ? "bg-green-500 text-white"
-                            : "bg-gray-200"
-                        }`}
-                      >
-                        {cat}
-                      </button>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
-            )}
+                  {cat}
+                </button>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      )}
 
       {loading && <p className="text-center text-lg">Loading...</p>}
 
@@ -113,43 +97,48 @@ const Allfreequizs = () => {
         {currentTests.map((test) => (
           <div
             key={test.test_id}
-            className="bg-white shadow-md rounded-lg border overflow-hidden hover:shadow-xl transition-all"
+            className="bg-white shadow-md rounded-lg border overflow-hidden hover:shadow-xl transition-all h-40 flex flex-col"
           >
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{test.title}</h3>
+            <div className="p-4 flex flex-col flex-grow">
+              <h3 className="text-sm font-semibold mb-2 line-clamp-2">
+                {test.title}
+              </h3>
 
               <p className="text-gray-700 text-sm">
-                Questions: {test.total_questions} | Marks: {test.total_marks} |
-                Time: {test.time} mins
+                Questions: {test.total_questions} | Marks: {test.total_marks} | Time: {test.time} mins
               </p>
 
-              {test.syllabus && (
+              {/* {test.syllabus && (
                 <button
                   onClick={() => openPdfModal(test.syllabus)}
                   className="mt-2 inline-block text-blue-600 text-sm hover:underline"
                 >
                   View Syllabus
                 </button>
-              )}
+              )} */}
 
-              {!test.attend ? (
-                <button
-                  className="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-                  onClick={() =>
-                    nav("/practice-test-instruction", {
-                      state: { testInfo: test },
-                    })
-                  }
-                >
-                  Start Test
-                </button>
-              ) : (
-                <span className="mt-3 inline-block text-green-600 font-semibold">
-                  Already Attended
-                </span>
-              )}
+              {/* Push button/span to bottom */}
+              <div className="mt-auto">
+                {!test.attend ? (
+                  <button
+                    className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+                    onClick={() =>
+                      nav("/free-quizes-instruction", {
+                        state: { testInfo: test },
+                      })
+                    }
+                  >
+                    Start Test
+                  </button>
+                ) : (
+                  <span className="inline-block text-green-600 font-semibold">
+                    Already Attended
+                  </span>
+                )}
+              </div>
             </div>
           </div>
+
         ))}
       </div>
 

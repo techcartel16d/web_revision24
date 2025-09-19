@@ -71,6 +71,8 @@ import TopicTestResult from './pages/freeTests/topictest/TopicTestResult';
 import Allmaganizes from './pages/maganizes/Allmaganizes';
 import PdfViewerEditor from './pages/pdfView/PdfViewers';
 import Allfreequizs from './pages/freeQuiz/Allfreequizs';
+import FreequizesInstructions from './pages/freeQuiz/FreequizesInstructions';
+import FreequizeAttend from './pages/freeQuiz/freequizeAttend';
 
 function App() {
   // useEffect(() => {
@@ -221,9 +223,9 @@ function App() {
 
  {/* Free quizes */}
         <Route path="/free-quizes" element={<SideBarLayout><Allfreequizs /></SideBarLayout>} />
-        {/* <Route path="/practice-test-instruction" element={<SideBarLayout><TopicTestInstructions /></SideBarLayout>} />
-        <Route path="/practice-test-attend-quiz" element={<ProtectedRoute><TopicTestAttendQuiz /></ProtectedRoute>} />
-        <Route path="/practice-test-result" element={<SideBarLayout><TopicTestResult /></SideBarLayout>} /> */}
+        <Route path="/free-quizes-instruction" element={<SideBarLayout><FreequizesInstructions /></SideBarLayout>} />
+        <Route path="/free-quizes-attend" element={<ProtectedRoute><FreequizeAttend /></ProtectedRoute>} />
+        <Route path="/practice-test-result" element={<SideBarLayout><TopicTestResult /></SideBarLayout>} />
 
 
 
