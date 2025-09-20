@@ -29,7 +29,7 @@ const TestSeriesPage = () => {
 
       <div className="p-4 border-b">
         {/* ✅ Horizontal Scroll with Swiper */}
-        {/* <Swiper
+        {/* <Swiperå
           slidesPerView={1}
           spaceBetween={10}
           freeMode={true}
@@ -48,7 +48,7 @@ const TestSeriesPage = () => {
               </div>
             </SwiperSlide>
           ))}
-        </Swiper> */}
+        </Swiperå> */}
 
         {/* नीचे आप अपनी collection component call कर सकते हैं */}
       </div>

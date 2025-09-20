@@ -82,7 +82,7 @@ const Sidebar = () => {
         { name: 'Previous Year Papers', icon: <FileText size={18} />, path: '/previous-papers' },
         { name: 'Practice', icon: <RefreshCcw size={18} />, path: '/practice', badge: 'FREE' },
          { name: 'Free Quiz', icon: <CircleQuestionMark size={18} />, path: '/free-quizes', badge: 'FREE' },
-          { name: 'GK & Current Affairs', icon: <RefreshCcw size={18} />, path: '/', badge: '' },
+          { name: 'GK & Current Affairs', icon: <RefreshCcw size={18} />, path: '/gk&ca-page', badge: '' },
         { 
           name: 'Focus+', 
           icon: <Crown size={18} />, 

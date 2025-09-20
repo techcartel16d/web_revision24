@@ -256,6 +256,18 @@ export const getLiveVideoSlice = createAsyncThunk(
     },
 );
 
+export const getAllGkSlice = createAsyncThunk(
+    'home/getLiveViewSlice',
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await HomeProvider.getAllGkseries();
+            return res;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+
 
 
 const homeSlice = createSlice({

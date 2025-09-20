@@ -27,7 +27,7 @@ import PauseTestModal from "../../../components/PauseTestModal";
 import ConfirmTestSubmitModal from "../../../components/ConfirmTestSubmitModal";
 import SymbolModal from "../../../components/SymbolModal";
 
-const TopicTestAttendQuiz = () => {
+const GkCAtestPage = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
   const { state } = useLocation();
@@ -894,4 +894,4 @@ const TopicTestAttendQuiz = () => {
   );
 };
 
-export default TopicTestAttendQuiz;
+export default GkCAtestPage;

@@ -57,7 +57,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
   const fetchBookMarkTestSeries = async () => {
     try {
       const res = await dispatch(getUserCollectionDetailSlice()).unwrap();
-      // console.log("book mark test series fetch", res);
+      console.log("book mark test series fetch", res);
 
       if (res.status_code == 200) {
         // showSuccessToast(res.message)
@@ -105,7 +105,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
     <div className="p-6 bg-gray-50" id="testseries">
       {category.map((cat) => {
         const series = testSeriesData?.[cat.title] || [];
-        // console.log(cat)
+        console.log(series)
 
         if (series.length === 0) return null; // Skip if no test series
 
