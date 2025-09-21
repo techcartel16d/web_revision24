@@ -51,6 +51,8 @@ const NotesPdfPage = () => {
          <div className="p-6">
             <h1 className="text-2xl font-bold mb-6">📚 Notes / Mind Maps</h1>
 
+            
+
             {loading ? (
                 <p className="text-center text-lg font-semibold">Loading...</p>
             ) : (
@@ -65,7 +67,7 @@ const NotesPdfPage = () => {
                                 >
                                     <div className="aspect-video bg-gray-200">
                                         <img
-                                            src={item.pdf}
+                                            src={item.cover_image}
                                             alt={item.title}
                                             className="w-full h-full object-contain"
                                         />

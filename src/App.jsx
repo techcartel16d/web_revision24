@@ -73,6 +73,9 @@ import PdfViewerEditor from './pages/pdfView/PdfViewers';
 import Allfreequizs from './pages/freeQuiz/Allfreequizs';
 import SettingPage from './pages/setting/SettingPage';
 import AttemptedTestPage from './pages/attempted/AttemptedTestPage';
+import FreequizesInstructions from './pages/freeQuiz/FreequizesInstructions';
+import FreequizeAttend from './pages/freeQuiz/FreequizeAttend';
+import GkCapage from './pages/freeTests/gk&currentAffers/GkCapage';
 
 function App() {
   useEffect(() => {
@@ -225,9 +228,11 @@ function App() {
 
         {/* Free quizes */}
         <Route path="/free-quizes" element={<SideBarLayout><Allfreequizs /></SideBarLayout>} />
-        {/* <Route path="/practice-test-instruction" element={<SideBarLayout><TopicTestInstructions /></SideBarLayout>} />
-        <Route path="/practice-test-attend-quiz" element={<ProtectedRoute><TopicTestAttendQuiz /></ProtectedRoute>} />
-        <Route path="/practice-test-result" element={<SideBarLayout><TopicTestResult /></SideBarLayout>} /> */}
+
+        {/* GK & CA */}
+        <Route path="/gk&ca-page" element={<SideBarLayout><GkCapage /></SideBarLayout>} />
+        <Route path="/free-quizes-instruction" element={<SideBarLayout><FreequizesInstructions /></SideBarLayout>} />
+        <Route path="/free-quizes-attend" element={<ProtectedRoute><FreequizeAttend /></ProtectedRoute>} />
 
 
 

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { getUserDataDecrypted } from '../../../helpers/userStorage';
 import Checkbox from '../../../components/Checkbox';
 
-const TopicTestInstructions = () => {
+const GkCaTestInstructions = () => {
   const nav = useNavigate();
   const { state } = useLocation();
    const [isChecked, setIsChecked] = useState(false);
@@ -182,4 +182,4 @@ const TopicTestInstructions = () => {
   );
 };
 
-export default TopicTestInstructions;
+export default GkCaTestInstructions;

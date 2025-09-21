@@ -7,8 +7,7 @@ const TopicsWiseTestPage = () => {
   const dispatch = useDispatch();
   const [freeQuizData, setFreeQuizData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const nav = useNavigate()
-  // PDF modal state
+  const nav = useNavigate();
   const [openPdf, setOpenPdf] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
 
@@ -16,7 +15,7 @@ const TopicsWiseTestPage = () => {
     try {
       setLoading(true);
       const res = await dispatch(getFreeTopicWisePaperSlice()).unwrap();
-      // console.log("FreeTopicswisePaper Data", res);
+      console.log("FreeTopicswisePaper Data", res);
       setFreeQuizData(res.data.data || []);
     } catch (error) {
       console.log("Error fetching topic wise test:", error);
@@ -30,7 +29,6 @@ const TopicsWiseTestPage = () => {
   }, []);
 
   const openPdfModal = (url) => {
-    console.log(url)
     setPdfUrl(url);
     setOpenPdf(true);
   };
@@ -53,39 +51,45 @@ const TopicsWiseTestPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {freeQuizData.map((test) => (
           <div
-            key={test.id}
-            className="bg-white shadow-md rounded-lg border overflow-hidden hover:shadow-xl transition-all"
+            key={test.test_id}
+            className="relative shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-all h-40 flex flex-col
+             border border-black/30"
+            style={{
+              backgroundImage: `url('/bg.webp')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+             
+            }}
           >
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{test.title}</h3>
-              <p className="text-gray-500 text-sm mb-2">{test.short_desc}</p>
+            {/* Optional gradient overlay */}
+            {/* <div className="absolute inset-0 bg-gradient-to-tr from-sky-300 via-sky-400 to-teal-400 opacity-60"></div> */}
+
+            {/* Inner content */}
+            <div className="relative p-4 flex flex-col flex-grow bg-white/70 backdrop-blur-sm h-full">
+              <h3 className="text-sm font-semibold mb-2 line-clamp-2">
+                {test.title}
+              </h3>
+
               <p className="text-gray-700 text-sm">
-                Questions: {test.no_of_question} | Marks: {test.marks} | Time: {test.time} mins
-              </p>
-              <p className="text-gray-700 text-sm">
-                Type: {test.test_series_type} | Status: {test.status}
+                Questions: {test.total_questions} | Marks: {test.total_marks} | Time: {test.time} mins
               </p>
 
-              {test.syllabus && (
-                <button
-                  onClick={() => openPdfModal(test.syllabus)}
-                  className="mt-2 inline-block text-blue-600 text-sm hover:underline"
-                >
-                  View Syllabus
-                </button>
-              )}
-
-              {test.is_start && !test.attend && (
-                <button className="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" onClick={() => nav("/practice-test-instruction",{state:{testInfo:test}})}>
-                  Start Test
-                </button>
-              )}
-
-              {test.attend && (
-                <span className="mt-3 inline-block text-green-600 font-semibold">
-                  Already Attended
-                </span>
-              )}
+              <div className="mt-auto">
+                {!test.attend ? (
+                  <button
+                    className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+                    onClick={() =>
+                      nav("/free-quizes-instruction", { state: { testInfo: test } })
+                    }
+                  >
+                    Start Test
+                  </button>
+                ) : (
+                  <span className="inline-block text-green-600 font-semibold">
+                    Already Attended
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         ))}

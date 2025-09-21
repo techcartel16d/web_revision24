@@ -1,42 +1,44 @@
-
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getUserDataDecrypted } from '../../../helpers/userStorage';
-import Checkbox from '../../../components/Checkbox';
+import { getUserDataDecrypted } from '../../helpers/userStorage';
+import Checkbox from '../../components/Checkbox';
+import { secureSet } from '../../helpers/storeValues';
 
-const TopicTestInstructions = () => {
+
+const FreequizesInstructions = () => {
   const nav = useNavigate();
   const { state } = useLocation();
    const [isChecked, setIsChecked] = useState(false);
-  console.log(state)
+  console.log("free quizes instrections",state)
   const [userInfo, setUserInfo] = useState(null);
-    const [lang, setLang] = useState('Choose a language')
+  const [lang, setLang] = useState('Choose a language')
   const getUserInfo = async () => {
     const user = await getUserDataDecrypted();
     // console.log(user)
     setUserInfo(user);
   };
+  const selectedLang = async (e) => {
+          setLang(e.target.value)
+          try {
+              await secureSet('language', e.target.value)
+  
+          } catch (error) {
+              console.log("Error in store language", error)
+          }
+  
+      }
 
   useEffect(() => {
     getUserInfo();
   }, []);
 
   const subjects = state?.testInfo || {};
-  const totalQuestions = subjects?.no_of_question || 0
+  const totalQuestions = state.testInfo.total_questions || 0;
+  console.log('totalQuestions', totalQuestions)
   const totalMarks = parseInt(subjects.marks_per_question || 0)
-  const negativeMark = state?.testInfo?.negative_marks || '0';
+  const negativeMark = state?.testInfo?.details[0]?.negative_mark || '0';
+  console.log('negativeMark', negativeMark)
   const duration = state?.testInfo?.time || 60;
-
-    const selectedLang = async (e) => {
-            setLang(e.target.value)
-            try {
-                await secureSet('language', e.target.value)
-    
-            } catch (error) {
-                console.log("Error in store language", error)
-            }
-    
-        }
 
   return (
     <div className="px-6 py-4">
@@ -86,7 +88,7 @@ const TopicTestInstructions = () => {
             <ul className="list-disc pl-5 space-y-1">
               <li>Duration: <span className="font-bold text-blue-700">{duration} minutes</span> / समयावधि: <span className="font-bold text-blue-700">{duration} मिनट</span></li>
               <li>Total Questions: <span className="font-bold text-blue-700">{totalQuestions}</span> / कुल प्रश्न: <span className="font-bold text-blue-700">{totalQuestions}</span></li>
-              <li>Negative Marking: {negativeMark} marks deducted for each wrong answer. / ऋणात्मक अंकन: प्रत्येक गलत उत्तर पर <span className="font-bold">{negativeMark}</span> अंक काटे जाएंगे।</li>
+              <li>Negative Marking: <span className='text-red-600 font-bold'>{negativeMark} </span>marks deducted for each wrong answer. / ऋणात्मक अंकन: प्रत्येक गलत उत्तर पर <span className='text-red-600 font-bold'>{negativeMark} </span>अंक काटे जाएंगे।</li>
               <li>Number of Sections displayed at any time: <span className="font-bold text-blue-700">{subjects.length}</span> / किसी भी समय पर प्रदर्शित अनुभागों की संख्या: <span className="font-bold text-blue-700">{subjects.length}</span></li>
             </ul>
           </li>
@@ -137,8 +139,10 @@ const TopicTestInstructions = () => {
           </li>
         </ol>
 
+        <p className="text-center font-semibold text-green-700 mt-6">Good Luck! / शुभकामनाएँ!</p>
+      </div>
 
-         <div className='py-3 flex flex-col gap-3'>
+      <div className='py-3 flex flex-col gap-3'>
 
                 <select onChange={selectedLang} className='border p-1 rounded-md bg-slate-200 border-slate-300 '>
                     <option value="Choose a language">Choose a language</option>
@@ -164,22 +168,19 @@ const TopicTestInstructions = () => {
                     onChange={setIsChecked}
                 />
             </div>
-        
-
-        <p className="text-center font-semibold text-green-700 mt-6">Good Luck! / शुभकामनाएँ!</p>
-      </div>
 
       <div className="flex justify-center my-6">
         <button
           className="bg-blue-700 text-white px-6 py-2 cursor-pointer rounded hover:bg-blue-800"
-          onClick={() => nav("/practice-test-attend-quiz", { state })}
+          onClick={() => nav("/free-quizes-attend", { state })}
           // onClick={()=> console.log(userInfo)}
+           disabled={lang === 'Choose a language' || !isChecked}
         >
-          Agree & Get Start
+          Start
         </button>
       </div>
     </div>
   );
 };
 
-export default TopicTestInstructions;
+export default FreequizesInstructions;

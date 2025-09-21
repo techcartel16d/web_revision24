@@ -235,6 +235,15 @@ const HomeProvider = {
             console.log("ERROR IN USER COLLECTION DETAILS API ", error)
         }
     },
+      // GET USER COLLECTION DETAILS API
+    getAllGkseries: async () => {
+        try {
+            const res = await api.get(`/all-gk-test-series`);
+            return res.data;
+        } catch (error) {
+            console.log("ERROR IN USER GK GK API ", error)
+        }
+    },
 }
 
 export default HomeProvider
