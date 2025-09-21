@@ -44,7 +44,7 @@ const HomePage = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -130,7 +130,7 @@ const HomePage = () => {
       <div className="min-h-screen bg-gray-50">
         {/* Layout Wrapper */}
         <div className="flex h-screen overflow-hidden">
-          
+
           {/* Sidebar - Only show when user is logged in */}
           {userInfo && (
             <>
@@ -141,7 +141,7 @@ const HomePage = () => {
                   onClick={() => setSidebarVisible(false)}
                 />
               )}
-              
+
               {/* Sidebar Component */}
               <div className={`
                 fixed md:static inset-y-0 left-0 z-50
@@ -158,7 +158,7 @@ const HomePage = () => {
             flex-1 flex flex-col h-full overflow-hidden
             ${userInfo && !isMobile ? 'md:ml-0' : ''}
           `}>
-            
+
             {/* Header */}
             <div className="flex-shrink-0 relative z-30">
               {userInfo ? (
@@ -184,7 +184,7 @@ const HomePage = () => {
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto">
               <div className="min-h-full">
-                
+
                 {/* Hero Banner */}
                 {bannerData && bannerData.length > 0 && (
                   <section className="relative">
@@ -244,14 +244,14 @@ const HomePage = () => {
                 </svg>
                 <span className="text-xs mt-1">Menu</span>
               </button>
-              
+
               <button className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 transition-colors">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
                 </svg>
                 <span className="text-xs mt-1">Tests</span>
               </button>
-              
+
               <button className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 transition-colors">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -286,15 +286,15 @@ const HomePage = () => {
         }
         
         ${[...Array(12)].map((_, i) => {
-          const angle = i * 30;
-          const delay = i * 0.1;
-          return `
+        const angle = i * 30;
+        const delay = i * 0.1;
+        return `
             .bar${i + 1} {
               transform: rotate(${angle}deg) translate(0, -150%);
               animation-delay: -${delay}s;
             }
           `;
-        }).join('')}
+      }).join('')}
 
         /* Custom Scrollbar */
         .overflow-y-auto::-webkit-scrollbar {
