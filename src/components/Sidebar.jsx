@@ -80,6 +80,7 @@ const Sidebar = () => {
         { name: 'Test Series', icon: <FileText size={18} />, path: '/test-series' },
         { name: 'Live Tests & Quizzes', icon: <Calendar size={18} />, path: '/live-quiz-test' },
         { name: 'Previous Year Papers', icon: <FileText size={18} />, path: '/previous-papers' },
+        { name: 'Attempted Test', icon: <FileText size={18} />, path: '/attempted-test' },
         { name: 'Practice', icon: <RefreshCcw size={18} />, path: '/practice', badge: 'FREE' },
          { name: 'Free Quiz', icon: <CircleQuestionMark size={18} />, path: '/free-quizes', badge: 'FREE' },
           { name: 'GK & Current Affairs', icon: <RefreshCcw size={18} />, path: '/', badge: '' },
@@ -98,9 +99,9 @@ const Sidebar = () => {
       items: [
         { name: 'My Profile', icon: <User2 size={18} />, path: '/user-dashboard' },
         { name: 'My Transactions', icon: <BadgeIndianRupee size={18} />, path: '/my-transaction' },
-        { name: 'My Saved Items', icon: <LucideSave size={18} />, path: '/saved-items' },
+        { name: 'My Collection', icon: <LucideSave size={18} />, path: '/saved-items' },
         { name: 'Support', icon: <HelpCircleIcon size={18} />, path: '/help-support' },
-        { name: 'Settings', icon: <Settings size={18} />, path: '/exams' },
+        { name: 'Settings', icon: <Settings size={18} />, path: '/setting' },
       ],
     },
   ];

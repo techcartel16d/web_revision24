@@ -57,9 +57,9 @@ const MySavedCollectionPage = () => {
 
           <TestPackageCollection />
         ) : (
-        <div className="flex items-center justify-center h-screen">
-  <h3>You haven't saved anything yet!</h3>
-</div>
+          <div className="flex items-center justify-center h-screen">
+            <h3>You haven't saved anything yet!</h3>
+          </div>
 
         )
       }
