@@ -64,62 +64,61 @@ const Allmaganizes = () => {
                 <LanguageToggle language={language} setLanguage={setLanguage} />
             </div>
 
-           {/* Cards Grid */}
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-  {currentMagazines && currentMagazines.length > 0 ? (
-    currentMagazines.map((item, index) => (
-      <motion.div
-        key={item.id}
-        className="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-all duration-300 w-70 h-125"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
-      >
-        {/* Image Preview (fixed height) */}
-        <motion.img
-          src={item.cover_image}
-          alt={item.title}
-          className="w-full h-100 object-contain"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.3 }}
-        />
+            {/* Cards Grid - Reduced Gap */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
+                {currentMagazines && currentMagazines.length > 0 ? (
+                    currentMagazines.map((item, index) => (
+                        <motion.div
+                            key={item.id}
+                            className="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-all duration-300 w-70 h-125"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                        >
+                            {/* Image Preview - Better visual display */}
+                            <motion.img
+                                src={item.cover_image}
+                                alt={item.title}
+                                className="w-full h-100 object-cover"
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.3 }}
+                            />
 
-        {/* Content */}
-        <div className="p-3 flex flex-col flex-grow">
-          <h2 className="font-semibold text-sm sm:text-base line-clamp-2 mb-2">
-            {item.title}
-          </h2>
+                            {/* Content */}
+                            <div className="p-3 flex flex-col flex-grow">
+                                <h2 className="font-semibold text-sm sm:text-base line-clamp-2 mb-2">
+                                    {item.title}
+                                </h2>
 
-          {/* Footer Actions */}
-          <div className="flex gap-2 mt-auto">
-            {/* ✅ View PDF Button */}
-            <button
-              onClick={() => handleViewPdf(item.file_path, item.title)}
-              className="flex-1 text-xs sm:text-sm text-white bg-blue-600 hover:bg-blue-700 py-1.5 px-3 rounded transition-all font-medium flex items-center justify-center gap-1"
-            >
-              📖 View PDF
-            </button>
+                                {/* Footer Actions */}
+                                <div className="flex gap-2 mt-auto">
+                                    {/* ✅ View PDF Button */}
+                                    <button
+                                        onClick={() => handleViewPdf(item.file_path, item.title)}
+                                        className="flex-1 text-xs sm:text-sm text-white bg-blue-600 hover:bg-blue-700 py-1.5 px-3 rounded transition-all font-medium flex items-center justify-center gap-1"
+                                    >
+                                        📖 View PDF
+                                    </button>
 
-            {/* ✅ Download Button */}
-            <button
-              onClick={() => window.open(item.file_path, "_blank")}
-              className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 py-1.5 px-3 rounded border border-blue-600 hover:border-blue-800 transition-all font-medium"
-            >
-              📥
-            </button>
-          </div>
-        </div>
-      </motion.div>
-    ))
-  ) : (
-    <div className="col-span-full text-center text-gray-600 text-lg mt-8">
-      {language === "Hindi"
-        ? "कोई पत्रिकाएँ उपलब्ध नहीं हैं"
-        : "No magazines available"}
-    </div>
-  )}
-</div>
-
+                                    {/* ✅ Download Button */}
+                                    <button
+                                        onClick={() => window.open(item.file_path, "_blank")}
+                                        className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 py-1.5 px-3 rounded border border-blue-600 hover:border-blue-800 transition-all font-medium"
+                                    >
+                                        📥
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))
+                ) : (
+                    <div className="col-span-full text-center text-gray-600 text-lg mt-8">
+                        {language === "Hindi"
+                            ? "कोई पत्रिकाएँ उपलब्ध नहीं हैं"
+                            : "No magazines available"}
+                    </div>
+                )}
+            </div>
 
             {/* ✅ PDF Viewer Modal */}
             <AnimatePresence>
