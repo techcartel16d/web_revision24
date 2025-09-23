@@ -1,6 +1,5 @@
 // OLD CODE
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 import LoginPage from './pages/authPage/LoginPage';
 import RegisterPage from './pages/authPage/RegisterPage';
@@ -76,6 +75,8 @@ import AttemptedTestPage from './pages/attempted/AttemptedTestPage';
 import FreequizesInstructions from './pages/freeQuiz/FreequizesInstructions';
 import FreequizeAttend from './pages/freeQuiz/FreequizeAttend';
 import GkCapage from './pages/freeTests/gk&currentAffers/GkCapage';
+import GkCaTestInstructions from './pages/freeTests/gk&currentAffers/GkCaTestInstructions';
+import GkCAtestPage from './pages/freeTests/gk&currentAffers/Gk&CAtestPage';
 
 function App() {
   // useEffect(() => {
@@ -231,8 +232,8 @@ function App() {
 
         {/* GK & CA */}
         <Route path="/gk&ca-page" element={<SideBarLayout><GkCapage /></SideBarLayout>} />
-        <Route path="/free-quizes-instruction" element={<SideBarLayout><FreequizesInstructions /></SideBarLayout>} />
-        <Route path="/free-quizes-attend" element={<ProtectedRoute><FreequizeAttend /></ProtectedRoute>} />
+        <Route path="/gk-ca-test-instruction" element={<SideBarLayout><GkCaTestInstructions /></SideBarLayout>} />
+        <Route path="/gk-test-attend" element={<ProtectedRoute><GkCAtestPage /></ProtectedRoute>} />
 
 
 
