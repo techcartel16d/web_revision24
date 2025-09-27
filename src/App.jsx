@@ -77,6 +77,9 @@ import FreequizeAttend from './pages/freeQuiz/FreequizeAttend';
 import GkCapage from './pages/freeTests/gk&currentAffers/GkCapage';
 import GkCaTestInstructions from './pages/freeTests/gk&currentAffers/GkCaTestInstructions';
 import GkCAtestPage from './pages/freeTests/gk&currentAffers/Gk&CAtestPage';
+import RRBTestPage from './pages/RRBTEST/RRBTestPage';
+import RRBInstructionPage2 from './pages/RRBTEST/RRBInstructionPage2';
+import RRBInstructionPage from './pages/RRBTEST/RRBInstructionPage';
 
 function App() {
   // useEffect(() => {
@@ -213,6 +216,10 @@ function App() {
         <Route path="/live-quiz-analysis" element={<ProtectedRoute><LiveQuizAnalysisPage /></ProtectedRoute>} />
         <Route path="/live-quiz-solution" element={<ProtectedRoute><LiveQuizSokutionPage /></ProtectedRoute>} />
 
+        {/* /RRB TEST ROUTES */}
+        <Route path="/rrb-test" element={<ProtectedRoute><RRBTestPage /></ProtectedRoute>} />
+        <Route path="/rrb-instruction-final" element={<ProtectedRoute><RRBInstructionPage2 /></ProtectedRoute>} />
+        <Route path="/rrb-instruction" element={<ProtectedRoute><RRBInstructionPage /></ProtectedRoute>} />
 
         {/* FREE TEST ROUTES */}
         <Route path="/current-affairs" element={<SideBarLayout><CurrentAffairesPage /></SideBarLayout>} />

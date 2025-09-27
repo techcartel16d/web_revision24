@@ -61,6 +61,7 @@ const SubscriptionPlans = ({ userInfo }) => {
 
     try {
       const res = await dispatch(checkoutpaySlice(planData)).unwrap();
+      console.log("checkout payment res", res)
       if (window.Cashfree) {
         const cashfree = window.Cashfree({ mode: "production" });
         cashfree.checkout({
@@ -87,7 +88,7 @@ const SubscriptionPlans = ({ userInfo }) => {
     <section className="min-h-screen bg-gray-50 py-6 px-3 sm:py-8 sm:px-4 lg:py-12">
       <div className="max-w-7xl mx-auto">
         {/* Responsive Title */}
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -131,7 +132,7 @@ const SubscriptionPlans = ({ userInfo }) => {
                 <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800">
                   Special Offers for You!
                 </h2>
-                
+
                 <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-700">
                   Select your Plan:
                 </h3>
@@ -149,15 +150,14 @@ const SubscriptionPlans = ({ userInfo }) => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3, delay: idx * 0.1 }}
                         onClick={() => setSelectedPlan(plan)} // ✅ All plans selectable
-                        className={`border rounded-lg p-3 sm:p-4 transition-all duration-200 cursor-pointer ${
-                          isActivePlan 
+                        className={`border rounded-lg p-3 sm:p-4 transition-all duration-200 cursor-pointer ${isActivePlan
                             ? selectedPlan?.subscription_name === plan.subscription_name
                               ? "border-green-500 bg-green-50 shadow-lg transform scale-105"
                               : "border-green-500 bg-green-50"
                             : selectedPlan?.subscription_name === plan.subscription_name
-                            ? "border-blue-500 bg-blue-50 shadow-md"
-                            : "border-gray-200 hover:border-blue-400 hover:shadow-sm"
-                        }`}
+                              ? "border-blue-500 bg-blue-50 shadow-md"
+                              : "border-gray-200 hover:border-blue-400 hover:shadow-sm"
+                          }`}
                       >
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
                           <div className="flex-1">
@@ -213,19 +213,18 @@ const SubscriptionPlans = ({ userInfo }) => {
                   <button
                     onClick={() => (auth ? checkOutPay(selectedPlan) : nav("/login"))}
                     disabled={!selectedPlan}
-                    className={`w-full py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-all duration-200 ${
-                      selectedPlan
+                    className={`w-full py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-all duration-200 ${selectedPlan
                         ? "bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105"
                         : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    }`}
+                      }`}
                   >
-                    {!auth 
-                      ? "Login to Continue" 
+                    {!auth
+                      ? "Login to Continue"
                       : selectedPlan && userInfo?.subscription_details?.some(
-                          (sub) => sub.subscription_name === selectedPlan.subscription_name
-                        )
-                      ? "Renew Subscription"
-                      : "Proceed To Payment"
+                        (sub) => sub.subscription_name === selectedPlan.subscription_name
+                      )
+                        ? "Renew Subscription"
+                        : "Proceed To Payment"
                     }
                   </button>
                 </div>
@@ -242,8 +241,8 @@ const SubscriptionPlans = ({ userInfo }) => {
                   </h2>
                   <ul className="space-y-4 xl:space-y-5">
                     {benefits.map((b, i) => (
-                      <motion.li 
-                        key={i} 
+                      <motion.li
+                        key={i}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3, delay: i * 0.1 }}
@@ -279,15 +278,14 @@ const SubscriptionPlans = ({ userInfo }) => {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3, delay: idx * 0.1 }}
                           onClick={() => setSelectedPlan(plan)} // ✅ All plans selectable
-                          className={`border rounded-lg p-4 xl:p-5 flex justify-between items-center transition-all duration-200 cursor-pointer ${
-                            isActivePlan 
+                          className={`border rounded-lg p-4 xl:p-5 flex justify-between items-center transition-all duration-200 cursor-pointer ${isActivePlan
                               ? selectedPlan?.subscription_name === plan.subscription_name
                                 ? "border-green-500 bg-green-50 shadow-lg transform scale-105"
                                 : "border-green-500 bg-green-50 hover:shadow-md"
                               : selectedPlan?.subscription_name === plan.subscription_name
-                              ? "border-blue-500 bg-blue-50 shadow-lg transform scale-105"
-                              : "border-gray-200 hover:border-blue-400 hover:shadow-md hover:transform hover:scale-102"
-                          }`}
+                                ? "border-blue-500 bg-blue-50 shadow-lg transform scale-105"
+                                : "border-gray-200 hover:border-blue-400 hover:shadow-md hover:transform hover:scale-102"
+                            }`}
                         >
                           <div>
                             <div className="flex items-center gap-3">
@@ -341,19 +339,18 @@ const SubscriptionPlans = ({ userInfo }) => {
                     <button
                       onClick={() => (auth ? checkOutPay(selectedPlan) : nav("/login"))}
                       disabled={!selectedPlan}
-                      className={`w-full py-4 xl:py-5 rounded-lg font-semibold text-lg xl:text-xl transition-all duration-300 ${
-                        selectedPlan
+                      className={`w-full py-4 xl:py-5 rounded-lg font-semibold text-lg xl:text-xl transition-all duration-300 ${selectedPlan
                           ? "bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105"
                           : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                      }`}
+                        }`}
                     >
-                      {!auth 
-                        ? "Login to Continue" 
+                      {!auth
+                        ? "Login to Continue"
                         : selectedPlan && userInfo?.subscription_details?.some(
-                            (sub) => sub.subscription_name === selectedPlan.subscription_name
-                          )
-                        ? "Renew Subscription"
-                        : "Proceed To Payment"
+                          (sub) => sub.subscription_name === selectedPlan.subscription_name
+                        )
+                          ? "Renew Subscription"
+                          : "Proceed To Payment"
                       }
                     </button>
                   </div>

@@ -19,7 +19,7 @@
 //   // Enhanced toggle bookmark function with proper state management
 //   const toggleBookmark = async (packageId) => {
 //     const isCurrentlyBookmarked = bookmarkedIds.includes(packageId);
-    
+
 //     // Optimistically update UI first for better UX
 //     if (isCurrentlyBookmarked) {
 //       setBookmarkedIds(prev => prev.filter(id => id !== packageId));
@@ -29,7 +29,7 @@
 
 //     try {
 //       let res;
-      
+
 //       if (isCurrentlyBookmarked) {
 //         // Remove bookmark
 //         const collection = {
@@ -43,7 +43,7 @@
 //           test_series_id: [],
 //           package_id: [packageId] // Remove this specific package
 //         };
-        
+
 //         res = await dispatch(removeUserCollectionSlice(collection)).unwrap();
 //       } else {
 //         // Add bookmark
@@ -58,7 +58,7 @@
 //           test_series_id: [],
 //           package_id: [packageId] // Add this specific package
 //         };
-        
+
 //         res = await dispatch(saveCollectionSlice(collection)).unwrap();
 //       }
 
@@ -90,7 +90,7 @@
 //     setLoading(true);
 //     try {
 //       const res = await dispatch(getUserCollectionDetailSlice()).unwrap();
-      
+
 //       if (res.status_code === 200) {
 //         const dataArray = Array.isArray(res.data.package_id?.data)
 //           ? res.data.package_id.data
@@ -190,7 +190,7 @@
 //             >
 //               {series.map((item, index) => {
 //                 const isBookmarked = bookmarkedIds.includes(item.id);
-                
+
 //                 return (
 //                   <SwiperSlide key={`${item.id}-${index}`}>
 //                     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border cursor-pointer overflow-hidden h-full">
@@ -311,6 +311,7 @@ import { showErrorToast, showSuccessToast } from '../utils/ToastUtil';
 import { motion } from 'framer-motion';
 
 const TestSeriesViewer = ({ testSeriesData, category }) => {
+
   const nav = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -339,7 +340,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
     try {
       setLoading(true);
       const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
-      
+
       // Optimistic update - Update UI immediately
       if (isCurrentlyBookmarked) {
         setBookmarkedIds(prev => prev.filter(id => id !== itemId));
@@ -381,7 +382,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
       }
     } catch (error) {
       console.error('Bookmark toggle error:', error);
-      
+
       // Revert optimistic update on error
       const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
       if (isCurrentlyBookmarked) {
@@ -389,7 +390,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
       } else {
         setBookmarkedIds(prev => prev.filter(id => id !== itemId));
       }
-      
+
       showErrorToast('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
@@ -416,12 +417,14 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
       <div className="py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-blue-50" id="testseries">
         <div className="max-w-7xl mx-auto space-y-12">
           {category.map((cat, categoryIndex) => {
+            // console.log("cate", cat);
             const series = testSeriesData?.[cat.title] || [];
+            // console.log("cat.title", cat.title);
 
             if (series.length === 0) return null;
 
             return (
-              <motion.div 
+              <motion.div
                 key={cat.id}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -432,9 +435,9 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                 <div className="text-center space-y-4">
                   <div className="flex items-center justify-center gap-4">
                     <div className="relative">
-                      <img 
-                        className="h-16 w-16 rounded-2xl shadow-lg border-4 border-white" 
-                        src={cat.icon} 
+                      <img
+                        className="h-16 w-16 rounded-2xl shadow-lg border-4 border-white"
+                        src={cat.icon}
                         alt={cat.title}
                       />
                       <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center">
@@ -504,13 +507,13 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                         >
                           {/* Background Glow Effect */}
                           <div className="absolute -inset-1 bg-gradient-to-r from-blue-400/0 to-purple-500/0 group-hover:from-blue-400/20 group-hover:to-purple-500/20 rounded-3xl transition-all duration-500 blur-sm -z-10"></div>
-                          
+
                           {/* Card Header */}
                           <div className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
                             {/* Background Pattern */}
                             <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 to-purple-100/50 opacity-50"></div>
                             <div className="absolute top-2 right-2 w-20 h-20 bg-gradient-to-br from-blue-200/30 to-purple-300/30 rounded-full blur-xl"></div>
-                            
+
                             <div className="relative z-10 flex items-center justify-between">
                               <div className="flex items-center gap-4">
                                 <div className="relative">
@@ -532,18 +535,17 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                                   </div>
                                 </div>
                               </div>
-                              
+
                               {/* Enhanced Bookmark Button */}
-                              <motion.button 
+                              <motion.button
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => handleBookmarkToggle(item.id)}
                                 disabled={loading}
-                                className={`bookmark-btn relative z-20 p-3 rounded-2xl transition-all duration-300 ${
-                                  bookmarkedIds.includes(item.id)
-                                    ? 'bg-yellow-500 text-white shadow-lg'
-                                    : 'bg-white/80 text-gray-600 hover:bg-yellow-500 hover:text-white'
-                                } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                className={`bookmark-btn relative z-20 p-3 rounded-2xl transition-all duration-300 ${bookmarkedIds.includes(item.id)
+                                  ? 'bg-yellow-500 text-white shadow-lg'
+                                  : 'bg-white/80 text-gray-600 hover:bg-yellow-500 hover:text-white'
+                                  } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                               >
                                 {loading ? (
                                   <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
@@ -625,7 +627,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                             <motion.button
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
-                              onClick={() => nav('/testpakages', { state: { item, testId: item.id } })}
+                              onClick={() => nav('/testpakages', { state: { item, testId: item.id, category: cat.title } })}
                               className="start-test-btn w-full bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center justify-center gap-3 group overflow-hidden"
                             >
                               {/* Shimmer Effect */}
@@ -643,12 +645,12 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                   {/* Custom Navigation Buttons */}
                   <div className={`swiper-button-prev-${cat.id} custom-nav-btn custom-prev-btn`}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                   <div className={`swiper-button-next-${cat.id} custom-nav-btn custom-next-btn`}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
 

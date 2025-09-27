@@ -24,7 +24,8 @@ const TestPagesPage = () => {
     const nav = useNavigate();
     const dispatch = useDispatch();
     const { state } = useLocation();
-    
+    console.log("STATE ===>", state);
+
     const [testData, setTestData] = useState([]);
     const [testId, setTestId] = useState(null);
     const [puaseStatus, setPuaseStatus] = useState(false);
@@ -104,12 +105,12 @@ const TestPagesPage = () => {
     const fetchTestSeriesDetails = async (item) => {
         try {
             const res = await dispatch(getSingleCategoryPackageTestseriesDetailSlice(item.id)).unwrap();
-            nav('/system-info', { 
-                state: { 
-                    testInfo: res.data.test_series_info, 
-                    testId: state?.testId, 
-                    testDetail: res.data.details 
-                } 
+            nav('/system-info', {
+                state: {
+                    testInfo: res.data.test_series_info,
+                    testId: state?.testId,
+                    testDetail: res.data.details
+                }
             });
         } catch (error) {
             console.log("ERROR ", error);
@@ -119,12 +120,12 @@ const TestPagesPage = () => {
     const handleResume = async () => {
         try {
             const res = await dispatch(getSingleCategoryPackageTestseriesDetailSlice(resumeData?.id)).unwrap();
-            nav('/scc-mock-test', { 
-                state: { 
-                    testInfo: res.data.test_series_info, 
-                    testId: state?.testId, 
-                    testDetail: res.data.details 
-                } 
+            nav('/scc-mock-test', {
+                state: {
+                    testInfo: res.data.test_series_info,
+                    testId: state?.testId,
+                    testDetail: res.data.details
+                }
             });
             setShowModal(false);
         } catch (error) {
@@ -165,7 +166,7 @@ const TestPagesPage = () => {
     // Get button configuration based on test status
     const getButtonConfig = (test) => {
         const isPaused = pauseStatusArray.some(item => item.test_id === test.id && item.isPaused);
-        
+
         if (subscribe || (!subscribe && test.purchase_type === 'free')) {
             if (test.attend_status === '' && isPaused) {
                 return {
@@ -296,7 +297,7 @@ const TestPagesPage = () => {
                                 >
                                     {/* Enhanced Glow Effect */}
                                     <div className={`absolute -inset-1 bg-gradient-to-r from-blue-400/0 via-purple-500/0 to-pink-500/0 ${isHovered ? 'from-blue-400/20 via-purple-500/20 to-pink-500/20' : ''} rounded-2xl transition-all duration-500 blur-sm -z-10`}></div>
-                                    
+
                                     {/* Floating Elements on Hover */}
                                     <div className={`absolute top-4 right-4 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center transform transition-all duration-500 ${isHovered ? 'scale-100 rotate-12' : 'scale-0 rotate-0'}`}>
                                         <IoSparklesOutline className="text-white text-sm" />
@@ -307,12 +308,12 @@ const TestPagesPage = () => {
                                         {/* Background Pattern */}
                                         <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 to-purple-100/50 opacity-50"></div>
                                         <div className={`absolute top-2 right-2 w-20 h-20 bg-gradient-to-br from-blue-200/30 to-purple-300/30 rounded-full blur-xl transition-all duration-500 ${isHovered ? 'scale-150 opacity-70' : 'scale-100 opacity-30'}`}></div>
-                                        
+
                                         {/* Status Badges */}
                                         <div className="relative z-10 flex items-start justify-between mb-4">
                                             <div className="flex flex-wrap gap-2 max-w-[70%]">
                                                 {test.purchase_type === 'free' && (
-                                                    <motion.span 
+                                                    <motion.span
                                                         whileHover={{ scale: 1.05 }}
                                                         className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full shadow-lg"
                                                     >
@@ -320,7 +321,7 @@ const TestPagesPage = () => {
                                                     </motion.span>
                                                 )}
                                                 {isPaused && (
-                                                    <motion.span 
+                                                    <motion.span
                                                         whileHover={{ scale: 1.05 }}
                                                         className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full shadow-lg animate-pulse"
                                                     >
@@ -328,7 +329,7 @@ const TestPagesPage = () => {
                                                     </motion.span>
                                                 )}
                                                 {test.attend_status === 'done' && (
-                                                    <motion.span 
+                                                    <motion.span
                                                         whileHover={{ scale: 1.05 }}
                                                         className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-full shadow-lg flex items-center gap-1"
                                                     >
@@ -349,7 +350,7 @@ const TestPagesPage = () => {
 
                                         {/* Enhanced Test Stats */}
                                         <div className="grid grid-cols-3 gap-3">
-                                            <motion.div 
+                                            <motion.div
                                                 whileHover={{ scale: 1.05, y: -2 }}
                                                 className="flex items-center gap-2 text-sm text-gray-600 p-2 bg-white/60 rounded-lg backdrop-blur-sm"
                                             >
@@ -361,7 +362,7 @@ const TestPagesPage = () => {
                                                     <div className="text-xs text-gray-500">Duration</div>
                                                 </div>
                                             </motion.div>
-                                            <motion.div 
+                                            <motion.div
                                                 whileHover={{ scale: 1.05, y: -2 }}
                                                 className="flex items-center gap-2 text-sm text-gray-600 p-2 bg-white/60 rounded-lg backdrop-blur-sm"
                                             >
@@ -373,7 +374,7 @@ const TestPagesPage = () => {
                                                     <div className="text-xs text-gray-500">Questions</div>
                                                 </div>
                                             </motion.div>
-                                            <motion.div 
+                                            <motion.div
                                                 whileHover={{ scale: 1.05, y: -2 }}
                                                 className="flex items-center gap-2 text-sm text-gray-600 p-2 bg-white/60 rounded-lg backdrop-blur-sm"
                                             >
@@ -399,8 +400,8 @@ const TestPagesPage = () => {
                                         >
                                             {/* Enhanced Shimmer Effect */}
                                             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                                            
-                                            <motion.span 
+
+                                            <motion.span
                                                 className="relative z-10"
                                                 whileHover={{ rotate: 15, scale: 1.1 }}
                                                 transition={{ type: "spring", stiffness: 300 }}
@@ -408,7 +409,7 @@ const TestPagesPage = () => {
                                                 {buttonConfig.icon}
                                             </motion.span>
                                             <span className="relative z-10 truncate">{buttonConfig.text}</span>
-                                            
+
                                             {/* Button glow effect */}
                                             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl blur-xl bg-gradient-to-r from-current/20 to-current/20"></div>
                                         </motion.button>
@@ -417,10 +418,10 @@ const TestPagesPage = () => {
                                     {/* Enhanced Floating Action on Hover */}
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.8, y: 10 }}
-                                        animate={{ 
-                                            opacity: isHovered ? 1 : 0, 
-                                            scale: isHovered ? 1 : 0.8, 
-                                            y: isHovered ? 0 : 10 
+                                        animate={{
+                                            opacity: isHovered ? 1 : 0,
+                                            scale: isHovered ? 1 : 0.8,
+                                            y: isHovered ? 0 : 10
                                         }}
                                         transition={{ duration: 0.3 }}
                                         className="absolute top-4 left-4 flex gap-2"
@@ -450,7 +451,7 @@ const TestPagesPage = () => {
                         >
                             {/* Button shimmer effect */}
                             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                            
+
                             {pageLoading ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -473,7 +474,7 @@ const TestPagesPage = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-center py-16 bg-white rounded-2xl shadow-lg mx-4"
                     >
-                        <motion.div 
+                        <motion.div
                             initial={{ scale: 0.8 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: 0.2 }}
