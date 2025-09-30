@@ -326,8 +326,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
         const dataArray = Array.isArray(res.data.package_id?.data)
           ? res.data.package_id.data
           : [];
-
-        const ids = dataArray.map(item => item.id);
+          const ids = dataArray.map(item => item.id);
         setBookmarkedIds(ids);
       }
     } catch (error) {
@@ -470,7 +469,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                 </div>
 
                 {/* Enhanced Swiper */}
-                <div className="relative swiper-wrapper-container">
+                <div className="relative swiper-wrapper-container pb-8" >
                   <Swiper
                     modules={[Navigation, Pagination, Autoplay]}
                     spaceBetween={24}
@@ -498,18 +497,18 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                     className="pb-12"
                   >
                     {series.map((item, index) => (
-                      <SwiperSlide key={index}>
+                      <SwiperSlide key={index}  style={{maxHeight:'360px'}}>
                         <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-blue-200 test-series-card"
+                          className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-blue-200 test-series-card"
                         >
                           {/* Background Glow Effect */}
                           <div className="absolute -inset-1 bg-gradient-to-r from-blue-400/0 to-purple-500/0 group-hover:from-blue-400/20 group-hover:to-purple-500/20 rounded-3xl transition-all duration-500 blur-sm -z-10"></div>
 
                           {/* Card Header */}
-                          <div className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
+                          <div className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
                             {/* Background Pattern */}
                             <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 to-purple-100/50 opacity-50"></div>
                             <div className="absolute top-2 right-2 w-20 h-20 bg-gradient-to-br from-blue-200/30 to-purple-300/30 rounded-full blur-xl"></div>
@@ -520,17 +519,24 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                                   <img
                                     src={item.logo || '/logo.jpeg'}
                                     alt="Logo"
-                                    className="w-16 h-16 object-contain rounded-2xl bg-white p-2 shadow-lg"
+                                    className="w-12 h-12 object-contain rounded-sm bg-white p-1 shadow-lg"
                                   />
                                   <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center">
                                     <FaBolt className="text-white text-xs" />
                                   </div>
                                 </div>
                                 <div>
-                                  <div className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full mb-1">
-                                    PREMIUM
-                                  </div>
-                                  <div className="text-sm text-gray-600 font-medium">
+                                 <div className="text-[10px] font-semibold text-white bg-[#FFAC00] px-1 py-1 rounded-sm mb-1 
+                transition-all duration-300 
+                hover:scale-105 hover:shadow-lg 
+                animate-pulse 
+                cursor-pointer
+                hover:bg-gradient-to-r hover:from-yellow-400 hover:via-orange-500 hover:to-pink-600" 
+     style={{textAlign:'center'}}>
+  PREMIUM
+</div>
+
+                                  <div className="text-[10px] text-gray-600 font-medium">
                                     {item.total_assign_test || 0} Tests Available
                                   </div>
                                 </div>
@@ -542,7 +548,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => handleBookmarkToggle(item.id)}
                                 disabled={loading}
-                                className={`bookmark-btn relative z-20 p-3 rounded-2xl transition-all duration-300 ${bookmarkedIds.includes(item.id)
+                                className={`bookmark-btn relative z-20 p-2 rounded-sm transition-all duration-300 ${bookmarkedIds.includes(item.id)
                                   ? 'bg-yellow-500 text-white shadow-lg'
                                   : 'bg-white/80 text-gray-600 hover:bg-yellow-500 hover:text-white'
                                   } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -550,31 +556,31 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                                 {loading ? (
                                   <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
                                 ) : bookmarkedIds.includes(item.id) ? (
-                                  <BookmarkCheck size={20} />
+                                  <BookmarkCheck size={16} />
                                 ) : (
-                                  <Bookmark size={20} />
+                                  <Bookmark size={16} />
                                 )}
                               </motion.button>
                             </div>
                           </div>
 
                           {/* Card Body */}
-                          <div className="p-6 space-y-4 bg-white">
+                          <div className="p-6 space-y-3 bg-white" >
                             {/* Title */}
-                            <h3 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                            <h3 className="text-sm font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
                               {item.title || 'Mock Test Series'}
                             </h3>
 
                             {/* Language */}
-                            <div className="flex items-center gap-2 text-blue-600 bg-blue-50 px-3 py-2 rounded-xl">
-                              <MdOutlineGTranslate className="text-xl" />
+                            <div className="flex items-center gap-2 text-blue-600 bg-blue-50 px-3 py-1 rounded-sm">
+                              <MdOutlineGTranslate className="text-sm" />
                               <span className="text-sm font-medium">
                                 {item.language || 'English, Hindi'}
                               </span>
                             </div>
 
                             {/* Features List */}
-                            <div className="space-y-3">
+                            <div className="space-y-2" >
                               {item.live_tests && (
                                 <div className="flex items-center gap-3 text-sm text-gray-700">
                                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
@@ -582,7 +588,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                                 </div>
                               )}
                               {item.ai_tests && (
-                                <div className="flex items-center gap-3 text-sm text-gray-700">
+                                <div className="flex items-center gap-3 text-sm text-gray-700" >
                                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                                   <span><strong className="text-gray-900">{item.ai_tests}</strong> AI-Powered Tests</span>
                                 </div>
@@ -604,7 +610,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                             </div>
 
                             {/* Stats */}
-                            <div className="grid grid-cols-3 gap-3 pt-4 border-t border-gray-100">
+                            <div className="grid grid-cols-3 gap-3 pt-2 border-t border-gray-100">
                               <div className="text-center">
                                 <div className="text-lg font-bold text-blue-600">
                                   {item.total_assign_test || 0}
@@ -623,18 +629,18 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                           </div>
 
                           {/* Card Footer */}
-                          <div className="p-6 pt-0 bg-white">
+                          <div className="p-6 pt-0 bg-white" >
                             <motion.button
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
                               onClick={() => nav('/testpakages', { state: { item, testId: item.id, category: cat.title } })}
-                              className="start-test-btn w-full bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center justify-center gap-3 group overflow-hidden"
+                              className="start-test-btn w-full bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white py-2 px-3 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-2xl flex items-center justify-center gap-3 group overflow-hidden"
                             >
                               {/* Shimmer Effect */}
                               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                              <Trophy size={20} className="relative z-10" />
-                              <span className="relative z-10">Start Test Series</span>
-                              <MdPlayArrow size={24} className="group-hover:translate-x-1 transition-transform relative z-10" />
+                              <Trophy size={16} className="relative z-10" />
+                              <span className="relative z-10 text-[13px]">Start Test Series</span>
+                              <MdPlayArrow size={16} className="group-hover:translate-x-1 transition-transform relative z-10" />
                             </motion.button>
                           </div>
                         </motion.div>

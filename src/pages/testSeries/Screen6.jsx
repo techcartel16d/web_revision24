@@ -9,7 +9,7 @@ const Screen6 = () => {
     const nav = useNavigate();
     const dispatch = useDispatch();
     const { state } = useLocation();
-    // console.log("state", state);
+    console.log("state", state);
 
     const [performance, setPerformance] = useState(null);
     const [sections, setSections] = useState([]);
@@ -18,10 +18,97 @@ const Screen6 = () => {
     const [rankScore, setRankScore] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // ✅ Single, consolidated fetchUserResult function
     const fetchUserResult = useCallback(async () => {
         if (!state) return;
 
-        let testId = state?.testInfo?.test_id || state?.testInfo?.id;
+        // ✅ Check if data is already preloaded from AttemptedTestPage
+        if (state.isDataPreloaded && state.preloadedData) {
+            console.log('Using preloaded data:', state.preloadedData);
+            
+            try {
+                setLoading(true);
+                
+                // Set the data directly without API call
+                const res = { status_code: 200, data: state.preloadedData };
+                
+                // Continue with your existing data processing logic
+                if (res.status_code == 200) {
+                    const test = res.data.test_detail;
+                    const my = res.data.my_detail;
+                    setTestData(res.data);
+                    console.log("Using preloaded data on screen no 6", res.data);
+
+                    setSubjectWiseAnalysis(res?.data?.subject_wise_analysis || []);
+                    
+                    const totalAttempted = my?.total_attend_question || 0;
+                    const totalQuestions = test?.total_no_of_question || 1;
+                    const totalMarks = parseFloat(test?.total_marks || 0);
+                    const negativeMark = parseFloat(test?.negative_mark || 0);
+                    const correct = parseInt(my?.correct || 0);
+                    const inCorrect = parseInt(my?.in_correct || 0);
+
+                    const markPer_ques = totalMarks / totalQuestions;
+                    const calculatedScore = (correct * markPer_ques) - (inCorrect * negativeMark);
+                    setRankScore(calculatedScore);
+                    console.log('calculatedScore from preloaded data', calculatedScore);
+
+                    const accuracy = correct && totalAttempted
+                        ? ((correct / totalAttempted) * 100).toFixed(2) + "%"
+                        : "0%";
+
+                    setPerformance({
+                        rank: {
+                            value: my?.my_rank || 0,
+                            total: my?.total_join_user || 0
+                        },
+                        score: {
+                            value: calculatedScore.toFixed(2),
+                            max: totalMarks
+                        },
+                        attempted: {
+                            value: totalAttempted,
+                            max: totalQuestions
+                        },
+                        accuracy,
+                        percentile: (my?.percentile || 0) + "%"
+                    });
+
+                    const parsedSpent = JSON.parse(my?.spent_time || '[]');
+                    const totalTimeSpent = parsedSpent.reduce((acc, item) => acc + (item?.time || 0), 0);
+
+                    setSections([
+                        {
+                            name: "Full Test",
+                            score: calculatedScore.toFixed(2),
+                            maxScore: totalMarks,
+                            attempted: totalAttempted,
+                            accuracy,
+                            time: `${Math.floor(totalTimeSpent / 60)}:${(totalTimeSpent % 60).toString().padStart(2, '0')}`
+                        }
+                    ]);
+                }
+            } catch (error) {
+                console.error("ERROR processing preloaded data", error);
+            } finally {
+                setLoading(false);
+            }
+            return;
+        }
+
+        // ✅ Fallback to API call if no preloaded data (for other navigation sources)
+        let testId = state?.testInfo?.test_id || 
+                     state?.testInfo?.id ||
+                     state?.testData?.my_detail?.test_id;
+
+        console.log('No preloaded data, making API call with testId:', testId);
+
+        if (!testId) {
+            console.error('No test ID found in state');
+            setLoading(false);
+            return;
+        }
+
         try {
             setLoading(true);
             const res = await dispatch(fetchUserTestSeriesRankSlice(testId)).unwrap();
@@ -30,10 +117,10 @@ const Screen6 = () => {
                 const test = res.data.test_detail;
                 const my = res.data.my_detail;
                 setTestData(res.data);
-                console.log("res.data", res.data)
+                console.log("res on screen no 6 from API", res.data);
 
                 setSubjectWiseAnalysis(res?.data?.subject_wise_analysis || []);
-
+                
                 const totalAttempted = my?.total_attend_question || 0;
                 const totalQuestions = test?.total_no_of_question || 1;
                 const totalMarks = parseFloat(test?.total_marks || 0);
@@ -43,8 +130,8 @@ const Screen6 = () => {
 
                 const markPer_ques = totalMarks / totalQuestions;
                 const calculatedScore = (correct * markPer_ques) - (inCorrect * negativeMark);
-
                 setRankScore(calculatedScore);
+                console.log('calculatedScore from API', calculatedScore);
 
                 const accuracy = correct && totalAttempted
                     ? ((correct / totalAttempted) * 100).toFixed(2) + "%"
@@ -52,8 +139,8 @@ const Screen6 = () => {
 
                 setPerformance({
                     rank: {
-                        value: my.my_rank,
-                        total: my.total_join_user
+                        value: my?.my_rank || 0,
+                        total: my?.total_join_user || 0
                     },
                     score: {
                         value: calculatedScore.toFixed(2),
@@ -64,10 +151,10 @@ const Screen6 = () => {
                         max: totalQuestions
                     },
                     accuracy,
-                    percentile: my.percentile + "%"
+                    percentile: (my?.percentile || 0) + "%"
                 });
 
-                const parsedSpent = JSON.parse(my.spent_time || '[]');
+                const parsedSpent = JSON.parse(my?.spent_time || '[]');
                 const totalTimeSpent = parsedSpent.reduce((acc, item) => acc + (item?.time || 0), 0);
 
                 setSections([
@@ -415,7 +502,7 @@ const Screen6 = () => {
                         </button>
                         
                         <button 
-                            onClick={() => nav('/dashboard')}
+                            onClick={() => nav('/')}
                             className="w-full sm:w-auto bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
                         >
                             Back to Dashboard

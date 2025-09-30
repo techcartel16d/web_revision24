@@ -95,6 +95,7 @@ export const fetchUserTestSeriesRankSlice = createAsyncThunk(
     async (test_id, { rejectWithValue }) => {
         try {
             const data = await HomeProvider.getUserTestSeriesRank(test_id);
+            console.log('Analysis screen slice data', data)
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);

@@ -29,7 +29,7 @@ const Screen5 = () => {
     const dispatch = useDispatch()
     const { state } = useLocation()
     const [userInfo, setUserInfo] = useState(null);
-    // console.log("state==>", state)
+    console.log("state==>", state)
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [questionsState, setQuestionsState] = useState([]);
     const [loading, setLoading] = useState(false)
@@ -311,62 +311,70 @@ const Screen5 = () => {
     // };
 
     const handleSaveAndNext = async () => {
-        const testId = state?.testInfo?.test_id;
-        const currentId = questionsState[currentQuestion]?.id;
+    const testId = state?.testInfo?.test_id;
+    const currentId = questionsState[currentQuestion]?.id;
 
-        await updateSpentTime(currentId);
+    await updateSpentTime(currentId);
 
-        const isOptionSelected = !!selectedOptions[currentId];
-        const isAlreadySelected = optionSelected.includes(currentId);
-        const isAlreadyMarked = markedForReview.includes(currentId);
-        const isAlreadyMarkedWithAns = markedWithAns.includes(currentId);
+    const isOptionSelected = !!selectedOptions[currentId];
+    const isAlreadySelected = optionSelected.includes(currentId);
+    const isAlreadyMarked = markedForReview.includes(currentId);
+    const isAlreadyMarkedWithAns = markedWithAns.includes(currentId);
 
-        // Add to optionSelected if not already
-        if (isOptionSelected && !isAlreadySelected) {
-            const updatedSelected = [...optionSelected, currentId];
-            setOptionSelected(updatedSelected);
-            await secureSaveTestData(testId, 'optionSelected', updatedSelected);
-        }
+    // ✅ FIXED: Ensure all state updates are completed before navigation
+    let updatedSelected = optionSelected;
+    let updatedSkipped = skippedQuestions;
+    let updatedMarkedWithAns = markedWithAns;
+    let updatedMarked = markedForReview;
 
-        // Remove from skippedQuestions if present
-        if (isOptionSelected && skippedQuestions.includes(currentId)) {
-            const updatedSkipped = skippedQuestions.filter(id => id !== currentId);
-            setSkippedQuestions(updatedSkipped);
-            await secureSaveTestData(testId, 'skippedQuestions', updatedSkipped);
-        }
+    // Add to optionSelected if not already
+    if (isOptionSelected && !isAlreadySelected) {
+        updatedSelected = [...optionSelected, currentId];
+        setOptionSelected(updatedSelected);
+        await secureSaveTestData(testId, 'optionSelected', updatedSelected);
+    }
 
-        // If markedForReview but now answered, move to markedWithAns
-        if (isOptionSelected && isAlreadyMarked && !isAlreadyMarkedWithAns) {
-            const updatedMarkedWithAns = [...markedWithAns, currentId];
-            setMarkedWithAns(updatedMarkedWithAns);
-            await secureSaveTestData(testId, 'marked_with_ans', updatedMarkedWithAns);
+    // Remove from skippedQuestions if present
+    if (isOptionSelected && skippedQuestions.includes(currentId)) {
+        updatedSkipped = skippedQuestions.filter(id => id !== currentId);
+        setSkippedQuestions(updatedSkipped);
+        await secureSaveTestData(testId, 'skippedQuestions', updatedSkipped);
+    }
 
-            const updatedMarked = markedForReview.filter(id => id !== currentId);
-            setMarkedForReview(updatedMarked);
-            await secureSaveTestData(testId, 'markedForReview', updatedMarked);
-        }
+    // If markedForReview but now answered, move to markedWithAns
+    if (isOptionSelected && isAlreadyMarked && !isAlreadyMarkedWithAns) {
+        updatedMarkedWithAns = [...markedWithAns, currentId];
+        setMarkedWithAns(updatedMarkedWithAns);
+        await secureSaveTestData(testId, 'marked_with_ans', updatedMarkedWithAns);
 
-        // ✅ If already in markedWithAns, remove from BOTH lists (cleanup)
-        if (isAlreadyMarkedWithAns) {
-            const updatedMarkedWithAns = markedWithAns.filter(id => id !== currentId);
-            setMarkedWithAns(updatedMarkedWithAns);
-            await secureSaveTestData(testId, 'marked_with_ans', updatedMarkedWithAns);
-        }
+        updatedMarked = markedForReview.filter(id => id !== currentId);
+        setMarkedForReview(updatedMarked);
+        await secureSaveTestData(testId, 'markedForReview', updatedMarked);
+    }
 
-        if (isAlreadyMarked) {
-            const updatedMarked = markedForReview.filter(id => id !== currentId);
-            setMarkedForReview(updatedMarked);
-            await secureSaveTestData(testId, 'markedForReview', updatedMarked);
-        }
+    // ✅ If already in markedWithAns, remove from BOTH lists (cleanup)
+    if (isAlreadyMarkedWithAns) {
+        updatedMarkedWithAns = markedWithAns.filter(id => id !== currentId);
+        setMarkedWithAns(updatedMarkedWithAns);
+        await secureSaveTestData(testId, 'marked_with_ans', updatedMarkedWithAns);
+    }
 
-        // Navigate to next (circular logic)
-        if (currentQuestion === questionsState.length - 1) {
-            // setCurrentQuestion(0);
-            handleSubmit()
-        } else {
-            setCurrentQuestion(prev => prev + 1);
-        }
-    };
+    if (isAlreadyMarked) {
+        updatedMarked = markedForReview.filter(id => id !== currentId);
+        setMarkedForReview(updatedMarked);
+        await secureSaveTestData(testId, 'markedForReview', updatedMarked);
+    }
+
+    // ✅ FIXED: Enable circular navigation instead of auto-submit
+    if (currentQuestion === questionsState.length - 1) {
+        setCurrentQuestion(0); // Go back to first question
+    } else {
+        setCurrentQuestion(prev => prev + 1);
+    }
+
+    console.log("✅ Question saved and navigated successfully");
+};
+
 
 
 
@@ -639,10 +647,12 @@ const Screen5 = () => {
 
         const allAttendedQuestions = optionSelected.map((questionId) => {
             const question = questionsState.find(q => q.id === questionId);
+
             const selectedAns = selectedOptions2[questionId];
             const rightAns = question?.hindi_ans;
 
-            if (selectedAns === rightAns) {
+            // ✅ FIX: Use case-insensitive comparison
+            if (selectedAns && rightAns && selectedAns.toLowerCase() === rightAns.toLowerCase()) {
                 correct++;
             } else {
                 in_correct++;
@@ -683,8 +693,8 @@ const Screen5 = () => {
         };
 
         console.log("📤 Submission Data:", submissionData);
-        
-        
+
+
         try {
 
 

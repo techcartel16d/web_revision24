@@ -105,6 +105,16 @@ const TestPagesPage = () => {
     const fetchTestSeriesDetails = async (item) => {
         try {
             const res = await dispatch(getSingleCategoryPackageTestseriesDetailSlice(item.id)).unwrap();
+
+            if(state?.category==='RRB Group D'){
+            nav('/online-exam-general-instruction', {
+                state: {
+                    testInfo: res.data.test_series_info,
+                    testId: state?.testId,
+                    testDetail: res.data.details
+                }
+            });
+            }else{
             nav('/system-info', {
                 state: {
                     testInfo: res.data.test_series_info,
@@ -112,6 +122,7 @@ const TestPagesPage = () => {
                     testDetail: res.data.details
                 }
             });
+          }
         } catch (error) {
             console.log("ERROR ", error);
         }

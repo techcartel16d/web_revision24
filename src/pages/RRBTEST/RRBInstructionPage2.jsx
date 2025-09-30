@@ -1,17 +1,30 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const RRBInstructionPage2 = () => {
   const [isDeclared, setIsDeclared] = useState(false);
+  const { state } = useLocation();
+  console.log("STATE ===>", state);
   const nav = useNavigate();
+
+  // Extract test information from state
+  const testInfo = state?.testInfo || {};
+  const testDetail = state?.testDetail || [];
+  
+  // Calculate total questions and marks
+  const totalQuestions = testDetail.reduce((total, subject) => total + parseInt(subject.no_of_question || 0), 0);
+  const totalMarks = testDetail.reduce((total, subject) => total + parseInt(subject.marks || 0), 0);
+  
+  // Convert negative marking fraction to decimal
+  const negativeMarkDecimal = testInfo.negative_mark === "1/3" ? "0.33" : "0.25";
 
   return (
     <div className="bg-white min-h-screen font-sans text-gray-700">
       {/* Header */}
       <header className="p-4 border-b border-gray-200">
         <div className="flex items-center">
-          <span className="text-2xl font-bold text-blue-500">testbook</span>
-          <span className="ml-4 text-gray-600">RRB NTPC CBT 2 (12th Level) Full Test 2</span>
+          <span className="text-2xl font-bold text-blue-500">Revision24</span>
+          <span className="ml-4 text-gray-600">{testInfo.title || 'Test Information'}</span>
         </div>
       </header>
 
@@ -19,30 +32,51 @@ const RRBInstructionPage2 = () => {
         {/* Main Content */}
         <main className="flex-grow p-8">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-semibold text-gray-800">RRB NTPC CBT 2 (12th Level) Full Test 2</h1>
+            <h1 className="text-2xl font-semibold text-gray-800">
+              {testInfo.title || 'Test Information'}
+            </h1>
           </div>
 
           <div className="flex justify-between items-start mb-6">
             <div>
-              <p className="font-semibold">Duration: 90 Mins</p>
+              <p className="font-semibold">Duration: {testInfo.time || 90} Mins</p>
             </div>
             <div className="text-right">
-              <p className="font-semibold">Maximum Marks: 120</p>
+              <p className="font-semibold">Maximum Marks: {totalMarks || 120}</p>
             </div>
           </div>
 
           <div className="mb-8">
             <h2 className="font-bold mb-3 text-gray-800">Read the following instructions carefully.</h2>
             <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
-              <li>The test contains 120 total questions.</li>
+              <li>The test contains {totalQuestions || 120} total questions.</li>
               <li>Each question has 4 options out of which only one is correct.</li>
-              <li>You have to finish the test in 90 minutes.</li>
+              <li>You have to finish the test in {testInfo.time || 90} minutes.</li>
               <li>Try not to guess the answer as there is negative marking.</li>
-              <li>You will be awarded 1 mark for each correct answer and 0.33 will be deducted for each wrong answer.</li>
+              <li>You will be awarded 1 mark for each correct answer and {negativeMarkDecimal} will be deducted for each wrong answer.</li>
               <li>There is no negative marking for the questions that you have not attempted.</li>
               <li>You can write this test only once. Make sure that you complete the test before you submit the test and/or close the browser.</li>
             </ol>
           </div>
+
+          {/* Subject-wise breakdown */}
+          {testDetail.length > 0 && (
+            <div className="mb-8">
+              <h3 className="font-bold mb-3 text-gray-800">Subject-wise Distribution:</h3>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                  {testDetail.map((subject, index) => (
+                    <div key={index} className="flex justify-between items-center bg-white p-3 rounded border">
+                      <span className="font-medium text-gray-700">{subject.subject_name}</span>
+                      <span className="text-blue-600 font-semibold">
+                        {subject.no_of_question} Questions ({subject.marks} Marks)
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           <hr className="my-8" />
 
@@ -69,7 +103,7 @@ const RRBInstructionPage2 = () => {
                   className="mt-1 mr-2 h-4 w-4"
                 />
                 <label htmlFor="declaration" className="text-sm text-gray-600">
-                  I have read all the instructions carefully and have understood them. I agree not to cheat or use unfair means in this examination. I understand that using unfair means of any sort for my own or someone else's advantage will lead to my immediate disqualification. The decision of Testbook.com will be final in these matters and cannot be appealed.
+                  I have read all the instructions carefully and have understood them. I agree not to cheat or use unfair means in this examination. I understand that using unfair means of any sort for my own or someone else's advantage will lead to my immediate disqualification. The decision of Revision24.com will be final in these matters and cannot be appealed.
                 </label>
               </div>
             </div>
@@ -84,6 +118,29 @@ const RRBInstructionPage2 = () => {
             className="w-24 h-24 rounded-full border-2 border-gray-300"
           />
           <p className="mt-4 font-semibold text-lg">Rajat</p>
+          
+          {/* Test Summary Card */}
+          <div className="mt-6 w-full bg-white rounded-lg shadow-sm border p-4">
+            <h4 className="font-semibold text-gray-800 mb-3 text-center">Test Summary</h4>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Questions:</span>
+                <span className="font-medium">{totalQuestions}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Duration:</span>
+                <span className="font-medium">{testInfo.time} mins</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Total Marks:</span>
+                <span className="font-medium">{totalMarks}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Negative Marking:</span>
+                <span className="font-medium text-red-600">-{negativeMarkDecimal}</span>
+              </div>
+            </div>
+          </div>
         </aside>
       </div>
 
@@ -96,7 +153,7 @@ const RRBInstructionPage2 = () => {
           Previous
         </button>
         <button
-        onClick={() => nav('/rrb-test')}
+          onClick={() => nav('/online-exam', { state })}
           disabled={!isDeclared}
           className={`px-4 py-2 rounded-md font-semibold ${
             isDeclared

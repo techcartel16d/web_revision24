@@ -6,7 +6,7 @@ const LeaderBoardTable = ({ data, rankScore }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    // console.log("data", data)
+    console.log("data", data)
 
     const columns = [
         {
@@ -48,7 +48,7 @@ const LeaderBoardTable = ({ data, rankScore }) => {
         },
         {
             name: "Score",
-            selector: row => row.marks,
+            selector: row => rankScore,
             sortable: true,
 
         },

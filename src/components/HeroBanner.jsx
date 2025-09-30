@@ -69,7 +69,7 @@ const HeroBanner = ({ banner, data }) => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="order-2 lg:order-1 text-center lg:text-left space-y-6 lg:space-y-8"
+                        className="order-2 lg:order-1 text-center lg:text-left space-y-6 lg:space-y-6"
                     >
                         {/* Badge */}
                         <motion.div
@@ -79,7 +79,7 @@ const HeroBanner = ({ banner, data }) => {
                             className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-3 py-2 sm:px-4 sm:py-2 rounded-full border border-blue-200 shadow-lg text-sm sm:text-base"
                         >
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span className="font-medium text-gray-700">🔥 India's Fastest Growing Platform</span>
+                            <span className="font-small text-gray-700">🔥 India's Fastest Growing Platform</span>
                         </motion.div>
 
                         {/* Main Heading - Mobile Optimized */}
@@ -87,16 +87,16 @@ const HeroBanner = ({ banner, data }) => {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
-                            className="space-y-3 sm:space-y-4"
+                            className="space-y-2 sm:space-y-1"
                         >
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight">
+                            <h1 className="text-xl sm:text-xl md:text-5xl lg:text-xl xl:text-3xl font-bold text-gray-900 leading-tight">
                                 Practice SSC's{' '}
                                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
                                     New UI
                                 </span>{' '}
                                 Today
                             </h1>
-                            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800">
+                            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl font-bold text-gray-800">
                                 <span className="bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">
                                     Crack your Exam Tomorrow
                                 </span>
@@ -110,20 +110,20 @@ const HeroBanner = ({ banner, data }) => {
                             transition={{ delay: 0.4 }}
                             className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2 sm:gap-3 text-sm sm:text-base lg:text-lg font-semibold text-gray-700"
                         >
-                            <div className="flex items-center gap-4 sm:gap-6">
+                            <div className="flex items-center gap-2 sm:gap-2">
                                 <div className="flex items-center gap-2 bg-blue-100 px-2 py-1 sm:px-3 sm:py-1 rounded-lg">
                                     <MdSchool className="text-blue-600 text-sm sm:text-base" />
-                                    <span>Learn</span>
+                                    <span className='text-sm'>Learn</span>
                                 </div>
                                 <FaAngleRight className="text-gray-400 hidden sm:block" />
                                 <div className="flex items-center gap-2 bg-green-100 px-2 py-1 sm:px-3 sm:py-1 rounded-lg">
                                     <MdTrendingUp className="text-green-600 text-sm sm:text-base" />
-                                    <span>Revise</span>
+                                    <span className='text-sm'>Revise</span>
                                 </div>
                                 <FaAngleRight className="text-gray-400 hidden sm:block" />
                                 <div className="flex items-center gap-2 bg-purple-100 px-2 py-1 sm:px-3 sm:py-1 rounded-lg">
                                     <FaTrophy className="text-purple-600 text-sm sm:text-base" />
-                                    <span>Crack</span>
+                                    <span className='text-sm'>Crack</span>
                                 </div>
                             </div>
                         </motion.div>
@@ -133,7 +133,7 @@ const HeroBanner = ({ banner, data }) => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.5 }}
-                            className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto lg:mx-0 px-4 sm:px-0"
+                            className="text-base sm:text-lg lg:text-md text-gray-600 max-w-2xl mx-auto lg:mx-0 px-4 sm:px-0"
                         >
                             Start your selection journey with India's most comprehensive exam preparation platform.{' '}
                             <span className="font-bold text-green-600">Completely Free!</span>

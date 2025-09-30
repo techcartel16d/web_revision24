@@ -82,8 +82,9 @@ const Sidebar = () => {
         { name: 'Previous Year Papers', icon: <FileText size={18} />, path: '/previous-papers' },
         { name: 'Attempted Test', icon: <FileText size={18} />, path: '/attempted-test' },
         { name: 'Practice', icon: <RefreshCcw size={18} />, path: '/practice', badge: 'FREE' },
-         { name: 'Free Quiz', icon: <CircleQuestionMark size={18} />, path: '/free-quizes', badge: 'FREE' },
-          { name: 'GK & Current Affairs', icon: <RefreshCcw size={18} />, path: '/gk&ca-page', badge: '' },
+        { name: 'Free Quiz', icon: <CircleQuestionMark size={18} />, path: '/free-quizes', badge: 'FREE' },
+        { name: 'GK & Current Affairs', icon: <RefreshCcw size={18} />, path: '/gk&ca-page', badge: '' },
+        { name: 'Doubts', icon: <FileText size={18} />, path: '/doubts' },
         { 
           name: 'Focus+', 
           icon: <Crown size={18} />, 
@@ -153,7 +154,7 @@ const Sidebar = () => {
               </div>
               <div>
                 <h1 className="text-xl font-bold">Revision24</h1>
-                <p className="text-sm opacity-80">Ultimate Learning platform</p>
+                <p className="text-sm opacity-80">Ultimate Learning Platform</p>
               </div>
             </div>
           </Link>

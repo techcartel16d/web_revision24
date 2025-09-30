@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // A helper component for the legend icons, styled with Tailwind CSS
 const InstructionIcon = ({ bgColor, children }) => (
@@ -10,16 +10,79 @@ const InstructionIcon = ({ bgColor, children }) => (
 
 const RRBInstructionPage = () => {
     const nav = useNavigate();
+    const { state } = useLocation();
+    // console.log("STATE ===>", state);
+    
+    // Extract test information from state
+    const testInfo = state?.testInfo || {};
+    const testDetail = state?.testDetail || [];
+    
+    // Calculate total questions and marks
+    const totalQuestions = testDetail.reduce((total, subject) => total + parseInt(subject.no_of_question), 0);
+    const totalMarks = testDetail.reduce((total, subject) => total + parseInt(subject.marks), 0);
+    
     return (
         <div className="flex flex-col h-screen bg-white font-sans">
             {/* Header */}
             <header className="px-4 py-2 flex items-center justify-between border-b border-gray-200 bg-gray-50">
                 <h1 className="text-xl font-bold text-blue-500">Revision24</h1>
-                <p className="text-sm text-gray-600">RRB NTPC CBT 2 (12th Level) Full Test 2</p>
+                <p className="text-sm text-gray-600">{testInfo.title || 'Test Information'}</p>
             </header>
 
             {/* Scrollable Content Area */}
             <main className="flex-1 overflow-y-auto p-5">
+                {/* Test Overview Section */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <h2 className="text-lg font-bold text-blue-800 mb-3">Test Overview</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div className="bg-white p-3 rounded border">
+                            <div className="font-semibold text-gray-600">Duration</div>
+                            <div className="text-lg font-bold text-blue-600">{testInfo.time || 0} minutes</div>
+                        </div>
+                        <div className="bg-white p-3 rounded border">
+                            <div className="font-semibold text-gray-600">Total Questions</div>
+                            <div className="text-lg font-bold text-green-600">{totalQuestions}</div>
+                        </div>
+                        <div className="bg-white p-3 rounded border">
+                            <div className="font-semibold text-gray-600">Total Marks</div>
+                            <div className="text-lg font-bold text-green-600">{totalMarks}</div>
+                        </div>
+                        <div className="bg-white p-3 rounded border">
+                            <div className="font-semibold text-gray-600">Negative Marking</div>
+                            <div className="text-lg font-bold text-red-600">{testInfo.negative_mark || 'N/A'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Subject-wise Breakdown */}
+                {testDetail.length > 0 && (
+                    <div className="mb-6">
+                        <h3 className="text-lg font-bold text-gray-800 mb-4">Subject-wise Breakdown:</h3>
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse border border-gray-300 text-sm">
+                                <thead>
+                                    <tr className="bg-gray-100">
+                                        <th className="border border-gray-300 px-4 py-2 text-left font-semibold">Subject</th>
+                                        <th className="border border-gray-300 px-4 py-2 text-center font-semibold">Questions</th>
+                                        <th className="border border-gray-300 px-4 py-2 text-center font-semibold">Marks</th>
+                                        <th className="border border-gray-300 px-4 py-2 text-center font-semibold">Negative Marking</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {testDetail.map((subject, index) => (
+                                        <tr key={index} className="hover:bg-gray-50">
+                                            <td className="border border-gray-300 px-4 py-2 font-medium">{subject.subject_name}</td>
+                                            <td className="border border-gray-300 px-4 py-2 text-center">{subject.no_of_question}</td>
+                                            <td className="border border-gray-300 px-4 py-2 text-center">{subject.marks}</td>
+                                            <td className="border border-gray-300 px-4 py-2 text-center text-red-600">{subject.negative_mark}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
                 <h2 className="text-lg font-bold text-gray-800 mb-4">General Instructions:</h2>
 
                 <p className="text-gray-700 leading-relaxed mb-3">1. The clock will be set at the server. The countdown timer at the top right corner of the screen will display the remaining time available for you to complete the examination. When the timer reaches zero, the examination will end by itself. You need not terminate the examination or submit your paper.</p>
@@ -88,7 +151,11 @@ const RRBInstructionPage = () => {
                     <span className="mr-2 text-xl">←</span>
                     Go to Tests
                 </button>
-                <button onClick={() => nav('/rrb-instruction-final')} className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 flex items-center">
+                <button onClick={() => nav('/online-exam-specific-instruction', {
+                    state:state
+                })
+                } 
+                className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 flex items-center">
                     Next
                     <span className="ml-2 text-xl">→</span>
                 </button>

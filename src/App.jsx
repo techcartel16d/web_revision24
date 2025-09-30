@@ -58,12 +58,12 @@ import PreviouseYearResultPage from './pages/pyp_test/PreviouseYearResultPage';
 import PreviouseYearExamSolutionsPage from './pages/pyp_test/PreviouseYearExamSolutionsPage';
 import LiveQuizeInstructionsPage from './pages/liveTest/LiveQuizeInstructionsPage';
 import LiveQuizAttendPage from './pages/liveTest/LiveQuizAttendPage';
-import CurrentAffairesPage from './pages/freeTests/CurrentAffairesPage';
-import CurrentAffairesdetailsPage from './pages/freeTests/CurrentAffairesdetailsPage';
+import CurrentAffairesPage from './pages/currentAffair&Notes/CurrentAffairesPage';
+import CurrentAffairesdetailsPage from './pages/currentAffair&Notes/CurrentAffairesdetailsPage';
 import LiveQuizAnalysisPage from './pages/liveTest/LiveQuizAnalysisPage';
 import LiveQuizSokutionPage from './pages/liveTest/LiveQuizSokutionPage';
 import AccountDeletePage from './pages/AccountDeletePage';
-import NotesPdfPage from './pages/freeTests/NotesPdfPage';
+import NotesPdfPage from './pages/currentAffair&Notes/NotesPdfPage';
 import TopicTestInstructions from './pages/freeTests/topictest/TopicTestInstructions';
 import TopicTestAttendQuiz from './pages/freeTests/topictest/TopicTestAttendQuiz';
 import TopicTestResult from './pages/freeTests/topictest/TopicTestResult';
@@ -80,6 +80,7 @@ import GkCAtestPage from './pages/freeTests/gk&currentAffers/Gk&CAtestPage';
 import RRBTestPage from './pages/RRBTEST/RRBTestPage';
 import RRBInstructionPage2 from './pages/RRBTEST/RRBInstructionPage2';
 import RRBInstructionPage from './pages/RRBTEST/RRBInstructionPage';
+import Doubts from './pages/doubts/Doubts';
 
 function App() {
   // useEffect(() => {
@@ -216,10 +217,10 @@ function App() {
         <Route path="/live-quiz-analysis" element={<ProtectedRoute><LiveQuizAnalysisPage /></ProtectedRoute>} />
         <Route path="/live-quiz-solution" element={<ProtectedRoute><LiveQuizSokutionPage /></ProtectedRoute>} />
 
-        {/* /RRB TEST ROUTES */}
-        <Route path="/rrb-test" element={<ProtectedRoute><RRBTestPage /></ProtectedRoute>} />
-        <Route path="/rrb-instruction-final" element={<ProtectedRoute><RRBInstructionPage2 /></ProtectedRoute>} />
-        <Route path="/rrb-instruction" element={<ProtectedRoute><RRBInstructionPage /></ProtectedRoute>} />
+        {/* /Online TEST ROUTES */}
+        <Route path="/online-exam" element={<ProtectedRoute><RRBTestPage /></ProtectedRoute>} />
+        <Route path="/online-exam-specific-instruction" element={<ProtectedRoute><RRBInstructionPage2 /></ProtectedRoute>} />
+        <Route path="/online-exam-general-instruction" element={<ProtectedRoute><RRBInstructionPage /></ProtectedRoute>} />
 
         {/* FREE TEST ROUTES */}
         <Route path="/current-affairs" element={<SideBarLayout><CurrentAffairesPage /></SideBarLayout>} />
@@ -242,7 +243,8 @@ function App() {
         <Route path="/gk-ca-test-instruction" element={<SideBarLayout><GkCaTestInstructions /></SideBarLayout>} />
         <Route path="/gk-test-attend" element={<ProtectedRoute><GkCAtestPage /></ProtectedRoute>} />
 
-
+          {/* Doubts */}
+        <Route path="/doubts" element={<SideBarLayout><Doubts /></SideBarLayout>} />
 
         {/* Maganizes routes */}
         <Route path="/all-magazies" element={<SideBarLayout><Allmaganizes /></SideBarLayout>} />
