@@ -8,7 +8,7 @@ export const getattemptedData = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await AttemptedData.getAttemptedTestData();
-      console.log('Attempted Test Api Slice Data res',response.data);
+   
       return response.data; // Should be array of magazines
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

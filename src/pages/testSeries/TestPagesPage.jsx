@@ -24,7 +24,7 @@ const TestPagesPage = () => {
     const nav = useNavigate();
     const dispatch = useDispatch();
     const { state } = useLocation();
-    console.log("STATE ===>", state);
+    // console.log("STATE ===>", state);
 
     const [testData, setTestData] = useState([]);
     const [testId, setTestId] = useState(null);

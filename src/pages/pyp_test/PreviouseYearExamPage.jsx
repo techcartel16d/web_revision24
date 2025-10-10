@@ -629,7 +629,7 @@ if (!current || questionsState.length === 0) {
     //     handleSaveAndNext()
     // }
 
-    console.log("state", state?.testInfo);
+    // console.log("state", state?.testInfo);
 
 
 
@@ -703,7 +703,7 @@ if (!current || questionsState.length === 0) {
       mark_for_review: markedForReview
     };
 
-    console.log("📤 Submission Data:", submissionData);
+    // console.log("📤 Submission Data:", submissionData);
     // return
 
     try {
@@ -719,7 +719,7 @@ if (!current || questionsState.length === 0) {
          showErrorToast("please attend minimum one question (save & next) after submit!!")
          setConfirmSubmit(false)
         // alert('please attend minimum one question (save & next) after submit!!')
-        console.log(res)
+        // console.log(res)
       }
 
 

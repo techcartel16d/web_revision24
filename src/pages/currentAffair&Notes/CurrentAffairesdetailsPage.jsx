@@ -7,6 +7,7 @@ const CurrentAffairesdetailsPage = () => {
     const navigate = useNavigate();
     const [language, setLanguage] = useState("Hindi");
 
+    console.log('state of news details', state)
     if (!state) {
         return (
             <div className="p-6 text-center">
@@ -30,10 +31,11 @@ const CurrentAffairesdetailsPage = () => {
         date,
         formatted_date,
         image,
+        source
     } = state;
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <div className="max-w-6xl mx-auto p-6">
             {/* Back button */}
             <button
                 onClick={() => navigate(-1)}
@@ -74,12 +76,19 @@ const CurrentAffairesdetailsPage = () => {
                 </div>
             </div>
 
-            {/* Date */}
-            {formatted_date || date ? (
-                <p className="text-sm text-gray-500 mb-4">
-                    🗓 {formatted_date || date}
-                </p>
-            ) : null}
+            <div style={{display:'flex',justifyContent:'space-between'}}>
+
+                        {/* Date */}
+                        {formatted_date || date ? (
+                            <p className="text-sm text-gray-500 mb-4">
+                                🗓 {formatted_date || date}
+                            </p>
+                            
+                        ) : null}
+                        <p className="text-sm text-gray-500 mb-4">
+                                Source :  {source || ''}
+                        </p>
+            </div>
 
             {/* Image */}
             {image && (
@@ -100,6 +109,7 @@ const CurrentAffairesdetailsPage = () => {
                             : description_english || description || "",
                 }}
             />
+           
         </div>
     );
 };

@@ -655,13 +655,13 @@ const FreequizeAttend = () => {
                 right_ans: rightAns
             };
         });
-console.log('allAttendedQuestions', allAttendedQuestions)
+
 
 
         const negativeMark = parseFloat(state?.testInfo?.negative_mark || 0);
        
         const statMark = parseFloat(state?.testInfo.details[0]?.marks || 0);
-        console.log(statMark)
+    
         const markPer_ques = statMark / questionsState.length
         // console.log(markPer_ques)
         //  (correct * markPer_ques) - (inCorrect * negativeMark)
@@ -684,7 +684,7 @@ console.log('allAttendedQuestions', allAttendedQuestions)
             mark_for_review: markedForReview
         };
 
-        console.log("📤 Submission Data:", submissionData);
+        // console.log("📤 Submission Data:", submissionData);
 
     
         try {

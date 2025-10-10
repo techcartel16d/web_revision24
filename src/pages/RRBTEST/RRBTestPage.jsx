@@ -45,14 +45,14 @@ const RRBTestPage = () => {
   const [timeLeft, setTimeLeft] = useState((testInfo.time || 90) * 60); // Convert minutes to seconds
   const [loading, setLoading] = useState(false);
 
-  console.log('state rrb test screen', state);
+  // console.log('state rrb test screen', state);
 
   const getTestSeriesQuestion = async () => {
     try {
       setLoading(true);
       const res = await dispatch(getSingleCategoryPackageTestseriesQuestionSlice(state?.testId || state?.testInfo?.test_id)).unwrap();
       if (res.status_code === 200) {
-        console.log("question data fetching", res);
+        // console.log("question data fetching", res);
         // Update questions with actual data from API
         if (res.data && res.data.length > 0) {
           const formattedQuestions = res.data.map((question, index) => ({

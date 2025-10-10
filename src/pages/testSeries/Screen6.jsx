@@ -24,7 +24,7 @@ const Screen6 = () => {
 
         // ✅ Check if data is already preloaded from AttemptedTestPage
         if (state.isDataPreloaded && state.preloadedData) {
-            console.log('Using preloaded data:', state.preloadedData);
+            // console.log('Using preloaded data:', state.preloadedData);
             
             try {
                 setLoading(true);
@@ -37,7 +37,7 @@ const Screen6 = () => {
                     const test = res.data.test_detail;
                     const my = res.data.my_detail;
                     setTestData(res.data);
-                    console.log("Using preloaded data on screen no 6", res.data);
+                    // console.log("Using preloaded data on screen no 6", res.data);
 
                     setSubjectWiseAnalysis(res?.data?.subject_wise_analysis || []);
                     
@@ -51,7 +51,7 @@ const Screen6 = () => {
                     const markPer_ques = totalMarks / totalQuestions;
                     const calculatedScore = (correct * markPer_ques) - (inCorrect * negativeMark);
                     setRankScore(calculatedScore);
-                    console.log('calculatedScore from preloaded data', calculatedScore);
+                    // console.log('calculatedScore from preloaded data', calculatedScore);
 
                     const accuracy = correct && totalAttempted
                         ? ((correct / totalAttempted) * 100).toFixed(2) + "%"
@@ -101,7 +101,7 @@ const Screen6 = () => {
                      state?.testInfo?.id ||
                      state?.testData?.my_detail?.test_id;
 
-        console.log('No preloaded data, making API call with testId:', testId);
+        // console.log('No preloaded data, making API call with testId:', testId);
 
         if (!testId) {
             console.error('No test ID found in state');
@@ -117,7 +117,7 @@ const Screen6 = () => {
                 const test = res.data.test_detail;
                 const my = res.data.my_detail;
                 setTestData(res.data);
-                console.log("res on screen no 6 from API", res.data);
+                // console.log("res on screen no 6 from API", res.data);
 
                 setSubjectWiseAnalysis(res?.data?.subject_wise_analysis || []);
                 
@@ -131,7 +131,7 @@ const Screen6 = () => {
                 const markPer_ques = totalMarks / totalQuestions;
                 const calculatedScore = (correct * markPer_ques) - (inCorrect * negativeMark);
                 setRankScore(calculatedScore);
-                console.log('calculatedScore from API', calculatedScore);
+                // console.log('calculatedScore from API', calculatedScore);
 
                 const accuracy = correct && totalAttempted
                     ? ((correct / totalAttempted) * 100).toFixed(2) + "%"

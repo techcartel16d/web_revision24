@@ -15,7 +15,7 @@ const TopicsWiseTestPage = () => {
     try {
       setLoading(true);
       const res = await dispatch(getFreeTopicWisePaperSlice()).unwrap();
-      console.log("FreeTopicswisePaper Data", res);
+      // console.log("FreeTopicswisePaper Data", res);
       setFreeQuizData(res.data.data || []);
     } catch (error) {
       console.log("Error fetching topic wise test:", error);

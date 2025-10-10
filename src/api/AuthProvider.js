@@ -9,7 +9,9 @@ const UserApiProvider = {
 
   login: async (credentials) => {
     const res = await api.post("/user_login", credentials);
+    console.log('User Login', res);
     return res.data;
+
   },
 
   getWallet: async () => {

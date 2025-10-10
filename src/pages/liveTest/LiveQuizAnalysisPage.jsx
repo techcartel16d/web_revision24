@@ -12,7 +12,7 @@ const LiveQuizAnalysisPage = () => {
     const dispatch = useDispatch();
     const { state } = useLocation();
 
-    console.log("state==>", state)
+    // console.log("state==>", state)
 
 
     const [performance, setPerformance] = useState(null);
@@ -30,7 +30,7 @@ const LiveQuizAnalysisPage = () => {
         let testId = state?.testInfo?.test_id || state?.testInfo?.id;
         try {
             const res = await dispatch(megaQuizResulGettSlice(testId)).unwrap();
-            console.log("response===>", res);
+            // console.log("response===>", res);
 
             if (res.status_code === 200) {
                 const test = res.data.quiz_detail;   // ✅ your API has quiz_detail

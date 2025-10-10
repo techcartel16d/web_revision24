@@ -78,7 +78,7 @@ const SettingPage = () => {
   const loadUserData = async () => {
     try {
       const user = await getUserDataDecrypted();
-      console.log("user data in setting page", user);
+      // console.log("user data in setting page", user);
 
       if (user) {
         setUserInfo({

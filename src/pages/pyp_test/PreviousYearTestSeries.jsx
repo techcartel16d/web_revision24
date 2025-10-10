@@ -127,7 +127,7 @@ const PreviousYearTestSeries = () => {
     }, []);
 
     const handleResume = async () => {
-        console.log("hello")
+        // console.log("hello")
         nav('/previous-test', { state: { testInfo: resumeData } })
 
     }

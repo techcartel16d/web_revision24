@@ -25,7 +25,7 @@ const LiveTestQuizePage = () => {
     try {
       const res = await dispatch(getLiveQuizSlice()).unwrap();
 
-      console.log("res", res)
+      // console.log("res", res)
       if (res?.status_code === 200) {
         const notAttended = res.data?.not_attended_quizzes || {};
         const attended = res.data?.attended_quizzes || {};

@@ -7,7 +7,7 @@ const CashfreeCheckoutPage = () => {
     const [sdkLoaded, setSdkLoaded] = useState(false);
 
     const queryParams = new URLSearchParams(location.search);
-    console.log("queryParams", queryParams)
+    // console.log("queryParams", queryParams)
     const orderId = queryParams.get('order_id');
     const sessionId = queryParams.get('session_id');
     const userId = queryParams.get('user_id');
@@ -51,7 +51,7 @@ const CashfreeCheckoutPage = () => {
       paymentSessionId: sessionId,
       redirectTarget: "_self"
     }).then((result) => {
-      console.log("Payment result:", result);
+      // console.log("Payment result:", result);
       if (result.error) {
         navigate(`/payment-response?status=failed&reason=${result.error.message}`);
       } else {

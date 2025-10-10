@@ -31,7 +31,7 @@ const TopicTestAttendQuiz = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
   const { state } = useLocation();
-  console.log('state', state)
+  // console.log('state', state)
   const [userInfo, setUserInfo] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [questionsState, setQuestionsState] = useState([]);
@@ -136,7 +136,7 @@ const TopicTestAttendQuiz = () => {
       const res = await dispatch(
         getSingleCategoryPackageTestseriesQuestionSlice(state?.testInfo?.id)
       ).unwrap();
-      console.log('All questions res', res)
+      // console.log('All questions res', res)
       if (res.status_code == 200) {
         // console.log("question data fetching", res)
         setQuestionsState(res.data);
@@ -635,12 +635,12 @@ const TopicTestAttendQuiz = () => {
       };
     });
     const negativeMark = parseFloat(state?.testInfo?.negative_marks || 0);
-    console.log('negativeMark', negativeMark)
+    // console.log('negativeMark', negativeMark)
     // const statMark = parseFloat(state?.testDetail[0]?.marks || 0);
     // console.log(statMark)
     clo
     const markPer_ques = state?.testInfo?.marks_per_question;
-    console.log('markPer_ques', markPer_ques)
+    // console.log('markPer_ques', markPer_ques)
     // console.log(markPer_ques)
     //  (correct * markPer_ques) - (inCorrect * negativeMark)
 
@@ -666,14 +666,14 @@ const TopicTestAttendQuiz = () => {
       mark_for_review: markedForReview,
     };
 
-    console.log("📤 Submission Data:", submissionData);
+    // console.log("📤 Submission Data:", submissionData);
     // return
 
     try {
       const res = await dispatch(
         attendPreviouseYearQuestionSlice(submissionData)
       ).unwrap();
-      console.log('attendPreviouseYearQuestionSlice', res)
+      // console.log('attendPreviouseYearQuestionSlice', res)
       if (res.status_code == 200) {
         // ✅ Clear all encrypted test data
         await clearAllTestData(testId);
@@ -685,7 +685,7 @@ const TopicTestAttendQuiz = () => {
         );
         setConfirmSubmit(false);
         // alert('please attend minimum one question (save & next) after submit!!')
-        console.log(res);
+        // console.log(res);
       }
     } catch (error) {
       console.error("❌ Error in Submitting Test:", error);

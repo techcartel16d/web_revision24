@@ -19,7 +19,7 @@ const LiveQuizSokutionPage = () => {
   const nav = useNavigate()
   const dispatch = useDispatch()
   const { state } = useLocation()
-  console.log("state==>", state)
+  // console.log("state==>", state)
 //   return;
   
   
@@ -91,7 +91,7 @@ const LiveQuizSokutionPage = () => {
   const fetchUserSolution = async () => {
     try {
       const res = await dispatch(megaQuizResulGettSlice(state?.state?.testInfo?.id)).unwrap();
-      console.log("live respo", res)
+      // console.log("live respo", res)
 
       if (res.status_code === 200) {
         setQuestionsState(res.data.all_question_list || []);
@@ -184,7 +184,7 @@ const LiveQuizSokutionPage = () => {
 
 
   const current = questionsState[currentQuestion];
-  console.log("cureree====>", current)
+  // console.log("cureree====>", current)
   if (!current) return <div className="p-4-400 text-red-500 w-full h-full flex items-center justify-center">
     <div className="fading-spinner">
       {[...Array(12)].map((_, i) => (

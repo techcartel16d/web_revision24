@@ -51,9 +51,7 @@ const Doubts = () => {
         dispatch(myDoubtSolutionData()).unwrap()
       ]);
       
-      console.log('All Doubts API Result:', allDoubtsResult);
-      console.log('My Doubts API Result:', myDoubtsResult);
-      console.log('Doubts data fetched successfully');
+      
     } catch (error) {
       console.error('Error fetching doubts:', error);
     } finally {
@@ -69,13 +67,13 @@ const Doubts = () => {
   // ✅ Debug current doubts
   const getCurrentDoubts = () => {
     const currentDoubts = activeTab === 'All Doubts' ? allDoubts : myDoubts;
-    console.log(`Current doubts for ${activeTab}:`, currentDoubts);
+   
     return currentDoubts;
   };
 
   // ✅ Updated render doubt card with better data mapping
   const renderDoubtCard = (doubt) => {
-    console.log('Rendering doubt card for:', doubt);
+ 
     
     return (
       <div key={doubt.id} className="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -239,7 +237,7 @@ const Doubts = () => {
       });
 
       const result = await dispatch(doubtSolutionData(formData)).unwrap();
-      console.log('Doubt submitted successfully:', result);
+    
       
       setDoubtQuestion('');
       setSelectedImage(null);

@@ -15,7 +15,7 @@ const GkCapage = () => {
     try {
       setLoading(true);
       const res = await dispatch(getAllGkSlice()).unwrap();
-      console.log('res', res.data)
+      // console.log('res', res.data)
       setFreeQuizData(res.data.data || []);
     } catch (error) {
       console.log("Error fetching topic wise test:", error);

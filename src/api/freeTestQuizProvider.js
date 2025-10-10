@@ -26,7 +26,7 @@ const freeTestProvider = {
   },
 
   getPreviouseYearPaperQuestionById: async (previousPaperId) => {
-    // console.log("previousPaperId", previousPaperId)
+   
     try {
 
       const response = await api.get(`/previous-year-question-list-get?previous_year_exam_id=${previousPaperId}`);
@@ -57,7 +57,7 @@ const freeTestProvider = {
   },
 
   previouseYearSolutionGet: async (previousPaperId) => {
-    console.log("previousPaperId", previousPaperId)
+   
     try {
       const response = await api.get(`/user-attend-previous-year-exam-question-solution?previous_year_exam_id=${previousPaperId}`);
       return response.data;

@@ -74,7 +74,7 @@ export const attendPreviouseYearQuestionSlice = createAsyncThunk(
 export const previouseYearSolutionGetSlice = createAsyncThunk(
   'user/previouseYearSolutionGetSlice',
   async (id, { rejectWithValue }) => {
-    console.log("previouseYearSubmitData", id)
+   
     try {
       const response = await freeTestProvider.previouseYearSolutionGet(
         id,
@@ -100,6 +100,29 @@ export const getPreviouseYearPaperRankSlice = createAsyncThunk(
   },
 );
 // Async Thunks getCurrentAffairesSlice
+// export const getCurrentAffairesSlice = createAsyncThunk(
+//   'getCurrentAffaires',
+//   async ({ page = 1 }, { rejectWithValue }) => {
+//     try {
+//       const response = await freeTestProvider.getCurrentAffairsData(page);
+//       return response;
+//     } catch (error) {
+//       return rejectWithValue(error.message);
+//     }
+//   }
+// );
+// export const getCurrentAffairesSlice = createAsyncThunk(
+//   'getCurrentAffaires',
+//   async (page = 1, { rejectWithValue }) => {
+//     try {
+//       const response = await freeTestProvider.getCurrentAffairsData(page);
+//       return response;
+//     } catch (error) {
+//       return rejectWithValue(error.message);
+//     }
+//   }
+// );
+
 export const getCurrentAffairesSlice = createAsyncThunk(
   'user/getCurrentAffairesSlice',
   async (_, { rejectWithValue }) => {

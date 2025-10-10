@@ -631,7 +631,7 @@ if (!current || questionsState.length === 0) {
     //     handleSaveAndNext()
     // }
 
-    console.log("state", state?.testInfo);
+    // console.log("state", state?.testInfo);
 
 
 
@@ -705,7 +705,7 @@ if (!current || questionsState.length === 0) {
       mark_for_review: markedForReview
     };
 
-    console.log("📤 Submission Data:", submissionData);
+    // console.log("📤 Submission Data:", submissionData);
     try {
 
 nav('/analysis', { replace: true, state })
@@ -717,7 +717,7 @@ nav('/analysis', { replace: true, state })
         nav('/analysis', { replace: true, state });
       } else {
         // alert('please attend minimum one question (save & next) after submit!!')
-        console.log(res)
+        // console.log(res)
       }
 
 

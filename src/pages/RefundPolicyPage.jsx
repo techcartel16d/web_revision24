@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 const RefundPolicy = () => {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className="max-w-4xlpx-4 p-8 text-gray-800 bg-white shadow-md rounded-lg">
         <h1 className="text-3xl font-bold text-center mb-6">Refund Policy</h1>
         <p className="text-sm text-gray-500 text-center mb-6">
@@ -65,10 +65,10 @@ const RefundPolicy = () => {
             If you believe you are eligible for a refund under the exceptions
             above, please write to us at{" "}
             <a
-              href="mailto:revision24@yahoo.com"
+              href="mailto:support@revision24.com"
               className="text-blue-600 underline"
             >
-              revision24@yahoo.com
+              support@revision24.com
             </a>{" "}
             with all relevant details.
           </p>
@@ -93,7 +93,7 @@ const RefundPolicy = () => {
           </p>
         </section>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

@@ -335,66 +335,138 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
   };
 
   // Enhanced bookmark toggle function with proper error handling
+  // const handleBookmarkToggle = async (itemId) => {
+  //   try {
+  //     setLoading(true);
+  //     const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
+      
+  //     // Optimistic update - Update UI immediately
+  //     if (isCurrentlyBookmarked) {
+  //       setBookmarkedIds(prev => prev.filter(id => id !== itemId));
+  //     } else {
+  //       setBookmarkedIds(prev => [...prev, itemId]);
+  //     }
+
+  //     // Make API call
+  //     let result;
+  //     if (isCurrentlyBookmarked) {
+  //       // Remove bookmark
+  //       result = await dispatch(removeUserCollectionSlice({
+  //         type: 'package_id',
+  //         id: itemId
+  //       })).unwrap();
+  //     } else {
+  //       // Add bookmark
+  //       result = await dispatch(saveCollectionSlice({
+  //         type: 'package_id',
+  //         id: itemId
+  //       })).unwrap();
+  //     }
+
+  //     // Check if API call was successful
+  //     if (result.status_code === 200) {
+  //       if (isCurrentlyBookmarked) {
+  //         showSuccessToast('Test Series removed successfully');
+  //       } else {
+  //         showSuccessToast('Test Series added successfully');
+  //       }
+  //     } else {
+  //       // Revert optimistic update if API call failed
+  //       if (isCurrentlyBookmarked) {
+  //         setBookmarkedIds(prev => [...prev, itemId]);
+  //       } else {
+  //         setBookmarkedIds(prev => prev.filter(id => id !== itemId));
+  //       }
+  //       showErrorToast('Failed to update bookmark');
+  //     }
+  //   } catch (error) {
+  //     console.error('Bookmark toggle error:', error);
+
+  //     // Revert optimistic update on error
+  //     const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
+  //     if (isCurrentlyBookmarked) {
+  //       setBookmarkedIds(prev => [...prev, itemId]);
+  //     } else {
+  //       setBookmarkedIds(prev => prev.filter(id => id !== itemId));
+  //     }
+
+  //     showErrorToast('Something went wrong. Please try again.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleBookmarkToggle = async (itemId) => {
-    try {
-      setLoading(true);
-      const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
-
-      // Optimistic update - Update UI immediately
-      if (isCurrentlyBookmarked) {
-        setBookmarkedIds(prev => prev.filter(id => id !== itemId));
-      } else {
-        setBookmarkedIds(prev => [...prev, itemId]);
-      }
-
-      // Make API call
-      let result;
-      if (isCurrentlyBookmarked) {
-        // Remove bookmark
-        result = await dispatch(removeUserCollectionSlice({
-          type: 'package_id',
-          id: itemId
-        })).unwrap();
-      } else {
-        // Add bookmark
-        result = await dispatch(saveCollectionSlice({
-          type: 'package_id',
-          id: itemId
-        })).unwrap();
-      }
-
-      // Check if API call was successful
-      if (result.status_code === 200) {
-        if (isCurrentlyBookmarked) {
-          showSuccessToast('Bookmark removed successfully');
-        } else {
-          showSuccessToast('Bookmark added successfully');
-        }
-      } else {
-        // Revert optimistic update if API call failed
-        if (isCurrentlyBookmarked) {
-          setBookmarkedIds(prev => [...prev, itemId]);
-        } else {
-          setBookmarkedIds(prev => prev.filter(id => id !== itemId));
-        }
-        showErrorToast('Failed to update bookmark');
-      }
-    } catch (error) {
-      console.error('Bookmark toggle error:', error);
-
-      // Revert optimistic update on error
-      const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
-      if (isCurrentlyBookmarked) {
-        setBookmarkedIds(prev => [...prev, itemId]);
-      } else {
-        setBookmarkedIds(prev => prev.filter(id => id !== itemId));
-      }
-
-      showErrorToast('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
+  try {
+    setLoading(true);
+    const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
+    
+    // Optimistic update
+    if (isCurrentlyBookmarked) {
+      setBookmarkedIds(prev => prev.filter(id => id !== itemId));
+    } else {
+      setBookmarkedIds(prev => [...prev, itemId]);
     }
-  };
+
+    // ✅ FIXED: Use correct API format (array structure)
+    let result;
+    if (isCurrentlyBookmarked) {
+      // Remove bookmark - Use array format
+      result = await dispatch(removeUserCollectionSlice({
+        video_id: [],
+        lession_id: [],
+        class_note_id: [],
+        study_note_id: [],
+        article_id: [],
+        news_id: [],
+        question_id: [],
+        test_series_id: [],
+        package_id: [itemId] // ✅ Array format
+      })).unwrap();
+    } else {
+      // Add bookmark - Use array format
+      result = await dispatch(saveCollectionSlice({
+        video_id: [],
+        lession_id: [],
+        class_note_id: [],
+        study_note_id: [],
+        article_id: [],
+        news_id: [],
+        question_id: [],
+        test_series_id: [],
+        package_id: [itemId] // ✅ Array format
+      })).unwrap();
+    }
+
+    // Success/error handling
+    if (result.status_code === 200) {
+      showSuccessToast(isCurrentlyBookmarked ? 'Removed Successfully' : 'Added Successfully');
+    } else {
+      // Revert on failure
+      if (isCurrentlyBookmarked) {
+        setBookmarkedIds(prev => [...prev, itemId]);
+      } else {
+        setBookmarkedIds(prev => prev.filter(id => id !== itemId));
+      }
+      showErrorToast('Failed to update bookmark');
+    }
+  } catch (error) {
+    console.error('Bookmark error:', error);
+    
+    // Revert on error
+    const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
+    if (isCurrentlyBookmarked) {
+      setBookmarkedIds(prev => [...prev, itemId]);
+    } else {
+      setBookmarkedIds(prev => prev.filter(id => id !== itemId));
+    }
+    
+    showErrorToast('Something went wrong');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchBookMarkTestSeries();

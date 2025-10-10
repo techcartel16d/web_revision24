@@ -5,7 +5,7 @@ import api from "./axiosConfig";
 const HomeProvider = {
 
     homeData: async (id = '') => {
-        // console.log("id---->", id)
+
         try {
             const token = localStorage.getItem('token');
             // if (!token) throw new Error('No token found');
@@ -23,8 +23,7 @@ const HomeProvider = {
     },
 
     getSingleCategoryPackageTestseries: async (id, page = 1, search) => {
-        // // console.log("getSingleCategoryPackageTestseries called with id:", id, "page:", page, "search:", search);
-        // return
+       
         try {
             const token = localStorage.getItem('token');
             const res = await api.get(`/test-course-detail-get`, {

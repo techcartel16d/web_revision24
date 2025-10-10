@@ -81,6 +81,10 @@ import RRBTestPage from './pages/RRBTEST/RRBTestPage';
 import RRBInstructionPage2 from './pages/RRBTEST/RRBInstructionPage2';
 import RRBInstructionPage from './pages/RRBTEST/RRBInstructionPage';
 import Doubts from './pages/doubts/Doubts';
+import PracticeBatch from './pages/practiceBatch/PracticeBatch';
+import BatchVideos from './pages/practiceBatch/BatchVideos';
+import PurchasedBatch from './pages/practiceBatch/PurchasedBatch';
+import SubscriptionPaymentSummery from './pages/SubscriptionPaymentSummery';
 
 function App() {
   // useEffect(() => {
@@ -139,11 +143,11 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/subscription" element={<SideBarLayout><SubscriptionPage /></SideBarLayout>} />
+        <Route path="/subscription-payment-summary" element={<SideBarLayout><SubscriptionPaymentSummery /></SideBarLayout>} />
         <Route path="/user-account-delete" element={<AccountDeletePage />} />
         {/* <Route path="/test-series" element={<TestSeriesPage />} /> */}
         <Route path="/terms-of-service" element={<TermsOfServicePage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/refund-policy" element={<RefundPolicy />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:id" element={<BlogDetailPage />} />
         <Route path="/cashfree-payment" element={<CashfreeCheckoutPage />} />
@@ -198,6 +202,7 @@ function App() {
         <Route path="/my-transaction" element={<SideBarLayout><MyTransactionPage /></SideBarLayout>} />
         <Route path="/saved-items" element={<SideBarLayout><MySavedCollectionPage /></SideBarLayout>} />
         <Route path="/help-support" element={<SideBarLayout><HelpAndSupportPage /></SideBarLayout>} />
+        <Route path="/refund-policy" element={<SideBarLayout><RefundPolicy /></SideBarLayout>} />
         <Route path="/live-classes" element={<SideBarLayout><LiveClassesPage /></SideBarLayout>} />
         <Route path="/test-series" element={<SideBarLayout><TestSeriesPage /></SideBarLayout>} />
         <Route path="/setting" element={<SideBarLayout><SettingPage /></SideBarLayout>} />
@@ -237,6 +242,8 @@ function App() {
 
         {/* Free quizes */}
         <Route path="/free-quizes" element={<SideBarLayout><Allfreequizs /></SideBarLayout>} />
+        <Route path="/free-quizes-instruction" element={<SideBarLayout><FreequizesInstructions /></SideBarLayout>} />
+        <Route path="/free-quizes-attend" element={<ProtectedRoute><FreequizeAttend /></ProtectedRoute>} />
 
         {/* GK & CA */}
         <Route path="/gk&ca-page" element={<SideBarLayout><GkCapage /></SideBarLayout>} />
@@ -248,6 +255,11 @@ function App() {
 
         {/* Maganizes routes */}
         <Route path="/all-magazies" element={<SideBarLayout><Allmaganizes /></SideBarLayout>} />
+        
+        {/* Practice Batch routes */}
+        <Route path="/all-batches" element={<SideBarLayout><PracticeBatch /></SideBarLayout>} />
+        <Route path="/batch-videos/:slug" element={<SideBarLayout><BatchVideos /></SideBarLayout>} />
+        <Route path="/purchased-batch" element={<SideBarLayout><PurchasedBatch /></SideBarLayout>} />
 
 
         {/* ❗️ Catch-all route outside PublicRoute */}

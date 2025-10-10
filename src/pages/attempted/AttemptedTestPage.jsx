@@ -17,7 +17,7 @@ const AttemptedTestPage = () => {
     setLoading(true);
     try {
       const res = await dispatch(getattemptedData()).unwrap();
-      console.log('Attempted Test Response Screen', res);
+     
       setTest(res); // No need to filter, API structure is different now
     } catch (error) {
       console.error('Error fetching attempted data:', error);
@@ -267,7 +267,7 @@ const AttemptedTestPage = () => {
         <div className="flex gap-6">
           {/* Main Content */}
           <div className="flex-1">
-            {/* Pass Pro Banner */}
+            {/* Focus+ Banner */}
             <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg p-6 mb-6 text-white relative overflow-hidden">
               <div className="absolute top-1 left-4">
                 <span className="bg-orange-500 text-white px-2 py-1 rounded text-[10px] font-medium">
@@ -280,7 +280,7 @@ const AttemptedTestPage = () => {
                   <div className="flex items-center mb-2">
                     <span className="text-xl font-bold mr-2">Revision24</span>
                     <span className="bg-yellow-600 text-black px-2 py-1 rounded text-xs font-medium">
-                      PASS PRO
+                      Focus+
                     </span>
                   </div>
 
@@ -316,7 +316,7 @@ const AttemptedTestPage = () => {
                 </div>
 
                 <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium">
-                  Get Pass Pro
+                  Get Focus+
                 </button>
               </div>
             </div>
@@ -445,7 +445,7 @@ const AttemptedTestPage = () => {
 
           {/* Sidebar */}
           <div className="w-80">
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
+            {/* <div className="bg-white rounded-lg border border-gray-200 p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
 
               <div className="space-y-3">
@@ -465,7 +465,7 @@ const AttemptedTestPage = () => {
               <button className="text-blue-500 text-sm mt-4 hover:text-blue-600">
                 +10 more Exams
               </button>
-            </div>
+            </div> */}
 
             {/* Live Indicators */}
             <div className="mt-6 space-y-2">

@@ -5,7 +5,7 @@ import { getUserDataDecrypted } from '../../helpers/userStorage';
 const LiveQuizeInstructionsPage = () => {
   const nav = useNavigate();
   const { state } = useLocation();
-  console.log(state)
+  // console.log(state)
   const [userInfo, setUserInfo] = useState(null);
   const getUserInfo = async () => {
     const user = await getUserDataDecrypted();

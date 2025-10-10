@@ -34,7 +34,7 @@ const LiveQuizCard = ({ data, index, callBack, currentUserId }) => {
     try {
       const res = await dispatch(megaQuizResultSlice(quizId)).unwrap();
       if (res.status_code == 200) {
-        console.log("✅ Registered:", res);
+        // console.log("✅ Registered:", res);
         setModalVisible(false);
         if (callBack) callBack();
       } else {

@@ -26,7 +26,8 @@ import {
   Sparkles,
   Star,
   NotebookPen,
-  CircleQuestionMark
+  CircleQuestionMark,
+  WalletCards
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
@@ -71,7 +72,7 @@ const Sidebar = () => {
         { name: 'Current Affairs', icon: <Newspaper size={18} />, path: '/current-affairs', badge: 'FREE' },
         { name: 'Monthly Magazines', icon: <BookOpenCheck size={18} />, path: '/all-magazies', badge: '' },
         { name: 'Notes & PDFs', icon: <NotebookPen size={18} />, path: '/pdf-notes', badge: '' },
-         { name: 'Practice Batch', icon: <SquarePlay size={18} />, path: '/', badge: '' },
+        { name: 'Practice Batch', icon: <SquarePlay size={18} />, path: '/all-batches', badge: '' },
       ],
     },
     {
@@ -85,12 +86,12 @@ const Sidebar = () => {
         { name: 'Free Quiz', icon: <CircleQuestionMark size={18} />, path: '/free-quizes', badge: 'FREE' },
         { name: 'GK & Current Affairs', icon: <RefreshCcw size={18} />, path: '/gk&ca-page', badge: '' },
         { name: 'Doubts', icon: <FileText size={18} />, path: '/doubts' },
-        { 
-          name: 'Focus+', 
-          icon: <Crown size={18} />, 
-          path: '/subscription', 
+        {
+          name: 'Focus+',
+          icon: <Crown size={18} />,
+          path: '/subscription',
           badge: 'PREMIUM',
-          isPremium: true 
+          isPremium: true
         },
         { name: 'Exams Blog', icon: <FileText size={18} />, path: '/blog' },
       ],
@@ -102,6 +103,7 @@ const Sidebar = () => {
         { name: 'My Transactions', icon: <BadgeIndianRupee size={18} />, path: '/my-transaction' },
         { name: 'My Collection', icon: <LucideSave size={18} />, path: '/saved-items' },
         { name: 'Support', icon: <HelpCircleIcon size={18} />, path: '/help-support' },
+        { name: 'Refund Policy', icon: <WalletCards size={18} />, path: '/refund-policy' },
         { name: 'Settings', icon: <Settings size={18} />, path: '/setting' },
       ],
     },
@@ -136,7 +138,7 @@ const Sidebar = () => {
           {/* Close Button for Mobile */}
           <button
             onClick={toggleSidebar}
-            className="md:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-colors duration-200 z-10"
+            className="md:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-colors duration-200 z-[999] border border-amber-600"
           >
             <X size={20} />
           </button>
@@ -175,7 +177,7 @@ const Sidebar = () => {
               )}
 
               {/* Menu Items */}
-              <ul className="space-y-1">
+              <ul className="space-y-1" >
                 {section.items.map((item) => (
                   <li key={item.name}>
                     <NavLink
@@ -194,7 +196,7 @@ const Sidebar = () => {
                             }
                           );
                         }
-                        
+
                         // Regular items styling
                         return clsx(
                           'group flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all duration-200 relative overflow-hidden',
@@ -222,7 +224,7 @@ const Sidebar = () => {
                                   <div className="w-1 h-1 bg-amber-400 rounded-full"></div>
                                 </div>
                               </div>
-                              
+
                               {/* Premium glow effect */}
                               <div className="absolute inset-0 bg-gradient-to-r from-amber-200/20 via-yellow-200/30 to-orange-200/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                             </>
@@ -238,8 +240,8 @@ const Sidebar = () => {
                                     ? 'text-zinc-600 bg-white bg-opacity-20'
                                     : 'text-amber-600 bg-gradient-to-r from-amber-100 to-yellow-100 group-hover:from-amber-200 group-hover:to-yellow-200 shadow-inner'
                                   : isActive
-                                  ? 'text-zinc-600 bg-white bg-opacity-20'
-                                  : 'text-gray-600 group-hover:text-blue-600 group-hover:bg-blue-50'
+                                    ? 'text-zinc-600 bg-white bg-opacity-20'
+                                    : 'text-gray-600 group-hover:text-blue-600 group-hover:bg-blue-50'
                               )}
                             >
                               {/* ✅ Premium crown icon with special effect */}
@@ -254,7 +256,7 @@ const Sidebar = () => {
                                 item.icon
                               )}
                             </div>
-                            
+
                             <span
                               className={clsx(
                                 'font-medium transition-colors duration-200',
@@ -263,8 +265,8 @@ const Sidebar = () => {
                                     ? 'text-white font-bold'
                                     : 'text-amber-800 font-bold group-hover:text-amber-900'
                                   : isActive
-                                  ? 'text-white'
-                                  : 'text-gray-700 group-hover:text-gray-900'
+                                    ? 'text-white'
+                                    : 'text-gray-700 group-hover:text-gray-900'
                               )}
                             >
                               {item.name}
@@ -281,12 +283,12 @@ const Sidebar = () => {
                                     ? 'bg-white bg-opacity-30 text-zinc-600'
                                     : 'bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-lg animate-pulse'
                                   : isActive
-                                  ? 'bg-white bg-opacity-20 text-zinc-600'
-                                  : item.badge === 'FREE'
-                                  ? 'bg-green-100 text-green-700 group-hover:bg-green-200'
-                                  : item.badge === 'NEW'
-                                  ? 'bg-orange-100 text-orange-700 group-hover:bg-orange-200'
-                                  : 'bg-blue-100 text-blue-700 group-hover:bg-blue-200'
+                                    ? 'bg-white bg-opacity-20 text-zinc-600'
+                                    : item.badge === 'FREE'
+                                      ? 'bg-green-100 text-green-700 group-hover:bg-green-200'
+                                      : item.badge === 'NEW'
+                                        ? 'bg-orange-100 text-orange-700 group-hover:bg-orange-200'
+                                        : 'bg-blue-100 text-blue-700 group-hover:bg-blue-200'
                               )}
                             >
                               {/* ✅ Premium badge with crown icon */}

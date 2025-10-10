@@ -95,7 +95,7 @@ export const fetchUserTestSeriesRankSlice = createAsyncThunk(
     async (test_id, { rejectWithValue }) => {
         try {
             const data = await HomeProvider.getUserTestSeriesRank(test_id);
-            console.log('Analysis screen slice data', data)
+        
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
@@ -136,7 +136,7 @@ export const checkoutpaySlice = createAsyncThunk(
     async (subscibeData, { rejectWithValue }) => {
         try {
             const response = await HomeProvider.checkoutpay(subscibeData);
-            console.log("checkoutpaySlice", response)
+           
             return response;
         } catch (error) {
             return rejectWithValue(error);
@@ -212,6 +212,7 @@ export const saveCollectionSlice = createAsyncThunk(
     async (collectionData, { rejectWithValue }) => {
         try {
             const response = await HomeProvider.saveCollection(collectionData);
+            console.log('Save Bookmark Collection Response:', response)
             return response;
         } catch (error) {
             return rejectWithValue(error);
@@ -222,7 +223,7 @@ export const saveCollectionSlice = createAsyncThunk(
 export const removeUserCollectionSlice = createAsyncThunk(
     'home/removeUserCollectionSlice',
     async (collection, { rejectWithValue }) => {
-        console.log('collectionData in userSlice ======>', collection);
+      
         try {
             const res = await HomeProvider.removeUserCollection(collection);
             return res;

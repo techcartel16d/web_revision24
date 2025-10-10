@@ -21,7 +21,7 @@ const Allfreequizs = () => {
     try {
       setLoading(true);
       const res = await dispatch(getfreeQuizesData()).unwrap();
-      console.log("FreeQuizesswisePaper Data", res);
+      
 
       if (res && typeof res === "object" && Object.keys(res).length > 0) {
         const keys = Object.keys(res); // e.g. ["SSC CGL - Graduation Level", "SSC CHSL - 12th Level"]

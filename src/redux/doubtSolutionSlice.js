@@ -5,7 +5,7 @@ import DoubtSolution from '../api/DoubtSolution';
 export const doubtSolutionData = createAsyncThunk(
   'doubtSolution/submitDoubt',
   async (formData, { rejectWithValue }) => {
-    console.log("Submitting doubt:", formData);
+   
     try {
       const response = await DoubtSolution.postDoubtData(formData);
       return response;

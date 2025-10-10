@@ -18,7 +18,7 @@ const NotesPdfPage = () => {
         setLoading(true);
         try {
             const res = await dispatch(getMindMapSlice({ page })).unwrap();
-            console.log("mind data response", res.data);
+           
             setMindMapData(res.data.data || []);
             setPagination({
                 current_page: res.data.current_page,

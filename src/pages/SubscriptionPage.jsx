@@ -13,7 +13,7 @@ const SubscriptionPage = () => {
         try {
             const user = await getUserDataDecrypted()
             setSubscribe(user)
-            console.log(user)
+            // console.log(user)
         } catch (error) {
             console.log("ERROR IN SUBSCRIBE PAGE", error)
         } finally {

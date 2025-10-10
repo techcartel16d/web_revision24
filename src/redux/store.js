@@ -6,7 +6,9 @@ import liveQuizeReducer from "./LiveQuizeSlice";
 import freeTest from "./freeTestSlice";
 import Monthlymagzines from "./magzinesMonthle";
 import FreeQuizeSlice from "./freeQuizeSlice";
-import doubtSolutionReducer from './doubtSolutionSlice'; // ✅ Add this import
+import doubtSolutionReducer from './doubtSolutionSlice';
+// ✅ ADD THIS IMPORT
+import practiceBatchReducer from './practiceBatchDataSlice';
 
 const store = configureStore({
     reducer: {
@@ -17,13 +19,12 @@ const store = configureStore({
         monthlyMagazines: Monthlymagzines,
         getFreeQuizeData: FreeQuizeSlice,
         freeTest,
-        doubtSolution: doubtSolutionReducer, // ✅ Add this reducer
+        doubtSolution: doubtSolutionReducer,
+        practiceBatch: practiceBatchReducer,
     },
-    // ✅ Add middleware to handle FormData
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
-                // Ignore these action types for FormData
                 ignoredActions: [
                     'doubtSolution/submitDoubt/pending', 
                     'doubtSolution/submitDoubt/fulfilled',

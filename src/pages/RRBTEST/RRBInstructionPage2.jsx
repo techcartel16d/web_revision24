@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const RRBInstructionPage2 = () => {
   const [isDeclared, setIsDeclared] = useState(false);
   const { state } = useLocation();
-  console.log("STATE ===>", state);
+  // console.log("STATE ===>", state);
   const nav = useNavigate();
 
   // Extract test information from state

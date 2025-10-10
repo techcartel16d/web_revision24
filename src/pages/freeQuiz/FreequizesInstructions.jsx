@@ -4,83 +4,76 @@ import { getUserDataDecrypted } from '../../helpers/userStorage';
 import Checkbox from '../../components/Checkbox';
 import { secureSet } from '../../helpers/storeValues';
 
-
 const FreequizesInstructions = () => {
   const nav = useNavigate();
   const { state } = useLocation();
-   const [isChecked, setIsChecked] = useState(false);
-  console.log("free quizes instrections",state)
+  const [isChecked, setIsChecked] = useState(false);
+  console.log('state', state);
+  
   const [userInfo, setUserInfo] = useState(null);
-  const [lang, setLang] = useState('Choose a language')
+  // ✅ FIXED: Use empty string as default instead of text
+  const [lang, setLang] = useState('');
+  
   const getUserInfo = async () => {
     const user = await getUserDataDecrypted();
-    // console.log(user)
     setUserInfo(user);
   };
+  
   const selectedLang = async (e) => {
-          setLang(e.target.value)
-          try {
-              await secureSet('language', e.target.value)
-  
-          } catch (error) {
-              console.log("Error in store language", error)
-          }
-  
-      }
+    setLang(e.target.value);
+    try {
+      await secureSet('language', e.target.value);
+    } catch (error) {
+      console.log("Error in store language", error);
+    }
+  };
 
   useEffect(() => {
     getUserInfo();
   }, []);
 
+  // ✅ FIXED: Safe property access with optional chaining
   const subjects = state?.testInfo || {};
-  const totalQuestions = state.testInfo.total_questions || 0;
-  console.log('totalQuestions', totalQuestions)
-  const totalMarks = parseInt(subjects.marks_per_question || 0)
-  const negativeMark = state?.testInfo?.details[0]?.negative_mark || '0';
-  console.log('negativeMark', negativeMark)
+  const totalQuestions = state?.testInfo?.total_questions || 0;
+  const totalMarks = parseInt(subjects.marks_per_question || 0);
+  // ✅ FIXED: Safe access to nested property
+  const negativeMark = state?.testInfo?.negative_mark || state?.testInfo?.details?.[0]?.negative_mark || '0';
   const duration = state?.testInfo?.time || 60;
+
+  // ✅ FIXED: Proper disabled state calculation
+  const isLanguageSelected = lang && lang !== '' && lang !== 'Choose a language';
+  const isButtonDisabled = !isLanguageSelected || !isChecked;
+
+  // ✅ FIXED: Handle button click with validation
+  const handleStartClick = () => {
+    if (isButtonDisabled) {
+      // Show user-friendly message
+      if (!isLanguageSelected) {
+        alert('Please select a language before starting the test.');
+        return;
+      }
+      if (!isChecked) {
+        alert('Please accept the terms and conditions before starting the test.');
+        return;
+      }
+    }
+    
+    // Navigate to test page
+    nav("/free-quizes-attend", { state });
+  };
 
   return (
     <div className="px-6 py-4">
       <div className='flex justify-between items-center gap-5 my-3'>
-        <h1 className="text-xl font-semibold">{state?.testInfo?.title || ''}</h1>
-
-        {/* <div className='flex items-center justify-center gap-3'>
-          <p className="text-2xl font-bold text-blue-800">
-            {state?.userData?.systemNumber || 'R2400000'}
-          </p>
-        </div> */}
+        <h1 className="text-xl font-semibold">{state?.testInfo?.title || 'Free Quiz Test'}</h1>
       </div>
 
       <div className="text-sm w-full bg-blue-400 text-left text-white px-3 py-2 mb-6 font-bold rounded">
-        Candidate Name : {userInfo && userInfo?.name || 'N/A'}
+        Candidate Name: {userInfo?.name || 'N/A'}
       </div>
 
       <div className="text-[15px] text-gray-800">
         <h2 className="font-bold mb-3">Instructions, Terms & Conditions</h2>
-
-        {/* <div className="overflow-x-auto my-4">
-          <table className="w-full border border-gray-300 text-sm text-left">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="border border-gray-300 px-3 py-2">Section</th>
-                <th className="border border-gray-300 px-3 py-2">Subject</th>
-                <th className="border border-gray-300 px-3 py-2">Number of Questions</th>
-                <th className="border border-gray-300 px-3 py-2">Maximum Marks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {subjects.map((subject, index) => (
-                <tr key={index} className={index % 2 !== 0 ? 'bg-gray-50' : ''}>
-                  <td className="border px-3 py-2">PART-{index + 1}</td>
-                  <td className="border px-3 py-2">{subject.subject_name}</td>
-                  <td className="border px-3 py-2">{subject.no_of_question}</td>
-                  <td className="border px-3 py-2">{subject.marks}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div> */}
 
         <ol className="list-decimal pl-5 space-y-4">
           <li>
@@ -88,8 +81,8 @@ const FreequizesInstructions = () => {
             <ul className="list-disc pl-5 space-y-1">
               <li>Duration: <span className="font-bold text-blue-700">{duration} minutes</span> / समयावधि: <span className="font-bold text-blue-700">{duration} मिनट</span></li>
               <li>Total Questions: <span className="font-bold text-blue-700">{totalQuestions}</span> / कुल प्रश्न: <span className="font-bold text-blue-700">{totalQuestions}</span></li>
-              <li>Negative Marking: <span className='text-red-600 font-bold'>{negativeMark} </span>marks deducted for each wrong answer. / ऋणात्मक अंकन: प्रत्येक गलत उत्तर पर <span className='text-red-600 font-bold'>{negativeMark} </span>अंक काटे जाएंगे।</li>
-              <li>Number of Sections displayed at any time: <span className="font-bold text-blue-700">{subjects.length}</span> / किसी भी समय पर प्रदर्शित अनुभागों की संख्या: <span className="font-bold text-blue-700">{subjects.length}</span></li>
+              <li>Negative Marking: <span className='text-red-600 font-bold'>{negativeMark}</span> marks deducted for each wrong answer. / ऋणात्मक अंकन: प्रत्येक गलत उत्तर पर <span className='text-red-600 font-bold'>{negativeMark}</span> अंक काटे जाएंगे।</li>
+              <li>Number of Sections displayed at any time: <span className="font-bold text-blue-700">1</span> / किसी भी समय पर प्रदर्शित अनुभागों की संख्या: <span className="font-bold text-blue-700">1</span></li>
             </ul>
           </li>
 
@@ -143,42 +136,42 @@ const FreequizesInstructions = () => {
       </div>
 
       <div className='py-3 flex flex-col gap-3'>
+        {/* ✅ FIXED: Controlled select component */}
+        <select 
+          value={lang} 
+          onChange={selectedLang} 
+          className='border p-1 rounded-md bg-slate-200 border-slate-300'
+        >
+          <option value="">Choose a language</option> {/* ✅ Empty string value */}
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+        </select>
 
-                <select onChange={selectedLang} className='border p-1 rounded-md bg-slate-200 border-slate-300 '>
-                    <option value="Choose a language">Choose a language</option>
-                    <option value="en">English</option>
-                    <option value="hi">Hindi</option>
-                </select>
-
-                <Checkbox
-                    id="example"
-                    // links={[
-                    //     {
-                    //         link: '/terms-of-service',
-                    //         link_name: 'Terms & Conditions'
-                    //     },
-                    //     {
-                    //         link: '/privacy-policy',
-                    //         link_name: 'Privacy Policy'
-                    //     },
-
-                    // ]}
-                    label={`I have carefully read and fully understood all the instructions. I agree to follow them honestly and will not use any unfair means during this examination. I understand that attempting to gain an advantage for myself or others through dishonest practices will result in immediate disqualification.The decision of Revision24.com will be final in these matters and cannot be appealed.`}
-                    checked={isChecked}
-                    onChange={setIsChecked}
-                />
-            </div>
+        <Checkbox
+          id="example"
+          label={`I have carefully read and fully understood all the instructions. I agree to follow them honestly and will not use any unfair means during this examination. I understand that attempting to gain an advantage for myself or others through dishonest practices will result in immediate disqualification. The decision of Revision24.com will be final in these matters and cannot be appealed.`}
+          checked={isChecked}
+          onChange={setIsChecked}
+        />
+      </div>
 
       <div className="flex justify-center my-6">
+        {/* ✅ FIXED: Proper button with disabled state and styling */}
         <button
-          className="bg-blue-700 text-white px-6 py-2 cursor-pointer rounded hover:bg-blue-800"
-          onClick={() => nav("/free-quizes-attend", { state })}
-          // onClick={()=> console.log(userInfo)}
-           disabled={lang === 'Choose a language' || !isChecked}
+          className={`px-6 py-2 rounded font-semibold transition-all duration-200 ${
+            isButtonDisabled 
+              ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-50' 
+              : 'bg-blue-700 text-white hover:bg-blue-800 cursor-pointer shadow-md hover:shadow-lg'
+          }`}
+          onClick={handleStartClick}
+          disabled={isButtonDisabled}
         >
-          Start
+          Start Test
         </button>
       </div>
+
+     
+     
     </div>
   );
 };

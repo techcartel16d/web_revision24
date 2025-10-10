@@ -608,107 +608,123 @@ const GkCayestPage = () => {
 
 
     // HANLDE SUBMIT NEW CODE ====>
-    const handleSubmit = async () => {
+   const handleSubmit = async () => {
+    const testId = state?.testInfo?.test_id;
+    const currentId = questionsState[currentQuestion]?.id;
 
-        // if (selectedOptions[current.id]) {
+    // ✅ Ensure current question's answer is saved
+    if (selectedOptions[currentId] && !optionSelected.includes(currentId)) {
+        const updatedSelected = [...optionSelected, currentId];
+        await secureSaveTestData(testId, 'optionSelected', updatedSelected);
+        setOptionSelected(updatedSelected);
+    }
 
-        //     handleSaveAndNext()
-        // }
-        const testId = state?.testInfo?.test_id;
-        const currentId = questionsState[currentQuestion]?.id;
+    // ✅ Use encrypted storage and await the values
+    const spentTime = await secureGetTestData(testId, 'spentTime') || [];
+    const optionSelected2 = await secureGetTestData(testId, 'optionSelected') || [];
+    const selectedOptions2 = await secureGetTestData(testId, 'selectedOptions') || {};
+    const skippedQuestions = await secureGetTestData(testId, 'skippedQuestions') || [];
+    const markedForReview = await secureGetTestData(testId, 'markedForReview') || [];
+    const totalAttendedQuestions = optionSelected2.length;
+    const totalNotAnsweredQuestions = questionsState.length - totalAttendedQuestions;
 
-        // ✅ Ensure current question's answer is saved
-        if (selectedOptions[currentId] && !optionSelected.includes(currentId)) {
-            const updatedSelected = [...optionSelected, currentId];
-            await secureSaveTestData(testId, 'optionSelected', updatedSelected);
+    let correct = 0;
+    let in_correct = 0;
+
+    // ✅ FIXED: Case-insensitive comparison with proper debugging
+    const allAttendedQuestions = optionSelected2.map((questionId) => {
+        const question = questionsState.find(q => q.id === questionId);
+        const selectedAns = selectedOptions2[questionId];
+        const rightAns = question?.hindi_ans;
+
+        console.log(`Question ${questionId}: Selected="${selectedAns}", Correct="${rightAns}"`);
+
+        // ✅ Case-insensitive comparison
+        if (selectedAns && rightAns && 
+            selectedAns.toString().toLowerCase().trim() === rightAns.toString().toLowerCase().trim()) {
+            correct++;
+            console.log(`✅ Question ${questionId}: CORRECT`);
+        } else {
+            in_correct++;
+            console.log(`❌ Question ${questionId}: INCORRECT`);
         }
 
-
-        // ✅ Use encrypted storage and await the values
-        const spentTime = await secureGetTestData(testId, 'spentTime') || [];
-        const optionSelected2 = await secureGetTestData(testId, 'optionSelected') || [];
-        const selectedOptions2 = await secureGetTestData(testId, 'selectedOptions') || {};
-        const skippedQuestions = await secureGetTestData(testId, 'skippedQuestions') || [];
-        const markedForReview = await secureGetTestData(testId, 'markedForReview') || [];
-        const totalAttendedQuestions = optionSelected2.length;
-        const totalNotAnsweredQuestions = questionsState.length - totalAttendedQuestions;
-
-
-
-        let correct = 0;
-        let in_correct = 0;
-
-        const allAttendedQuestions = optionSelected.map((questionId) => {
-            const question = questionsState.find(q => q.id === questionId);
-            const selectedAns = selectedOptions2[questionId];
-            const rightAns = question?.hindi_ans;
-
-            if (selectedAns === rightAns) {
-                correct++;
-            } else {
-                in_correct++;
-            }
-
-            return {
-                question_id: questionId,
-                user_selected_ans: selectedAns,
-                right_ans: rightAns
-            };
-        });
-console.log('allAttendedQuestions', allAttendedQuestions)
-
-
-        const negativeMark = parseFloat(state?.testInfo?.details[0].negative_mark || 0);
-       
-        const statMark = parseFloat(state?.testInfo.details[0]?.marks || 0);
-        console.log(statMark)
-        const markPer_ques = statMark / questionsState.length
-        console.log(markPer_ques)
-        //  (correct * markPer_ques) - (inCorrect * negativeMark)
-        const marksScored = (correct * markPer_ques) - (in_correct * negativeMark);
-        const totalTimeSpent = spentTime.reduce((acc, item) => acc + (item.time || 0), 0);
-
-        const submissionData = {
-            test_id: testId,
-            total_attend_question: totalAttendedQuestions,
-            total_not_answer_question: totalNotAnsweredQuestions,
-            correct,
-            in_correct,
-            marks: marksScored,
-            time: totalTimeSpent,
-            negative_mark: negativeMark,
-            all_attend_question: allAttendedQuestions,
-            spent_time: spentTime,
-            skip_question: skippedQuestions,
-            attend_question: optionSelected2,
-            mark_for_review: markedForReview
+        return {
+            question_id: questionId,
+            user_selected_ans: selectedAns,
+            right_ans: rightAns
         };
+    });
 
-        console.log("📤 Submission Data:", submissionData);
+    console.log(`Final Results: Correct=${correct}, Incorrect=${in_correct}`);
 
-    return;
-        try {
+    // ✅ Calculate marks properly
+    const negativeMark = parseFloat(state?.testInfo?.details?.[0]?.negative_mark || 0);
+    const statMark = parseFloat(state?.testInfo?.details?.[0]?.marks || 0);
+    
+    const markPer_ques = statMark / questionsState.length;
+    const marksScored = (correct * markPer_ques) - (in_correct * negativeMark);
+    const totalTimeSpent = spentTime.reduce((acc, item) => acc + (item.time || 0), 0);
 
-
-            const res = await dispatch(attendQuestionSubmitSlice(submissionData)).unwrap();
-            if (res.status_code == 200) {
-                // ✅ Clear all encrypted test data
-                await clearAllTestData(testId);
-
-                nav('/analysis', { replace: true, state });
-            } else {
-                // alert('please attend minimum one question (save & next) after submit!!')
-                console.log(res)
-            }
-
-
-
-        } catch (error) {
-            console.error("❌ Error in Submitting Test:", error);
-        } finally {
-
-        }
+    const submissionData = {
+        test_id: testId,
+        total_attend_question: totalAttendedQuestions,
+        total_not_answer_question: totalNotAnsweredQuestions,
+        correct,
+        in_correct,
+        marks: marksScored,
+        time: totalTimeSpent,
+        negative_mark: negativeMark,
+        all_attend_question: allAttendedQuestions,
+        spent_time: spentTime,
+        skip_question: skippedQuestions,
+        attend_question: optionSelected2,
+        mark_for_review: markedForReview
     };
+
+    console.log("📤 Corrected Submission Data:", submissionData);
+
+    try {
+        const res = await dispatch(attendQuestionSubmitSlice(submissionData)).unwrap();
+        if (res.status_code == 200) {
+            await clearAllTestData(testId);
+
+            // ✅ Since API doesn't return analysis data, fetch it separately
+            try {
+                console.log("🔄 Fetching analysis data...");
+                const analysisRes = await dispatch(fetchUserTestSeriesRankSlice(testId)).unwrap();
+                
+                if (analysisRes.status_code === 200) {
+                    // ✅ Navigate with preloaded analysis data
+                    nav('/analysis', { 
+                        replace: true, 
+                        state: {
+                            ...state,
+                            isDataPreloaded: true,
+                            preloadedData: analysisRes.data,
+                            submissionData: submissionData,
+                            testInfo: state?.testInfo,
+                            testDetail: state?.testDetail
+                        }
+                    });
+                } else {
+                    // ✅ Fallback: navigate without preloaded data
+                    nav('/analysis', { replace: true, state });
+                }
+            } catch (analysisError) {
+                console.error("❌ Error fetching analysis:", analysisError);
+                // ✅ Still navigate to analysis page
+                nav('/analysis', { replace: true, state });
+            }
+        } else {
+            console.log('Submission failed:', res);
+        }
+    } catch (error) {
+        console.error("❌ Error in Submitting Test:", error);
+    }
+};
+
+
 
 
 
