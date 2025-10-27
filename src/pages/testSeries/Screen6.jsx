@@ -9,7 +9,7 @@ const Screen6 = () => {
     const nav = useNavigate();
     const dispatch = useDispatch();
     const { state } = useLocation();
-    console.log("state", state);
+    console.log("Analysis Screen State Response", state);
 
     const [performance, setPerformance] = useState(null);
     const [sections, setSections] = useState([]);

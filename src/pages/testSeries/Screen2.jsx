@@ -49,17 +49,18 @@ const Screen2 = () => {
 
         await saveTestLoginInfo(userData);
         showSuccessToast("Test Login Success")
-         nav('/instructions', {
-                        state: {
-                            userData: {
-                                candidateName: userInfo?.name,
-                                systemNumber,
-                            },
-                            testInfo: state?.testInfo,
-                            testId: state?.testId,
-                            testDetail: state?.testDetail
-                        }
-                    });
+        nav('/instructions', {
+            state: {
+                userData: {
+                    candidateName: userInfo?.name,
+                    systemNumber,
+                },
+                testInfo: state?.testInfo,
+                testId: state?.testId,
+                testDetail: state?.testDetail,
+                packageDetail: state?.packageDetail,
+            }
+        });
         // setShowSuccess(true);
     };
 
@@ -146,7 +147,8 @@ const Screen2 = () => {
                             },
                             testInfo: state?.testInfo,
                             testId: state?.testId,
-                            testDetail: state?.testDetail
+                            testDetail: state?.testDetail,
+                            packageDetail: state?.packageDetail,
                         }
                     });
                 }}

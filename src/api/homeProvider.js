@@ -2,6 +2,7 @@ import axios from "axios";
 
 // const API_BASE_URL = "https://admin.revision24.com/api";
 import api from "./axiosConfig";
+import { getUserToken } from "../utils/auth";
 const HomeProvider = {
 
     homeData: async (id = '') => {
@@ -23,7 +24,7 @@ const HomeProvider = {
     },
 
     getSingleCategoryPackageTestseries: async (id, page = 1, search) => {
-       
+
         try {
             const token = localStorage.getItem('token');
             const res = await api.get(`/test-course-detail-get`, {
@@ -62,10 +63,23 @@ const HomeProvider = {
 
     getSingleCategoryPackageTestseriesQuestion: async (id) => {
         try {
-            const token = localStorage.getItem('token');
-            const res = await api.get(`/question-list-get?test_series_id=${id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            // // ✅ Change 'token' to 'user_token'
+            // const token = localStorage.getItem('user_token');
+            // console.log('token', token);
+
+            // if (!token) {
+            //     throw new Error('Authentication token not found. Please login again.');
+            // }
+
+            // const res = await api.get(`/question-list-get?test_series_id=${id}`, {
+            //     headers: { Authorization: `Bearer ${token}` },
+            // });
+            const token = await getUserToken();
+            // console.log('Token from getUserToken:', token);
+
+            const res = await api.get(`/question-list-get?test_series_id=${id}`);
+
+            console.log('GET SINGLE CATEGORY PACKAGE TESTSERIES QUESTION', res?.data);
             return res.data;
         } catch (error) {
             console.error('Error fetching testseries questions:', error);
@@ -199,7 +213,7 @@ const HomeProvider = {
 
     saveCollection: async (collectionData) => {
         try {
-            const response = await api.post(`/user-collection`, {collection: collectionData});
+            const response = await api.post(`/user-collection`, { collection: collectionData });
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;
@@ -208,7 +222,7 @@ const HomeProvider = {
     removeUserCollection: async (collection) => {
         // console.log("collection in user Provider========>", { collection })
         try {
-            const res = await api.post(`/user-collection-remove`, {collection});
+            const res = await api.post(`/user-collection-remove`, { collection });
             return res.data;
         } catch (error) {
             console.log("ERROR IN USER COLLECTION ADD API ", error)
@@ -234,15 +248,29 @@ const HomeProvider = {
             console.log("ERROR IN USER COLLECTION DETAILS API ", error)
         }
     },
-      // GET USER COLLECTION DETAILS API
-    getAllGkseries: async () => {
+    // GET USER COLLECTION DETAILS API
+    // getAllGkseries: async () => {
+    //     try {
+    //         const res = await api.get(`/all-gk-test-series`);
+    //         return res.data;
+    //     } catch (error) {
+    //         console.log("ERROR IN USER GK GK API ", error)
+    //     }
+    // },
+
+    // In your HomeProvider or API file
+    getAllGkseries: async (page = 1) => {  // ✅ Accept page parameter
         try {
-            const res = await api.get(`/all-gk-test-series`);
+            const res = await api.get(`/all-gk-test-series`, {
+                params: { page }  // ✅ Pass page as query parameter
+            });
             return res.data;
         } catch (error) {
-            console.log("ERROR IN USER GK GK API ", error)
+            console.log("ERROR IN USER GK API ", error);
+            throw error;  // ✅ Throw error for proper handling
         }
     },
+
 }
 
 export default HomeProvider

@@ -15,3 +15,19 @@ export const getattemptedData = createAsyncThunk(
     }
   }
 );
+
+// Async Thunks get Reset Test Slice Data
+// ✅ Updated Redux Slice with proper token handling
+export const getResetTestSliceData = createAsyncThunk(
+  "getResetTestSliceData",
+  async (testId, {rejectWithValue}) => {
+    try {
+      
+      const res = await AttemptedData.getResetTestData(testId);
+      console.log('Reset Test Data Slice Screen', res);
+      return res;
+    } catch(error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);

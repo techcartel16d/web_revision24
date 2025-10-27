@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getpracticeBatchData, clearError } from '../../redux/practiceBatchDataSlice';
+import { getpracticeBatchData, clearError, getBatchVideosSlice } from '../../redux/practiceBatchDataSlice';
 
 const PurchasedBatch = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
   // Get data from Redux store
   const { 
     batches: allBatches = [], 
@@ -27,7 +26,7 @@ const PurchasedBatch = () => {
     ...batch,
     // Add missing fields with mock data since API doesn't provide these
     purchased_at: batch.created_at || new Date().toISOString(),
-    expires_at: getExpiryDate(batch.start_date, batch.duration),
+    expires_at: getExpiryDate(batch.created_at, batch.duration),
     progress: Math.floor(Math.random() * 100), // Mock progress - replace with actual
     total_videos: Math.floor(Math.random() * 50) + 10, // Mock total videos
     watched_videos: Math.floor(Math.random() * 30), // Mock watched videos
@@ -56,6 +55,8 @@ const PurchasedBatch = () => {
 
     fetchBatches();
   }, [dispatch]);
+
+
 
   const handleBatchClick = (batch) => {
     if (batch.status === 'active') {
@@ -231,7 +232,7 @@ const PurchasedBatch = () => {
                   </div>
                   
                   {/* Progress Bar */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3">
+                  {/* <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3">
                     <div className="flex items-center justify-between text-white text-sm mb-1">
                       <span>Progress: {batch.progress}%</span>
                       <span>{batch.watched_videos}/{batch.total_videos} videos</span>
@@ -242,7 +243,7 @@ const PurchasedBatch = () => {
                         style={{ width: `${batch.progress}%` }}
                       ></div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Content Section */}
@@ -302,7 +303,7 @@ const PurchasedBatch = () => {
                             Continue Learning
                           </div>
                         </button>
-                        {batch.progress < 100 && (
+                        {/* {batch.progress < 100 && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -317,7 +318,7 @@ const PurchasedBatch = () => {
                               Resume from where you left
                             </div>
                           </button>
-                        )}
+                        )} */}
                       </>
                     ) : (
                       <button

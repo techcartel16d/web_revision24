@@ -33,7 +33,7 @@ export const getBatchVideosSlice = createAsyncThunk(
   async (slug, { rejectWithValue }) => {
     try {
       const response = await PracticeBatch.getBatchVideos(slug);
-      console.log('✅ Response from slice:', response);
+      console.log('✅ Practice Batch videos Response from slice:', response);
       return response;
     } catch (error) {
       console.error('❌ Error in slice:', error);

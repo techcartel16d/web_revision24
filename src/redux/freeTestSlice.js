@@ -74,7 +74,7 @@ export const attendPreviouseYearQuestionSlice = createAsyncThunk(
 export const previouseYearSolutionGetSlice = createAsyncThunk(
   'user/previouseYearSolutionGetSlice',
   async (id, { rejectWithValue }) => {
-   
+
     try {
       const response = await freeTestProvider.previouseYearSolutionGet(
         id,
@@ -123,16 +123,29 @@ export const getPreviouseYearPaperRankSlice = createAsyncThunk(
 //   }
 // );
 
+// export const getCurrentAffairesSlice = createAsyncThunk(
+//   'user/getCurrentAffairesSlice',
+//   async (_, { rejectWithValue }) => {
+//     try {
+//       const response = await freeTestProvider.getCurrentAffairsData();
+//       return response;
+//     } catch (error) {
+//       return rejectWithValue(error);
+//     }
+//   },
+// );
+
+// ✅ Updated to accept page parameter
 export const getCurrentAffairesSlice = createAsyncThunk(
   'user/getCurrentAffairesSlice',
-  async (_, { rejectWithValue }) => {
+  async ({ page = 1 }, { rejectWithValue }) => {  // ✅ Accept page parameter
     try {
-      const response = await freeTestProvider.getCurrentAffairsData();
+      const response = await freeTestProvider.getCurrentAffairsData(page);  // ✅ Pass page
       return response;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error?.response?.data || error.message);
     }
-  },
+  }
 );
 
 // Async Thunks getMindMapSlice

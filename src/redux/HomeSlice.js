@@ -48,8 +48,8 @@ export const getSingleCategoryPackageTestseriesDetailSlice = createAsyncThunk(
     'home/getSingleCategoryPackageTestseriesDetailSlice',
     async (id, { rejectWithValue }) => {
         try {
-            const data =
-                await HomeProvider.getSingleCategoryPackageTestseriesDetails(id);
+            const data = await HomeProvider.getSingleCategoryPackageTestseriesDetails(id);
+            console.log('Test Series Details', data);
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
@@ -68,6 +68,7 @@ export const getSingleCategoryPackageTestseriesQuestionSlice = createAsyncThunk(
         // console.log("this is id", id)
         try {
             const data = await HomeProvider.getSingleCategoryPackageTestseriesQuestion(id);
+            console.log('Exam Question', data);
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
@@ -95,7 +96,7 @@ export const fetchUserTestSeriesRankSlice = createAsyncThunk(
     async (test_id, { rejectWithValue }) => {
         try {
             const data = await HomeProvider.getUserTestSeriesRank(test_id);
-        
+
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
@@ -136,7 +137,7 @@ export const checkoutpaySlice = createAsyncThunk(
     async (subscibeData, { rejectWithValue }) => {
         try {
             const response = await HomeProvider.checkoutpay(subscibeData);
-           
+
             return response;
         } catch (error) {
             return rejectWithValue(error);
@@ -223,7 +224,7 @@ export const saveCollectionSlice = createAsyncThunk(
 export const removeUserCollectionSlice = createAsyncThunk(
     'home/removeUserCollectionSlice',
     async (collection, { rejectWithValue }) => {
-      
+
         try {
             const res = await HomeProvider.removeUserCollection(collection);
             return res;
@@ -258,16 +259,29 @@ export const getLiveVideoSlice = createAsyncThunk(
     },
 );
 
+// export const getAllGkSlice = createAsyncThunk(
+//     'home/getLiveViewSlice',
+//     async (_, { rejectWithValue }) => {
+//         try {
+//             const res = await HomeProvider.getAllGkseries();
+//             return res;
+//         } catch (error) {
+//             return rejectWithValue(error);
+//         }
+//     },
+// );
+
+// In your HomeSlice.js
 export const getAllGkSlice = createAsyncThunk(
-    'home/getLiveViewSlice',
-    async (_, { rejectWithValue }) => {
+    'home/getAllGkSlice',  // ✅ Fixed action name (was 'getLiveViewSlice')
+    async ({ page = 1 }, { rejectWithValue }) => {  // ✅ Accept page parameter
         try {
-            const res = await HomeProvider.getAllGkseries();
+            const res = await HomeProvider.getAllGkseries(page);  // ✅ Pass page
             return res;
         } catch (error) {
-            return rejectWithValue(error);
+            return rejectWithValue(error?.response?.data || error.message);
         }
-    },
+    }
 );
 
 

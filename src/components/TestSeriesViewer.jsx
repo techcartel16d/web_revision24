@@ -1,299 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { MdOutlineGTranslate } from 'react-icons/md';
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import 'swiper/css';
-// import 'swiper/css/navigation';
-// import { Navigation, Pagination } from 'swiper/modules';
-// import { Bookmark, BookmarkCheck, PlusSquare } from 'lucide-react';
-// import { useDispatch } from 'react-redux';
-// import { getUserCollectionDetailSlice, removeUserCollectionSlice, saveCollectionSlice } from '../redux/HomeSlice';
-// import { showErrorToast, showSuccessToast } from '../utils/ToastUtil';
-
-// const TestSeriesViewer = ({ testSeriesData, category }) => {
-//   const nav = useNavigate();
-//   const dispatch = useDispatch();
-//   const [loading, setLoading] = useState(false);
-//   const [bookmarkedIds, setBookmarkedIds] = useState([]);
-
-//   // Enhanced toggle bookmark function with proper state management
-//   const toggleBookmark = async (packageId) => {
-//     const isCurrentlyBookmarked = bookmarkedIds.includes(packageId);
-
-//     // Optimistically update UI first for better UX
-//     if (isCurrentlyBookmarked) {
-//       setBookmarkedIds(prev => prev.filter(id => id !== packageId));
-//     } else {
-//       setBookmarkedIds(prev => [...prev, packageId]);
-//     }
-
-//     try {
-//       let res;
-
-//       if (isCurrentlyBookmarked) {
-//         // Remove bookmark
-//         const collection = {
-//           video_id: [],
-//           lession_id: [],
-//           class_note_id: [],
-//           study_note_id: [],
-//           article_id: [],
-//           news_id: [],
-//           question_id: [],
-//           test_series_id: [],
-//           package_id: [packageId] // Remove this specific package
-//         };
-
-//         res = await dispatch(removeUserCollectionSlice(collection)).unwrap();
-//       } else {
-//         // Add bookmark
-//         const collection = {
-//           video_id: [],
-//           lession_id: [],
-//           class_note_id: [],
-//           study_note_id: [],
-//           article_id: [],
-//           news_id: [],
-//           question_id: [],
-//           test_series_id: [],
-//           package_id: [packageId] // Add this specific package
-//         };
-
-//         res = await dispatch(saveCollectionSlice(collection)).unwrap();
-//       }
-
-//       if (res.status_code === 200) {
-//         showSuccessToast(res.message);
-//         // State is already updated optimistically, so no need to change again
-//       } else {
-//         // Revert optimistic update on failure
-//         if (isCurrentlyBookmarked) {
-//           setBookmarkedIds(prev => [...prev, packageId]);
-//         } else {
-//           setBookmarkedIds(prev => prev.filter(id => id !== packageId));
-//         }
-//         showErrorToast(res.message);
-//       }
-//     } catch (error) {
-//       // Revert optimistic update on error
-//       if (isCurrentlyBookmarked) {
-//         setBookmarkedIds(prev => [...prev, packageId]);
-//       } else {
-//         setBookmarkedIds(prev => prev.filter(id => id !== packageId));
-//       }
-//       showErrorToast(error.message || "Something went wrong");
-//       console.error("Bookmark toggle error:", error);
-//     }
-//   };
-
-//   const fetchBookMarkTestSeries = async () => {
-//     setLoading(true);
-//     try {
-//       const res = await dispatch(getUserCollectionDetailSlice()).unwrap();
-
-//       if (res.status_code === 200) {
-//         const dataArray = Array.isArray(res.data.package_id?.data)
-//           ? res.data.package_id.data
-//           : [];
-
-//         const ids = dataArray.map(item => item.id);
-//         setBookmarkedIds(ids);
-//       } else {
-//         console.log("No bookmarks found");
-//       }
-//     } catch (error) {
-//       console.error("Bookmark fetch error", error);
-//       showErrorToast("Failed to fetch bookmarks");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   // Refresh bookmarks when component mounts
-//   useEffect(() => {
-//     fetchBookMarkTestSeries();
-//   }, []);
-
-//   // Optional: Refresh bookmarks when component becomes visible again
-//   useEffect(() => {
-//     const handleVisibilityChange = () => {
-//       if (!document.hidden) {
-//         fetchBookMarkTestSeries();
-//       }
-//     };
-
-//     document.addEventListener('visibilitychange', handleVisibilityChange);
-//     return () => {
-//       document.removeEventListener('visibilitychange', handleVisibilityChange);
-//     };
-//   }, []);
-
-//   if (!Array.isArray(category) || category.length === 0) {
-//     return (
-//       <div className="p-4 text-center">
-//         <p className="text-gray-600">No categories available to show test series.</p>
-//       </div>
-//     );
-//   }
-
-//   if (loading) {
-//     return (
-//       <div className="p-6 bg-gray-50 flex justify-center items-center min-h-[300px]">
-//         <div className="flex items-center space-x-2">
-//           <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-//           <span className="text-gray-600">Loading bookmarks...</span>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="p-6 bg-gray-50" id="testseries">
-//       {category.map((cat) => {
-//         const series = testSeriesData?.[cat.title] || [];
-
-//         if (series.length === 0) return null;
-
-//         return (
-//           <div key={cat.id} className="mb-10">
-//             <div className='flex items-center flex-col justify-center mb-6 gap-2'>
-//               <div className='flex items-center justify-center gap-2'>
-//                 <img className='h-8 w-8 rounded-sm object-cover' src={cat.icon} alt={cat.title} />
-//                 <h2 className="text-xl font-semibold text-gray-800">{cat.title}</h2>
-//               </div>
-//               <div className="flex items-center justify-center gap-1 text-xs">
-//                 <span className='px-3 py-1 text-slate-800 bg-green-100 rounded-full border-r border-gray-300'>
-//                   Free: {cat.free}
-//                 </span>
-//                 <span className='px-3 py-1 text-slate-800 bg-blue-100 rounded-full border-r border-gray-300'>
-//                   Paid: {cat.paid}
-//                 </span>
-//                 <span className='px-3 py-1 text-slate-800 bg-purple-100 rounded-full'>
-//                   Total: {cat.totalSeries}
-//                 </span>
-//               </div>
-//             </div>
-
-//             <Swiper
-//               modules={[Navigation, Pagination]}
-//               spaceBetween={20}
-//               slidesPerView={1}
-//               navigation
-//               pagination={{ clickable: true }}
-//               breakpoints={{
-//                 640: { slidesPerView: 1 },
-//                 768: { slidesPerView: 2 },
-//                 1024: { slidesPerView: 3 },
-//                 1280: { slidesPerView: 4 },
-//               }}
-//               className="pb-10"
-//             >
-//               {series.map((item, index) => {
-//                 const isBookmarked = bookmarkedIds.includes(item.id);
-
-//                 return (
-//                   <SwiperSlide key={`${item.id}-${index}`}>
-//                     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border cursor-pointer overflow-hidden h-full">
-//                       {/* Header */}
-//                       <div className="bg-gradient-to-r from-white to-blue-50 px-4 py-3 relative">
-//                         <img
-//                           src={item.logo || '/logo.jpeg'}
-//                           alt="Logo"
-//                           className="w-16 h-16 object-contain"
-//                           onError={(e) => {
-//                             e.target.src = '/logo.jpeg';
-//                           }}
-//                         />
-//                         <span className="absolute top-3 right-3 bg-white text-yellow-500 text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
-//                           ⚡
-//                         </span>
-//                       </div>
-
-//                       {/* Body */}
-//                       <div className="p-4 flex flex-col h-full">
-//                         <h3 className="text-base font-semibold text-gray-800 mb-2 line-clamp-2 min-h-[3rem]">
-//                           {item.title || 'Mock Test Series'}
-//                         </h3>
-
-//                         <p className="text-sm text-gray-600 mb-2">
-//                           {item.total_assign_test || 0} Total Tests
-//                         </p>
-
-//                         <p className="text-xs text-blue-600 flex items-center gap-2 mb-3">
-//                           <MdOutlineGTranslate className="text-base" />
-//                           {item.language || 'English, Hindi'}
-//                         </p>
-
-//                         <ul className="text-sm text-gray-700 space-y-1 mb-4 flex-grow">
-//                           {item.live_tests && (
-//                             <li className="flex items-center">
-//                               <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
-//                               {item.live_tests} AI-Generated Live Tests
-//                             </li>
-//                           )}
-//                           {item.ai_tests && (
-//                             <li className="flex items-center">
-//                               <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-//                               {item.ai_tests} AI Tests
-//                             </li>
-//                           )}
-//                           {item.previous_papers && (
-//                             <li className="flex items-center">
-//                               <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-//                               {item.previous_papers} SSC PYQs
-//                             </li>
-//                           )}
-//                           {item.more_tests && (
-//                             <li className="text-green-600 font-medium flex items-center">
-//                               <span className="w-2 h-2 bg-green-600 rounded-full mr-2"></span>
-//                               +{item.more_tests} more tests
-//                             </li>
-//                           )}
-//                         </ul>
-
-//                         {/* Action Buttons */}
-//                         <div className='flex gap-2 items-center justify-between mt-auto'>
-//                           <button 
-//                             onClick={() => nav('/testpakages', { state: { item, testId: item.id } })} 
-//                             className="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white py-2.5 text-sm rounded-lg font-semibold transition-all duration-300 hover:scale-105"
-//                           >
-//                             View Test Series
-//                           </button>
-
-//                           <button 
-//                             onClick={() => toggleBookmark(item.id)}
-//                             className={`
-//                               w-12 h-10 rounded-lg flex items-center justify-center transition-all duration-300
-//                               ${isBookmarked 
-//                                 ? 'bg-yellow-500 hover:bg-yellow-600 text-white' 
-//                                 : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-//                               }
-//                             `}
-//                             disabled={loading}
-//                           >
-//                             {isBookmarked ? (
-//                               <BookmarkCheck className="w-5 h-5" />
-//                             ) : (
-//                               <Bookmark className="w-5 h-5" />
-//                             )}
-//                           </button>
-//                         </div>
-//                       </div>
-//                     </div>
-//                   </SwiperSlide>
-//                 );
-//               })}
-//             </Swiper>
-//           </div>
-//         );
-//       })}
-//     </div>
-//   );
-// };
-
-// export default TestSeriesViewer;
-
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineGTranslate, MdQuiz, MdTrendingUp, MdPlayArrow } from 'react-icons/md';
@@ -322,150 +26,127 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
     try {
       const res = await dispatch(getUserCollectionDetailSlice()).unwrap();
 
+      // if (res.status_code === 200) {
+      //   const dataArray = Array.isArray(res.data.package_id?.data)
+      //     ? res.data.package_id.data
+      //     : [];
+
+      //   console.log('dataArray', dataArray)
+      //   const ids = dataArray.map(item => item.id);
+      //   setBookmarkedIds(ids);
+      // }
+
+
       if (res.status_code === 200) {
+        // ✅ Get data array
         const dataArray = Array.isArray(res.data.package_id?.data)
           ? res.data.package_id.data
           : [];
-          const ids = dataArray.map(item => item.id);
+
+        // ✅ Sort packages by sequence (ascending) AND sort tests inside each package
+        const sortedPackages = dataArray
+          .map(pkg => ({
+            ...pkg,
+            // Sort tests inside each package by sequence
+            tests: (pkg.tests || []).sort((a, b) => {
+              const seqA = a.sequence ? Number(a.sequence) : Infinity;
+              const seqB = b.sequence ? Number(b.sequence) : Infinity;
+              return seqA - seqB;
+            })
+          }))
+          // Sort packages by sequence
+          .sort((a, b) => {
+            const seqA = Number(a.sequence) || Infinity;
+            const seqB = Number(b.sequence) || Infinity;
+            return seqA - seqB;
+          });
+
+        console.log('Sorted packages:', sortedPackages);
+
+        // ✅ Extract package IDs from sorted data
+        const ids = sortedPackages.map(item => item.id);
         setBookmarkedIds(ids);
+
+        console.log('Package IDs (sorted):', ids);
       }
+
+
+
     } catch (error) {
       console.error("Bookmark fetch error", error);
     }
   };
 
-  // Enhanced bookmark toggle function with proper error handling
-  // const handleBookmarkToggle = async (itemId) => {
-  //   try {
-  //     setLoading(true);
-  //     const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
-      
-  //     // Optimistic update - Update UI immediately
-  //     if (isCurrentlyBookmarked) {
-  //       setBookmarkedIds(prev => prev.filter(id => id !== itemId));
-  //     } else {
-  //       setBookmarkedIds(prev => [...prev, itemId]);
-  //     }
-
-  //     // Make API call
-  //     let result;
-  //     if (isCurrentlyBookmarked) {
-  //       // Remove bookmark
-  //       result = await dispatch(removeUserCollectionSlice({
-  //         type: 'package_id',
-  //         id: itemId
-  //       })).unwrap();
-  //     } else {
-  //       // Add bookmark
-  //       result = await dispatch(saveCollectionSlice({
-  //         type: 'package_id',
-  //         id: itemId
-  //       })).unwrap();
-  //     }
-
-  //     // Check if API call was successful
-  //     if (result.status_code === 200) {
-  //       if (isCurrentlyBookmarked) {
-  //         showSuccessToast('Test Series removed successfully');
-  //       } else {
-  //         showSuccessToast('Test Series added successfully');
-  //       }
-  //     } else {
-  //       // Revert optimistic update if API call failed
-  //       if (isCurrentlyBookmarked) {
-  //         setBookmarkedIds(prev => [...prev, itemId]);
-  //       } else {
-  //         setBookmarkedIds(prev => prev.filter(id => id !== itemId));
-  //       }
-  //       showErrorToast('Failed to update bookmark');
-  //     }
-  //   } catch (error) {
-  //     console.error('Bookmark toggle error:', error);
-
-  //     // Revert optimistic update on error
-  //     const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
-  //     if (isCurrentlyBookmarked) {
-  //       setBookmarkedIds(prev => [...prev, itemId]);
-  //     } else {
-  //       setBookmarkedIds(prev => prev.filter(id => id !== itemId));
-  //     }
-
-  //     showErrorToast('Something went wrong. Please try again.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleBookmarkToggle = async (itemId) => {
-  try {
-    setLoading(true);
-    const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
-    
-    // Optimistic update
-    if (isCurrentlyBookmarked) {
-      setBookmarkedIds(prev => prev.filter(id => id !== itemId));
-    } else {
-      setBookmarkedIds(prev => [...prev, itemId]);
-    }
+    try {
+      setLoading(true);
+      const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
 
-    // ✅ FIXED: Use correct API format (array structure)
-    let result;
-    if (isCurrentlyBookmarked) {
-      // Remove bookmark - Use array format
-      result = await dispatch(removeUserCollectionSlice({
-        video_id: [],
-        lession_id: [],
-        class_note_id: [],
-        study_note_id: [],
-        article_id: [],
-        news_id: [],
-        question_id: [],
-        test_series_id: [],
-        package_id: [itemId] // ✅ Array format
-      })).unwrap();
-    } else {
-      // Add bookmark - Use array format
-      result = await dispatch(saveCollectionSlice({
-        video_id: [],
-        lession_id: [],
-        class_note_id: [],
-        study_note_id: [],
-        article_id: [],
-        news_id: [],
-        question_id: [],
-        test_series_id: [],
-        package_id: [itemId] // ✅ Array format
-      })).unwrap();
-    }
+      // Optimistic update
+      if (isCurrentlyBookmarked) {
+        setBookmarkedIds(prev => prev.filter(id => id !== itemId));
+      } else {
+        setBookmarkedIds(prev => [...prev, itemId]);
+      }
 
-    // Success/error handling
-    if (result.status_code === 200) {
-      showSuccessToast(isCurrentlyBookmarked ? 'Removed Successfully' : 'Added Successfully');
-    } else {
-      // Revert on failure
+      // ✅ FIXED: Use correct API format (array structure)
+      let result;
+      if (isCurrentlyBookmarked) {
+        // Remove bookmark - Use array format
+        result = await dispatch(removeUserCollectionSlice({
+          video_id: [],
+          lession_id: [],
+          class_note_id: [],
+          study_note_id: [],
+          article_id: [],
+          news_id: [],
+          question_id: [],
+          test_series_id: [],
+          package_id: [itemId] // ✅ Array format
+        })).unwrap();
+      } else {
+        // Add bookmark - Use array format
+        result = await dispatch(saveCollectionSlice({
+          video_id: [],
+          lession_id: [],
+          class_note_id: [],
+          study_note_id: [],
+          article_id: [],
+          news_id: [],
+          question_id: [],
+          test_series_id: [],
+          package_id: [itemId] // ✅ Array format
+        })).unwrap();
+      }
+
+      // Success/error handling
+      if (result.status_code === 200) {
+        showSuccessToast(isCurrentlyBookmarked ? 'Removed Successfully' : 'Added Successfully');
+      } else {
+        // Revert on failure
+        if (isCurrentlyBookmarked) {
+          setBookmarkedIds(prev => [...prev, itemId]);
+        } else {
+          setBookmarkedIds(prev => prev.filter(id => id !== itemId));
+        }
+        showErrorToast('Failed to update bookmark');
+      }
+    } catch (error) {
+      console.error('Bookmark error:', error);
+
+      // Revert on error
+      const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
       if (isCurrentlyBookmarked) {
         setBookmarkedIds(prev => [...prev, itemId]);
       } else {
         setBookmarkedIds(prev => prev.filter(id => id !== itemId));
       }
-      showErrorToast('Failed to update bookmark');
+
+      showErrorToast('Something went wrong');
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error('Bookmark error:', error);
-    
-    // Revert on error
-    const isCurrentlyBookmarked = bookmarkedIds.includes(itemId);
-    if (isCurrentlyBookmarked) {
-      setBookmarkedIds(prev => [...prev, itemId]);
-    } else {
-      setBookmarkedIds(prev => prev.filter(id => id !== itemId));
-    }
-    
-    showErrorToast('Something went wrong');
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
   useEffect(() => {
@@ -482,6 +163,8 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
       </div>
     );
   }
+
+
 
   return (
     <>
@@ -569,7 +252,7 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                     className="pb-12"
                   >
                     {series.map((item, index) => (
-                      <SwiperSlide key={index}  style={{maxHeight:'360px'}}>
+                      <SwiperSlide key={index} style={{ maxHeight: '360px' }}>
                         <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -598,15 +281,15 @@ const TestSeriesViewer = ({ testSeriesData, category }) => {
                                   </div>
                                 </div>
                                 <div>
-                                 <div className="text-[10px] font-semibold text-white bg-[#FFAC00] px-1 py-1 rounded-sm mb-1 
-                transition-all duration-300 
-                hover:scale-105 hover:shadow-lg 
-                animate-pulse 
-                cursor-pointer
-                hover:bg-gradient-to-r hover:from-yellow-400 hover:via-orange-500 hover:to-pink-600" 
-     style={{textAlign:'center'}}>
-  PREMIUM
-</div>
+                                  <div className="text-[10px] font-semibold text-white bg-[#FFAC00] px-1 py-1 rounded-sm mb-1 
+                                      transition-all duration-300 
+                                      hover:scale-105 hover:shadow-lg 
+                                      animate-pulse 
+                                      cursor-pointer
+                                      hover:bg-gradient-to-r hover:from-yellow-400 hover:via-orange-500 hover:to-pink-600"
+                                    style={{ textAlign: 'center' }}>
+                                    PREMIUM
+                                  </div>
 
                                   <div className="text-[10px] text-gray-600 font-medium">
                                     {item.total_assign_test || 0} Tests Available

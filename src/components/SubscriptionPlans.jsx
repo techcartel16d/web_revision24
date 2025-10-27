@@ -415,6 +415,7 @@ import { getSubscriptionSlice } from "../redux/HomeSlice";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticated } from "../utils/auth";
 import { motion } from "framer-motion";
+import { set } from "lodash";
 
 const SubscriptionPlans = ({ userInfo }) => {
   const dispatch = useDispatch();
@@ -441,16 +442,11 @@ const SubscriptionPlans = ({ userInfo }) => {
     try {
       setIsLoading(true);
       const res = await dispatch(getSubscriptionSlice()).unwrap();
+      console.log('Subscribtion Response:', res);
       if (res.status_code === 200) {
         setSubscriptionData(res.data.plus.details);
+        setBenefits(res.data.plus.benefits);
         setPlanId(res.data.plus.id);
-
-        const temp = res.data.plus.benefits
-          .replace(/<\/?p>/g, "")
-          .split("<br />")
-          .map((line) => line.replace(/<[^>]*>?/gm, "").trim())
-          .filter((line) => line.length > 0);
-        setBenefits(temp);
       }
     } catch (error) {
       console.error("Subscription fetch error:", error);
@@ -520,14 +516,10 @@ const SubscriptionPlans = ({ userInfo }) => {
                 <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-gray-800">
                   Benefits
                 </h2>
-                <ul className="space-y-2 sm:space-y-3">
-                  {benefits.map((b, i) => (
-                    <li key={i} className="text-gray-700 flex items-start text-sm sm:text-base">
-                      <span className="text-green-600 mr-2 mt-1 flex-shrink-0">✓</span>
-                      <div className="leading-relaxed" dangerouslySetInnerHTML={{ __html: b }} />
-                    </li>
-                  ))}
-                </ul>
+                <p>
+               <div className="leading-relaxed " dangerouslySetInnerHTML={{ __html: benefits }} /> 
+                </p>
+               
               </div>
 
               {/* Plans Section - Mobile */}
@@ -618,7 +610,8 @@ const SubscriptionPlans = ({ userInfo }) => {
                   <h2 className="text-2xl xl:text-3xl font-semibold mb-6 xl:mb-8 text-gray-800">
                     Benefits
                   </h2>
-                  <ul className="space-y-4 xl:space-y-5">
+                  <div className="leading-relaxed" dangerouslySetInnerHTML={{ __html: benefits }} />
+                  {/* <ul className="space-y-4 xl:space-y-5">
                     {benefits.map((b, i) => (
                       <motion.li
                         key={i}
@@ -631,7 +624,7 @@ const SubscriptionPlans = ({ userInfo }) => {
                         <span className="leading-relaxed">{b}</span>
                       </motion.li>
                     ))}
-                  </ul>
+                  </ul> */}
                 </div>
 
                 {/* Plans Column */}

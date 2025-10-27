@@ -6,31 +6,32 @@ import { AiOutlineReload } from "react-icons/ai";
 import { HiOutlineLightningBolt } from "react-icons/hi";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getSingleCategoryPackageTestseriesDetailSlice, getSingleCategoryPackageTestseriesSlice } from "../../redux/HomeSlice";
+import {
+    getSingleCategoryPackageTestseriesDetailSlice,
+    getSingleCategoryPackageTestseriesSlice,
+    // ✅ Added
+} from "../../redux/HomeSlice";
 import ResumeTestModal from "../../components/ResumeTestModal";
 import { clearAllEncryptedTestData, secureGetTestData } from "../../helpers/testStorage";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import { clearUserData, getUserDataDecrypted } from "../../helpers/userStorage";
 import SuccessModal from "../../components/SuccessModal";
 import ConfirmModal from "../../components/ConfirmModal";
 import AlertModal from "../../components/AlertModal";
-import { formatStartDateTime, isQuizStartAvailable, isQuizUpcoming } from "../../helpers/checkTestStartDate";
+import { formatStartDateTime, isQuizStartAvailable } from "../../helpers/checkTestStartDate";
 import { debounce } from "lodash";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoSparklesOutline } from "react-icons/io5";
+import { getResetTestSliceData } from "../../redux/attemptedDataSlice";
 
 const TestPagesPage = () => {
     const nav = useNavigate();
     const dispatch = useDispatch();
     const { state } = useLocation();
-    // console.log("STATE ===>", state);
+    // console.log('Test Pages page screen', state)
 
     const [testData, setTestData] = useState([]);
     const [testId, setTestId] = useState(null);
-    const [puaseStatus, setPuaseStatus] = useState(false);
     const [userInfo, setUserInfo] = useState({});
-    const [isPuase, setIsPuase] = useState(false);
     const [resumeData, setResumeData] = useState({});
     const [showModal, setShowModal] = useState(false);
     const [message, setMessage] = useState('');
@@ -46,6 +47,11 @@ const TestPagesPage = () => {
     const [showConfirm, setShowConfirm] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [hoveredCard, setHoveredCard] = useState(null);
+    const [examCategoryTitle, setExamCategoryTitle] = useState('');
+
+    // ✅ Add new states for reattempt
+    const [showReattemptConfirm, setShowReattemptConfirm] = useState(false);
+    const [reattemptTest, setReattemptTest] = useState(null);
 
     const loadUserData = async () => {
         const user = await getUserDataDecrypted();
@@ -68,6 +74,44 @@ const TestPagesPage = () => {
         loadPauseStatus();
     }, []);
 
+    // const getSigleCategoryData = async (page = 1, query = '') => {
+    //     if (state) {
+    //         try {
+    //             setPageLoading(true);
+    //             const res = await dispatch(
+    //                 getSingleCategoryPackageTestseriesSlice({
+    //                     testId: state.testId,
+    //                     page,
+    //                     search: query
+    //                 })
+    //             ).unwrap();
+    //             console.log("Single Category Test Series Data", res.data.package_detail);
+    //             setExamCategoryTitle(res?.data?.package_detail?.exam_category.title);
+    //             if (res.status_code == 200) {
+    //                 setTestData(prev =>
+    //                     page === 1 ? res.data.test_series.data : [...prev, ...res.data.test_series.data]
+
+    //                 );
+    //                 console.log('page', res.data.test_series.data)
+
+    //                 setPagination({
+    //                     current_page: res.data.test_series.current_page,
+    //                     last_page: res.data.test_series.last_page,
+    //                 });
+    //                 setTestId(res.data.package_detail.id);
+    //             } else if (res.status_code === 401) {
+    //                 await clearUserData();
+    //             }
+    //         } catch (error) {
+    //             setShowAlert(true);
+    //             setMessage('Login token has expired. Please sign in again to continue.');
+    //             await clearUserData();
+    //         } finally {
+    //             setPageLoading(false);
+    //         }
+    //     }
+    // };
+
     const getSigleCategoryData = async (page = 1, query = '') => {
         if (state) {
             try {
@@ -80,14 +124,35 @@ const TestPagesPage = () => {
                     })
                 ).unwrap();
 
+                console.log("Single Category Test Series Data", res.data.package_detail);
+                setExamCategoryTitle(res?.data?.package_detail?.exam_category.title);
+
                 if (res.status_code == 200) {
+                    // ✅ Get test series data from API
+                    const rawTestData = res.data.test_series.data || [];
+
+                    // ✅ Sort test series by sequence (ascending)
+                    const sortedTestData = rawTestData.sort((a, b) => {
+                        const seqA = a.sequence ? Number(a.sequence) : Infinity;
+                        const seqB = b.sequence ? Number(b.sequence) : Infinity;
+                        return seqA - seqB;
+                    });
+
+                    // ✅ Update test data (paginated + sorted)
                     setTestData(prev =>
-                        page === 1 ? res.data.test_series.data : [...prev, ...res.data.test_series.data]
+                        page === 1
+                            ? sortedTestData
+                            : [...prev, ...sortedTestData]
                     );
+
+                    console.log('Sorted test data for page', page, sortedTestData);
+
+                    // ✅ Set pagination info
                     setPagination({
                         current_page: res.data.test_series.current_page,
                         last_page: res.data.test_series.last_page,
                     });
+
                     setTestId(res.data.package_detail.id);
                 } else if (res.status_code === 401) {
                     await clearUserData();
@@ -105,24 +170,28 @@ const TestPagesPage = () => {
     const fetchTestSeriesDetails = async (item) => {
         try {
             const res = await dispatch(getSingleCategoryPackageTestseriesDetailSlice(item.id)).unwrap();
-
-            if(state?.category==='RRB Group D'){
-            nav('/online-exam-general-instruction', {
-                state: {
-                    testInfo: res.data.test_series_info,
-                    testId: state?.testId,
-                    testDetail: res.data.details
-                }
-            });
-            }else{
-            nav('/system-info', {
-                state: {
-                    testInfo: res.data.test_series_info,
-                    testId: state?.testId,
-                    testDetail: res.data.details
-                }
-            });
-          }
+            const userData = await getUserDataDecrypted("user");
+            if (examCategoryTitle === 'SSC') {
+                nav('/system-info', {
+                    state: {
+                        testInfo: res.data.test_series_info,
+                        testId: state?.testId,
+                        testDetail: res.data.details,
+                        userInfo: userData,
+                        packageDetail: res.data.packageDetail,
+                    }
+                });
+            } else {
+                nav('/online-exam-general-instruction', {
+                    state: {
+                        testInfo: res.data.test_series_info,
+                        testId: state?.testId,
+                        testDetail: res.data.details,
+                        userInfo: userData,
+                        packageDetail: res.data.packageDetail,
+                    }
+                });
+            }
         } catch (error) {
             console.log("ERROR ", error);
         }
@@ -135,7 +204,8 @@ const TestPagesPage = () => {
                 state: {
                     testInfo: res.data.test_series_info,
                     testId: state?.testId,
-                    testDetail: res.data.details
+                    testDetail: res.data.details,
+                    packageDetail: res.data.package_detail,
                 }
             });
             setShowModal(false);
@@ -143,6 +213,70 @@ const TestPagesPage = () => {
             console.log("ERROR ===>", error);
         }
     };
+
+    // ✅ With Confirmation but No Reset
+    const handleReattemptClick = (test) => {
+        setReattemptTest(test);
+        setShowReattemptConfirm(true);
+    };
+
+    // ✅ WITHOUT Reset - Backend must handle multiple attempts
+    const handleReattemptConfirm = async () => {
+        setShowReattemptConfirm(false);
+
+        if (!reattemptTest) return;
+
+        try {
+            setPageLoading(true);
+
+            // ✅ Pass isReattempt flag so backend creates new attempt
+            const testDetailsRes = await dispatch(
+                getSingleCategoryPackageTestseriesDetailSlice(reattemptTest.id)
+            ).unwrap();
+            const PackageDataRes = await dispatch(
+                getSingleCategoryPackageTestseriesSlice({
+                    testId: state.testId,
+                })
+            ).unwrap();
+            const userData = await getUserDataDecrypted("user");
+
+            // ✅ Navigate with reattempt flag
+            if (examCategoryTitle === 'SSC') {
+                nav('/system-info', {
+                    state: {
+                        testInfo: testDetailsRes.data.test_series_info,
+                        testId: state?.testId,
+                        testDetail: testDetailsRes.data.details,
+                        userInfo: userData,
+                        isReattempt: true,  // ✅ Important flag
+                        createNewAttempt: true, // ✅ Tell backend to create new attempt
+                        packageDetail: PackageDataRes,
+                    }
+                });
+            } else {
+                nav('/online-exam-general-instruction', {
+                    state: {
+                        testInfo: testDetailsRes.data.test_series_info,
+                        testId: state?.testId,
+                        testDetail: testDetailsRes.data.details,
+                        userInfo: userData,
+                        isReattempt: true,  // ✅ Important flag
+                        createNewAttempt: true,
+                        packageDetail: testDetailsRes?.data,  // ✅ Tell backend to create new attempt
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Reattempt Error:', error);
+            setShowAlert(true);
+            setMessage('Failed to start reattempt. Please try again.');
+        } finally {
+            setPageLoading(false);
+            setReattemptTest(null);
+        }
+    };
+
+
 
     const getUserInfo = async () => {
         const userData = await getUserDataDecrypted("user");
@@ -174,7 +308,6 @@ const TestPagesPage = () => {
         await getSigleCategoryData(1, query);
     };
 
-    // Get button configuration based on test status
     const getButtonConfig = (test) => {
         const isPaused = pauseStatusArray.some(item => item.test_id === test.id && item.isPaused);
 
@@ -198,16 +331,8 @@ const TestPagesPage = () => {
                 };
             } else if (test.attend && test.attend_status === 'done') {
                 return {
-                    text: "View Results",
-                    className: "bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:from-emerald-600 hover:via-green-600 hover:to-teal-600 text-white shadow-lg hover:shadow-green-500/25",
-                    icon: <FaTrophy size={18} />,
-                    onClick: () => nav('/analysis', {
-                        state: {
-                            testId: test.id,
-                            testInfo: test,
-                            userData: userInfo,
-                        },
-                    })
+                    isCompleted: true,
+                    test: test
                 };
             } else {
                 return {
@@ -235,10 +360,9 @@ const TestPagesPage = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-            {/* Enhanced Header Section with Better Overflow */}
+            {/* Header Section */}
             <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-                    {/* Back Button and Title */}
                     <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4 sm:mb-6">
                         <motion.button
                             whileHover={{ scale: 1.05, x: -2 }}
@@ -255,7 +379,6 @@ const TestPagesPage = () => {
                         </div>
                     </div>
 
-                    {/* Enhanced Search Bar */}
                     <div className="relative max-w-md">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <FaSearch className="h-4 w-4 text-gray-400" />
@@ -286,9 +409,8 @@ const TestPagesPage = () => {
                 </div>
             </div>
 
-            {/* Main Content with Improved Overflow */}
+            {/* Main Content */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-                {/* Test Cards Grid with Enhanced Hover Effects */}
                 <AnimatePresence>
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
                         {testData.map((test, index) => {
@@ -306,21 +428,17 @@ const TestPagesPage = () => {
                                     onMouseLeave={() => setHoveredCard(null)}
                                     className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-blue-200 overflow-hidden transform hover:scale-[1.02] hover:-translate-y-1"
                                 >
-                                    {/* Enhanced Glow Effect */}
                                     <div className={`absolute -inset-1 bg-gradient-to-r from-blue-400/0 via-purple-500/0 to-pink-500/0 ${isHovered ? 'from-blue-400/20 via-purple-500/20 to-pink-500/20' : ''} rounded-2xl transition-all duration-500 blur-sm -z-10`}></div>
 
-                                    {/* Floating Elements on Hover */}
                                     <div className={`absolute top-4 right-4 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center transform transition-all duration-500 ${isHovered ? 'scale-100 rotate-12' : 'scale-0 rotate-0'}`}>
                                         <IoSparklesOutline className="text-white text-sm" />
                                     </div>
 
                                     {/* Card Header */}
                                     <div className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6 overflow-hidden">
-                                        {/* Background Pattern */}
                                         <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 to-purple-100/50 opacity-50"></div>
                                         <div className={`absolute top-2 right-2 w-20 h-20 bg-gradient-to-br from-blue-200/30 to-purple-300/30 rounded-full blur-xl transition-all duration-500 ${isHovered ? 'scale-150 opacity-70' : 'scale-100 opacity-30'}`}></div>
 
-                                        {/* Status Badges */}
                                         <div className="relative z-10 flex items-start justify-between mb-4">
                                             <div className="flex flex-wrap gap-2 max-w-[70%]">
                                                 {test.purchase_type === 'free' && (
@@ -354,12 +472,10 @@ const TestPagesPage = () => {
                                             </div>
                                         </div>
 
-                                        {/* Test Title with Better Overflow */}
                                         <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors leading-tight overflow-hidden">
                                             {test.title}
                                         </h3>
 
-                                        {/* Enhanced Test Stats */}
                                         <div className="grid grid-cols-3 gap-3">
                                             <motion.div
                                                 whileHover={{ scale: 1.05, y: -2 }}
@@ -400,33 +516,77 @@ const TestPagesPage = () => {
                                         </div>
                                     </div>
 
-                                    {/* Enhanced Card Footer */}
+                                    {/* Card Footer with Buttons */}
                                     <div className="p-6 bg-white relative overflow-hidden">
-                                        <motion.button
-                                            whileHover={{ scale: 1.03, y: -2 }}
-                                            whileTap={{ scale: 0.97 }}
-                                            onClick={buttonConfig.onClick}
-                                            disabled={buttonConfig.className.includes('cursor-not-allowed')}
-                                            className={`relative w-full py-4 px-4 rounded-xl font-bold text-sm transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-3 group overflow-hidden transform hover:scale-105 ${buttonConfig.className}`}
-                                        >
-                                            {/* Enhanced Shimmer Effect */}
-                                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                        {buttonConfig.isCompleted ? (
+                                            <div className="flex gap-3">
+                                                {/* View Results Button */}
+                                                <motion.button
+                                                    whileHover={{ scale: 1.03, y: -2 }}
+                                                    whileTap={{ scale: 0.97 }}
+                                                    onClick={() => nav('/analysis', {
+                                                        state: {
+                                                            testId: buttonConfig.test.id,
+                                                            testInfo: buttonConfig.test,
+                                                            userData: userInfo,
+                                                        },
+                                                    })}
+                                                    className="relative flex-1 py-4 px-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-2 group overflow-hidden transform hover:scale-105 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:from-emerald-600 hover:via-green-600 hover:to-teal-600 text-white"
+                                                >
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                                    <motion.span
+                                                        className="relative z-10"
+                                                        whileHover={{ rotate: 15, scale: 1.1 }}
+                                                        transition={{ type: "spring", stiffness: 300 }}
+                                                    >
+                                                        <FaTrophy size={16} />
+                                                    </motion.span>
+                                                    <span className="relative z-10 truncate">View Results</span>
+                                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl blur-xl bg-gradient-to-r from-current/20 to-current/20"></div>
+                                                </motion.button>
 
-                                            <motion.span
-                                                className="relative z-10"
-                                                whileHover={{ rotate: 15, scale: 1.1 }}
-                                                transition={{ type: "spring", stiffness: 300 }}
+                                                {/* Reattempt Button */}
+                                                <motion.button
+                                                    whileHover={{ scale: 1.03, y: -2 }}
+                                                    whileTap={{ scale: 0.97 }}
+                                                    onClick={() => handleReattemptClick(buttonConfig.test)}
+                                                    disabled={pageLoading}
+                                                    className="relative flex-1 py-4 px-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-2 group overflow-hidden transform hover:scale-105 bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                                                >
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                                    <motion.span
+                                                        className="relative z-10"
+                                                        whileHover={{ rotate: 360, scale: 1.1 }}
+                                                        transition={{ type: "spring", stiffness: 300 }}
+                                                    >
+                                                        <AiOutlineReload size={16} />
+                                                    </motion.span>
+                                                    <span className="relative z-10 truncate">Reattempt</span>
+                                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl blur-xl bg-gradient-to-r from-current/20 to-current/20"></div>
+                                                </motion.button>
+                                            </div>
+                                        ) : (
+                                            <motion.button
+                                                whileHover={{ scale: 1.03, y: -2 }}
+                                                whileTap={{ scale: 0.97 }}
+                                                onClick={buttonConfig.onClick}
+                                                disabled={buttonConfig.className.includes('cursor-not-allowed')}
+                                                className={`relative w-full py-4 px-4 rounded-xl font-bold text-sm transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-3 group overflow-hidden transform hover:scale-105 ${buttonConfig.className}`}
                                             >
-                                                {buttonConfig.icon}
-                                            </motion.span>
-                                            <span className="relative z-10 truncate">{buttonConfig.text}</span>
-
-                                            {/* Button glow effect */}
-                                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl blur-xl bg-gradient-to-r from-current/20 to-current/20"></div>
-                                        </motion.button>
+                                                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                                <motion.span
+                                                    className="relative z-10"
+                                                    whileHover={{ rotate: 15, scale: 1.1 }}
+                                                    transition={{ type: "spring", stiffness: 300 }}
+                                                >
+                                                    {buttonConfig.icon}
+                                                </motion.span>
+                                                <span className="relative z-10 truncate">{buttonConfig.text}</span>
+                                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl blur-xl bg-gradient-to-r from-current/20 to-current/20"></div>
+                                            </motion.button>
+                                        )}
                                     </div>
 
-                                    {/* Enhanced Floating Action on Hover */}
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.8, y: 10 }}
                                         animate={{
@@ -450,7 +610,7 @@ const TestPagesPage = () => {
                     </div>
                 </AnimatePresence>
 
-                {/* Enhanced Load More Button */}
+                {/* Load More Button */}
                 {pagination.current_page < pagination.last_page && (
                     <div className="flex justify-center">
                         <motion.button
@@ -460,9 +620,7 @@ const TestPagesPage = () => {
                             disabled={pageLoading}
                             className="relative px-8 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-3 overflow-hidden group"
                         >
-                            {/* Button shimmer effect */}
                             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-
                             {pageLoading ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -478,7 +636,7 @@ const TestPagesPage = () => {
                     </div>
                 )}
 
-                {/* Enhanced Empty State */}
+                {/* Empty State */}
                 {testData.length === 0 && !pageLoading && (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -520,7 +678,7 @@ const TestPagesPage = () => {
             <SuccessModal
                 isOpen={showSuccess}
                 onClose={() => setShowSuccess(false)}
-                message="Your action was completed successfully!"
+                message={message}
             />
 
             <ConfirmModal
@@ -532,6 +690,18 @@ const TestPagesPage = () => {
                 }}
                 title="Confirm Deletion"
                 message="Do you really want to delete this item?"
+            />
+
+            {/* ✅ Reattempt Confirmation Modal */}
+            <ConfirmModal
+                isOpen={showReattemptConfirm}
+                onClose={() => {
+                    setShowReattemptConfirm(false);
+                    setReattemptTest(null);
+                }}
+                onConfirm={handleReattemptConfirm}
+                title="Reattempt Test"
+                message="Are you sure you want to reattempt this test? This will reset your previous attempt and you can start fresh."
             />
 
             <AlertModal

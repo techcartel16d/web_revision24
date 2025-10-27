@@ -85,6 +85,7 @@ import PracticeBatch from './pages/practiceBatch/PracticeBatch';
 import BatchVideos from './pages/practiceBatch/BatchVideos';
 import PurchasedBatch from './pages/practiceBatch/PurchasedBatch';
 import SubscriptionPaymentSummery from './pages/SubscriptionPaymentSummery';
+import PracticeBatchPaymentSummery from './pages/practiceBatch/PracticeBatchPaymentSummery';
 
 function App() {
   // useEffect(() => {
@@ -258,6 +259,7 @@ function App() {
         
         {/* Practice Batch routes */}
         <Route path="/all-batches" element={<SideBarLayout><PracticeBatch /></SideBarLayout>} />
+        <Route path="/practice-batch-payment-summery" element={<SideBarLayout><PracticeBatchPaymentSummery /></SideBarLayout>} />
         <Route path="/batch-videos/:slug" element={<SideBarLayout><BatchVideos /></SideBarLayout>} />
         <Route path="/purchased-batch" element={<SideBarLayout><PurchasedBatch /></SideBarLayout>} />
 

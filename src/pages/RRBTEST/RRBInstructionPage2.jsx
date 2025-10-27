@@ -4,17 +4,18 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const RRBInstructionPage2 = () => {
   const [isDeclared, setIsDeclared] = useState(false);
   const { state } = useLocation();
-  // console.log("STATE ===>", state);
   const nav = useNavigate();
+
+  console.log("STATE RRB INSTRUCTION SCREEN 2 ===>", state);
 
   // Extract test information from state
   const testInfo = state?.testInfo || {};
   const testDetail = state?.testDetail || [];
-  
+
   // Calculate total questions and marks
   const totalQuestions = testDetail.reduce((total, subject) => total + parseInt(subject.no_of_question || 0), 0);
   const totalMarks = testDetail.reduce((total, subject) => total + parseInt(subject.marks || 0), 0);
-  
+
   // Convert negative marking fraction to decimal
   const negativeMarkDecimal = testInfo.negative_mark === "1/3" ? "0.33" : "0.25";
 
@@ -29,8 +30,8 @@ const RRBInstructionPage2 = () => {
       </header>
 
       <div className="flex">
-        {/* Main Content */}
-        <main className="flex-grow p-8">
+        {/* Main Content - Added pb-24 for bottom spacing */}
+        <main className="flex-grow p-8 pb-24">
           <div className="text-center mb-6">
             <h1 className="text-2xl font-semibold text-gray-800">
               {testInfo.title || 'Test Information'}
@@ -111,37 +112,51 @@ const RRBInstructionPage2 = () => {
         </main>
 
         {/* Right Sidebar */}
-        <aside className="w-64 bg-gray-50 border-l border-gray-200 p-8 flex flex-col items-center">
+        <aside className="w-64 bg-gray-50 border-l border-gray-200 p-6 flex flex-col items-center">
+          {/* User Profile */}
           <img
-            src="https://i.pravatar.cc/100" // Placeholder image
+            src={state.userInfo?.profile}
             alt="User Avatar"
-            className="w-24 h-24 rounded-full border-2 border-gray-300"
+            className="w-24 h-24 rounded-full border-4 border-blue-500 shadow-lg object-cover"
           />
-          <p className="mt-4 font-semibold text-lg">Rajat</p>
-          
+          <p className="mt-4 font-bold text-lg text-gray-800 text-center">{state.userInfo?.name}</p>
+
           {/* Test Summary Card */}
-          <div className="mt-6 w-full bg-white rounded-lg shadow-sm border p-4">
-            <h4 className="font-semibold text-gray-800 mb-3 text-center">Test Summary</h4>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Questions:</span>
-                <span className="font-medium">{totalQuestions}</span>
+          <div className="mt-6 w-full bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-3">
+              <h4 className="font-bold text-white text-center text-base">Test Summary</h4>
+            </div>
+
+            {/* Content */}
+            <div className="p-4 space-y-3">
+              {/* Questions */}
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600 font-medium text-sm whitespace-nowrap">Questions:</span>
+                <span className="font-bold text-gray-900 text-base ml-2">{totalQuestions}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Duration:</span>
-                <span className="font-medium">{testInfo.time} mins</span>
+
+              {/* Duration */}
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600 font-medium text-sm whitespace-nowrap">Duration:</span>
+                <span className="font-bold text-gray-900 text-base ml-2">{testInfo.time} mins</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Total Marks:</span>
-                <span className="font-medium">{totalMarks}</span>
+
+              {/* Total Marks */}
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600 font-medium text-sm whitespace-nowrap">Total Marks:</span>
+                <span className="font-bold text-gray-900 text-base ml-2">{totalMarks}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Negative Marking:</span>
-                <span className="font-medium text-red-600">-{negativeMarkDecimal}</span>
+
+              {/* Negative Marking */}
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600 font-medium text-sm whitespace-nowrap">Negative Marking:</span>
+                <span className="font-bold text-red-600 text-base ml-2">-{negativeMarkDecimal}</span>
               </div>
             </div>
           </div>
         </aside>
+
       </div>
 
       {/* Footer */}

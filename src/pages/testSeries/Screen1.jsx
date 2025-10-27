@@ -6,7 +6,7 @@ const Screen1 = () => {
   const { state } = useLocation();
   const [userInfo, setUserInfo] = useState({});
   const nav = useNavigate();
-
+  console.log('Screen 1 state all data Response', state)
   const getUserInfo = async () => {
     const user = await getUserDataDecrypted();
     setUserInfo(user);
@@ -33,7 +33,7 @@ const Screen1 = () => {
 
         <div className="mt-6 py-6 rounded bg-gray-50 shadow-md px-4 md:px-6">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6 md:gap-10 mb-6">
-            
+
             {/* Left Info Table */}
             <div className="w-full lg:w-1/2">
               <table className="w-full text-left text-gray-700 text-sm sm:text-base">
@@ -78,6 +78,7 @@ const Screen1 = () => {
                     testInfo: state?.testInfo,
                     testId: state?.testId,
                     testDetail: state?.testDetail,
+                    packageDetail: state?.packageDetail,
                   },
                 })
               }

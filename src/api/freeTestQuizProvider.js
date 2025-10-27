@@ -26,7 +26,7 @@ const freeTestProvider = {
   },
 
   getPreviouseYearPaperQuestionById: async (previousPaperId) => {
-   
+
     try {
 
       const response = await api.get(`/previous-year-question-list-get?previous_year_exam_id=${previousPaperId}`);
@@ -57,7 +57,7 @@ const freeTestProvider = {
   },
 
   previouseYearSolutionGet: async (previousPaperId) => {
-   
+
     try {
       const response = await api.get(`/user-attend-previous-year-exam-question-solution?previous_year_exam_id=${previousPaperId}`);
       return response.data;
@@ -67,17 +67,27 @@ const freeTestProvider = {
   },
 
 
-  getCurrentAffairsData: async () => {
+  // getCurrentAffairsData: async () => {
+  //   try {
+
+
+  //     const response = await api.get(`/news`);
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error.response?.data || error.message;
+  //   }
+  // },
+  getCurrentAffairsData: async (page = 1) => {
     try {
-
-
-      const response = await api.get(`/news`);
-      return response.data;
+      const res = await api.get('/news', {
+        params: { page }  // ✅ Pass page as query param
+      });
+      return res.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      console.error('ERROR IN CURRENT AFFAIRS API:', error);
+      throw error;
     }
   },
-
 
   getMindMap: async () => {
     try {

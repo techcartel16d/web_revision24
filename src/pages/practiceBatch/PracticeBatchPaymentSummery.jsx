@@ -1,17 +1,26 @@
 // import React, { useEffect, useState } from "react";
 // import { useLocation, useNavigate } from "react-router-dom";
 // import { useDispatch } from "react-redux";
-// import { checkoutpaySlice } from "../redux/HomeSlice";
-// import { allCouponData, couponApplyData } from "../redux/couponDataSlice"; // ✅ Import both
+// import { purchasePracticeBatchSlice } from "../../redux/practiceBatchDataSlice";
+// import { allCouponData, couponApplyData } from "../../redux/couponDataSlice";
 // import { motion } from "framer-motion";
 // import { ArrowLeft, Tag, X, CheckCircle, Loader2 } from "lucide-react";
 
-// const SubscriptionPaymentSummary = () => {
+// const PracticeBatchPaymentSummery = () => {
 //     const location = useLocation();
 //     const navigate = useNavigate();
 //     const dispatch = useDispatch();
 
-//     const { plan, planId, pricing, benefits, userInfo } = location.state || {};
+//     // ✅ Get batch data from navigation state
+//     const { 
+//         batch, 
+//         batchId, 
+//         batchTitle, 
+//         batchAmount, 
+//         batchDuration,
+//         batchImage,
+//         batchDescription 
+//     } = location.state || {};
 
 //     const [couponCode, setCouponCode] = useState("");
 //     const [appliedCoupon, setAppliedCoupon] = useState(null);
@@ -21,6 +30,12 @@
 
 //     const [availableCoupons, setAvailableCoupons] = useState([]);
 //     const [couponsLoading, setCouponsLoading] = useState(true);
+
+//     // ✅ Calculate pricing with GST
+//     const basePrice = batchAmount || 0;
+//     const gstRate = 0.18;
+//     const gstAmount = basePrice * gstRate;
+//     const totalWithGST = basePrice + gstAmount;
 
 //     // Load Cashfree SDK
 //     useEffect(() => {
@@ -36,122 +51,92 @@
 //         };
 //     }, []);
 
-//     // Fetch coupons from API
-//     // useEffect(() => {
-//     //     const fetchCoupons = async () => {
-//     //         try {
-//     //             setCouponsLoading(true);
-//     //             const response = await dispatch(allCouponData()).unwrap();
-
-//     //             if (response.status === 200 && response.data) {
-//     //                 const formattedCoupons = response.data.map(coupon => {
-//     //                     const isPercentage = coupon.coupon_type === 'percentage';
-
-//     //                     return {
-//     //                         id: coupon.id,
-//     //                         code: coupon.code,
-//     //                         discount: isPercentage
-//     //                             ? parseFloat(coupon.discount_percent)
-//     //                             : parseFloat(coupon.flat_amount),
-//     //                         type: coupon.coupon_type,
-//     //                         description: isPercentage
-//     //                             ? `Get ${coupon.discount_percent}% off${coupon.max_discount_amount ? ` (Max ₹${coupon.max_discount_amount})` : ''}`
-//     //                             : `Flat ₹${coupon.flat_amount } off`,
-//     //                         min_amount: parseFloat(coupon.min_transaction_amount) || 0,
-//     //                         max_discount: coupon.max_discount_amount ? parseFloat(coupon.max_discount_amount) : null,
-//     //                         expiry_date: coupon.end_date,
-//     //                         is_active: coupon.status === 'active',
-//     //                     };
-//     //                 });
-
-//     //                 const activeCoupons = formattedCoupons.filter(c => c.is_active);
-//     //                 setAvailableCoupons(activeCoupons);
-//     //             }
-//     //         } catch (error) {
-//     //             console.error("Error fetching coupons:", error);
-//     //             setAvailableCoupons([]);
-//     //         } finally {
-//     //             setCouponsLoading(false);
-//     //         }
-//     //     };
-
-//     //     fetchCoupons();
-//     // }, [dispatch]);
+    
 
 //     // Fetch coupons from API
-// useEffect(() => {
-//     const fetchCoupons = async () => {
-//         try {
-//             setCouponsLoading(true);
-//             const response = await dispatch(allCouponData()).unwrap();
-
-//             if (response.status === 200 && response.data) {
-//                 const formattedCoupons = response.data.map(coupon => {
-//                     // ✅ FIXED: Check which value is available
-//                     const isPercentage = coupon.discount_percent !== null && coupon.discount_percent !== undefined;
-//                     const isFlat = coupon.flat_amount !== null && coupon.flat_amount !== undefined;
-
-//                     return {
-//                         id: coupon.id,
-//                         code: coupon.code,
-//                         discount: isPercentage
-//                             ? parseFloat(coupon.discount_percent)
-//                             : parseFloat(coupon.flat_amount),
-//                         type: coupon.coupon_type,
-//                         // ✅ FIXED: Show correct description based on available value
-//                         description: isPercentage
-//                             ? `Get ${coupon.discount_percent}% off${coupon.max_discount_amount ? ` (Max ₹${coupon.max_discount_amount})` : ''}`
-//                             : isFlat
-//                                 ? `Flat ₹${coupon.flat_amount} off`
-//                                 : 'Discount available', // fallback
-//                         min_amount: parseFloat(coupon.min_transaction_amount) || 0,
-//                         max_discount: coupon.max_discount_amount ? parseFloat(coupon.max_discount_amount) : null,
-//                         expiry_date: coupon.end_date,
-//                         is_active: coupon.status === 'active',
-//                     };
-//                 });
-
-//                 const activeCoupons = formattedCoupons.filter(c => c.is_active);
-//                 setAvailableCoupons(activeCoupons);
-//             }
-//         } catch (error) {
-//             console.error("Error fetching coupons:", error);
-//             setAvailableCoupons([]);
-//         } finally {
-//             setCouponsLoading(false);
-//         }
-//     };
-
-//     fetchCoupons();
-// }, [dispatch]);
-
-
-//     // Redirect if no plan data
 //     useEffect(() => {
-//         if (!plan || !pricing) {
-//             navigate("/subscription");
+//         const fetchCoupons = async () => {
+//             try {
+//                 setCouponsLoading(true);
+//                 const response = await dispatch(allCouponData()).unwrap();
+
+//                 if (response.status === 200 && response.data) {
+//                     const formattedCoupons = response.data.map(coupon => {
+//                         const isPercentage = coupon.discount_percent !== null && coupon.discount_percent !== undefined;
+//                         const isFlat = coupon.flat_amount !== null && coupon.flat_amount !== undefined;
+
+//                         return {
+//                             id: coupon.id,
+//                             code: coupon.code,
+//                             discount: isPercentage
+//                                 ? parseFloat(coupon.discount_percent)
+//                                 : parseFloat(coupon.flat_amount),
+//                             type: coupon.coupon_type,
+//                             description: isPercentage
+//                                 ? `Get ${coupon.discount_percent}% off${coupon.max_discount_amount ? ` (Max ₹${coupon.max_discount_amount})` : ''}`
+//                                 : isFlat
+//                                     ? `Flat ₹${coupon.flat_amount} off`
+//                                     : 'Discount available',
+//                             min_amount: parseFloat(coupon.min_transaction_amount) || 0,
+//                             max_discount: coupon.max_discount_amount ? parseFloat(coupon.max_discount_amount) : null,
+//                             expiry_date: coupon.end_date,
+//                             is_active: coupon.status === 'active',
+//                         };
+//                     });
+
+//                     const activeCoupons = formattedCoupons.filter(c => c.is_active);
+//                     setAvailableCoupons(activeCoupons);
+//                 }
+//             } catch (error) {
+//                 console.error("Error fetching coupons:", error);
+//                 setAvailableCoupons([]);
+//             } finally {
+//                 setCouponsLoading(false);
+//             }
+//         };
+
+//         fetchCoupons();
+//     }, [dispatch]);
+
+//     // Redirect if no batch data
+//     useEffect(() => {
+//         if (!batch || !batchAmount) {
+//             navigate("/practice-batch");
 //         }
-//     }, [plan, pricing, navigate]);
+//     }, [batch, batchAmount, navigate]);
 
-//     // ✅ FIXED: Calculate with GST added
+//     // ✅ Calculate final price with coupon and GST
 //     const calculateFinalPrice = () => {
-//         if (!appliedCoupon) return pricing.totalWithGST;
+//         if (!appliedCoupon) return totalWithGST;
 
-//         // ✅ Manual calculation (don't trust API's final_amount)
-//         const basePrice = pricing.basePrice; // 349
-//         const discountAmount = appliedCoupon.discount; // 100
-//         const priceAfterDiscount = basePrice - discountAmount; // 249
-//         const gstAmount = priceAfterDiscount * 0.18; // 44.82
-//         const finalAmount = priceAfterDiscount + gstAmount; // 293.82
+//         let discountAmount = 0;
+        
+//         if (appliedCoupon.type === 'percentage') {
+//             discountAmount = (basePrice * appliedCoupon.discount) / 100;
+//             if (appliedCoupon.max_discount && discountAmount > appliedCoupon.max_discount) {
+//                 discountAmount = appliedCoupon.max_discount;
+//             }
+//         } else {
+//             discountAmount = appliedCoupon.discount;
+//         }
 
-//         return finalAmount;
+//         const priceAfterDiscount = basePrice - discountAmount;
+//         const gstOnDiscountedPrice = priceAfterDiscount * gstRate;
+//         const finalAmount = priceAfterDiscount + gstOnDiscountedPrice;
+
+//         return {
+//             discountAmount,
+//             priceAfterDiscount,
+//             gstOnDiscountedPrice,
+//             finalAmount
+//         };
 //     };
 
-//     const finalPrice = calculateFinalPrice();
-//     const savedAmount = appliedCoupon ? pricing.totalWithGST - finalPrice : 0;
+//     const pricing = calculateFinalPrice();
+//     const finalPrice = appliedCoupon ? pricing.finalAmount : totalWithGST;
+//     const savedAmount = appliedCoupon ? totalWithGST - finalPrice : 0;
 
-
-//     // ✅ Send base price (without GST) to coupon API
+//     // Apply coupon
 //     const handleApplyCoupon = async () => {
 //         if (!couponCode.trim()) {
 //             setCouponError("Please enter a coupon code");
@@ -164,20 +149,17 @@
 //         try {
 //             const formData = new FormData();
 //             formData.append('coupon_code', couponCode.toUpperCase());
-//             // ✅ FIXED: Send base price WITHOUT GST
-//             formData.append('cart_amount', pricing.basePrice.toString()); // 349 instead of 411.82
+//             formData.append('cart_amount', basePrice.toString());
 
 //             const response = await dispatch(couponApplyData(formData)).unwrap();
-//             console.log("Apply Coupon Response:", response);
 
 //             if (response.status === true || response.status === 200) {
 //                 const apiCouponData = {
-//                     id: null,
+//                     id: response.data.id || null,
 //                     code: response.data.coupon_code,
-//                     discount: response.data.discount_amount,
+//                     discount: parseFloat(response.data.discount_amount),
 //                     type: response.data.coupon_type,
-//                     description: `${response.data.coupon_type === 'flat' ? 'Flat' : ''} ₹${response.data.discount_amount} off`,
-//                     api_final_amount: response.data.final_amount,
+//                     description: `${response.data.coupon_type === 'percentage' ? response.data.discount_amount + '%' : '₹' + response.data.discount_amount} off`,
 //                 };
 
 //                 setAppliedCoupon(apiCouponData);
@@ -194,46 +176,124 @@
 //         }
 //     };
 
-
 //     // Remove coupon
 //     const handleRemoveCoupon = () => {
 //         setAppliedCoupon(null);
 //         setCouponError("");
 //     };
 
-//     // Process payment
-//     const handleProceedToPayment = async () => {
-//         if (!plan || !planId) return;
+//     // ✅ Process payment with Cashfree
+//     // const handleProceedToPayment = async () => {
+//     //     if (!batch || !batchId) return;
 
-//         setIsProcessing(true);
+//     //     setIsProcessing(true);
 
-//         const paymentData = {
-//             amount: finalPrice,
-//             subscription_id: planId,
-//             coupon_code: appliedCoupon?.code || null,
-//             coupon_id: appliedCoupon?.id || null,
-//         };
+//     //     const paymentData = {
+//     //         amount: finalPrice,
+//     //         practice_batch_id: parseInt(batchId),
+//     //         coupon_code: appliedCoupon?.code || null,
+//     //     };
 
-//         try {
-//             const res = await dispatch(checkoutpaySlice(paymentData)).unwrap();
+//     //     console.log('Payment Data:', paymentData);
 
-//             if (window.Cashfree) {
-//                 const cashfree = window.Cashfree({ mode: "production" });
-//                 cashfree.checkout({
-//                     paymentSessionId: res.payment_session_id,
-//                     redirectTarget: "_self",
-//                     redirectUrl: "/cashfree-payment",
-//                 });
-//             }
-//         } catch (error) {
-//             console.error("Payment error:", error);
-//             alert("Payment failed. Please try again.");
-//         } finally {
-//             setIsProcessing(false);
-//         }
+//     //     try {
+//     //         const res = await dispatch(purchasePracticeBatchSlice(paymentData)).unwrap();
+//     //         console.log('Payment Response:', res);
+
+//     //         if (res.status_code === 200 && window.Cashfree) {
+//     //             const cashfree = window.Cashfree({ mode: "production" });
+//     //             cashfree.checkout({
+//     //                 paymentSessionId: res.payment_session_id,
+//     //                 redirectTarget: "_self",
+//     //                 returnUrl: `${window.location.origin}/cashfree-payment`,
+//     //             });
+//     //         } else {
+//     //             throw new Error(res.message || 'Payment initialization failed');
+//     //         }
+//     //     } catch (error) {
+//     //         console.error("Payment error:", error);
+//     //         alert(error.message || "Payment failed. Please try again.");
+//     //     } finally {
+//     //         setIsProcessing(false);
+//     //     }
+//     // };
+
+//     // ✅ Enhanced Process Payment with Debugging
+// const handleProceedToPayment = async () => {
+//     if (!batch || !batchId) {
+//         console.error('❌ Missing batch data:', { batch, batchId });
+//         alert('Batch information is missing. Please try again.');
+//         return;
+//     }
+
+//     setIsProcessing(true);
+
+//     const paymentData = {
+//         amount: parseFloat(finalPrice.toFixed(2)),
+//         practice_batch_id: parseInt(batchId),
+//         coupon_code: appliedCoupon?.code || null,
 //     };
 
-//     if (!plan || !pricing) {
+//     console.log('💰 Payment Data:', paymentData);
+//     console.log('🔍 Cashfree SDK Available:', !!window.Cashfree);
+
+//     try {
+//         const res = await dispatch(purchasePracticeBatchSlice(paymentData)).unwrap();
+//         console.log('✅ API Response:', res);
+//         console.log('📋 Response Structure:', {
+//             status_code: res.status_code,
+//             payment_session_id: res.payment_session_id,
+//             order_id: res.order_id,
+//             has_data: !!res.data
+//         });
+
+//         // ✅ Check for payment_session_id in multiple locations
+//         const sessionId = res.payment_session_id || res.data?.payment_session_id;
+
+//         if (!sessionId) {
+//             console.error('❌ No payment session ID found in response');
+//             throw new Error('Payment session ID not received from server');
+//         }
+
+//         console.log('🔑 Payment Session ID:', sessionId);
+
+//         if (!window.Cashfree) {
+//             console.error('❌ Cashfree SDK not loaded');
+//             throw new Error('Cashfree payment gateway not available. Please refresh and try again.');
+//         }
+
+//         console.log('🚀 Initializing Cashfree...');
+        
+//         const cashfree = window.Cashfree({ mode: "production" });
+        
+//         console.log('📱 Opening Cashfree checkout...');
+        
+//         const checkoutOptions = {
+//             paymentSessionId: sessionId,
+//             redirectTarget: "_self",
+//             returnUrl: `${window.location.origin}/cashfree-payment`,
+//         };
+        
+//         console.log('⚙️ Cashfree Options:', checkoutOptions);
+        
+//         cashfree.checkout(checkoutOptions);
+        
+//     } catch (error) {
+//         console.error("❌ Payment Error:", error);
+//         console.error("Error Details:", {
+//             message: error.message,
+//             response: error.response,
+//             data: error.data
+//         });
+        
+//         alert(error.message || "Payment failed. Please try again.");
+//     } finally {
+//         setIsProcessing(false);
+//     }
+// };
+
+
+//     if (!batch || !batchAmount) {
 //         return null;
 //     }
 
@@ -256,26 +316,42 @@
 //                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 //                     {/* Main Content */}
 //                     <div className="lg:col-span-2 space-y-6">
-//                         {/* Plan Details */}
+//                         {/* Batch Details */}
 //                         <motion.div
 //                             initial={{ opacity: 0, y: 20 }}
 //                             animate={{ opacity: 1, y: 0 }}
 //                             className="bg-white rounded-lg shadow-lg p-6"
 //                         >
 //                             <h2 className="text-xl font-semibold mb-4 text-gray-800">
-//                                 Selected Plan
+//                                 Selected Batch
 //                             </h2>
-//                             <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg border border-blue-200">
-//                                 <div>
+//                             <div className="flex gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+//                                 {batchImage && (
+//                                     <img 
+//                                         src={batchImage} 
+//                                         alt={batchTitle}
+//                                         className="w-24 h-24 object-cover rounded-lg"
+//                                         onError={(e) => {
+//                                             e.target.src = 'https://via.placeholder.com/96x96/3B82F6/FFFFFF?text=Batch';
+//                                         }}
+//                                     />
+//                                 )}
+//                                 <div className="flex-1">
 //                                     <p className="font-semibold text-lg text-gray-800">
-//                                         {plan.subscription_name}
+//                                         {batchTitle}
 //                                     </p>
-//                                     <p className="text-sm text-gray-600">{plan.duration} months</p>
+//                                     <p className="text-sm text-gray-600 mt-1">
+//                                         Duration: {batchDuration} {parseInt(batchDuration) === 1 ? 'Month' : 'Months'}
+//                                     </p>
+//                                     {batchDescription && (
+//                                         <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+//                                             {batchDescription}
+//                                         </p>
+//                                     )}
 //                                 </div>
 //                                 <div className="text-right">
-//                                     <p className="text-gray-400 line-through text-sm">₹{plan.price}</p>
 //                                     <p className="text-xl font-bold text-green-600">
-//                                         ₹{plan.offer_price}
+//                                         ₹{basePrice.toFixed(2)}
 //                                     </p>
 //                                 </div>
 //                             </div>
@@ -303,18 +379,19 @@
 //                                     className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 //                                     disabled={appliedCoupon}
 //                                 />
-//                                 {!appliedCoupon ? (
+//                                 {!appliedCoupon && (
 //                                     <button
 //                                         onClick={handleApplyCoupon}
 //                                         disabled={isApplying || !couponCode.trim()}
-//                                         className={`px-6 py-3 rounded-lg font-semibold transition-all ${isApplying || !couponCode.trim()
+//                                         className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+//                                             isApplying || !couponCode.trim()
 //                                                 ? "bg-gray-300 text-gray-600 cursor-not-allowed"
 //                                                 : "bg-blue-600 text-white hover:bg-blue-700"
-//                                             }`}
+//                                         }`}
 //                                     >
 //                                         {isApplying ? "Applying..." : "Apply"}
 //                                     </button>
-//                                 ) : null}
+//                                 )}
 //                             </div>
 
 //                             {couponError && (
@@ -360,10 +437,11 @@
 //                                         {availableCoupons.map((coupon) => (
 //                                             <div
 //                                                 key={coupon.id}
-//                                                 className={`p-3 border rounded-lg cursor-pointer transition-all ${appliedCoupon?.code === coupon.code
+//                                                 className={`p-3 border rounded-lg cursor-pointer transition-all ${
+//                                                     appliedCoupon?.code === coupon.code
 //                                                         ? "border-green-500 bg-green-50"
 //                                                         : "border-gray-200 hover:border-blue-400 hover:bg-blue-50"
-//                                                     }`}
+//                                                 }`}
 //                                                 onClick={() => {
 //                                                     if (!appliedCoupon) {
 //                                                         setCouponCode(coupon.code);
@@ -409,7 +487,6 @@
 //                         </motion.div>
 //                     </div>
 
-
 //                     {/* Price Summary Sidebar */}
 //                     <div className="lg:col-span-1">
 //                         <motion.div
@@ -424,44 +501,33 @@
 
 //                             <div className="space-y-3 mb-4">
 //                                 <div className="flex justify-between text-gray-700">
-//                                     <span>Plan Price:</span>
-//                                     <span>₹{pricing.basePrice}</span>
+//                                     <span>Batch Price:</span>
+//                                     <span>₹{basePrice.toFixed(2)}</span>
 //                                 </div>
 
-//                                 {/* ✅ Show discount if coupon applied */}
 //                                 {appliedCoupon && (
 //                                     <div className="flex justify-between text-red-600">
 //                                         <span>Coupon Discount:</span>
-//                                         <span>- ₹{appliedCoupon.discount}</span>
+//                                         <span>- ₹{pricing.discountAmount.toFixed(2)}</span>
 //                                     </div>
 //                                 )}
 
-//                                 {/* ✅ Show price after discount (before GST) */}
 //                                 {appliedCoupon && (
 //                                     <div className="flex justify-between text-gray-700 font-medium">
 //                                         <span>Price After Discount:</span>
-//                                         <span>₹{(pricing.basePrice - appliedCoupon.discount).toFixed(2)}</span>
+//                                         <span>₹{pricing.priceAfterDiscount.toFixed(2)}</span>
 //                                     </div>
 //                                 )}
 
-//                                 {/* ✅ Show GST on discounted price */}
 //                                 <div className="flex justify-between text-gray-700">
 //                                     <span>GST (18%):</span>
 //                                     <span>
 //                                         ₹{appliedCoupon
-//                                             ? ((pricing.basePrice - appliedCoupon.discount) * 0.18).toFixed(2)
-//                                             : pricing.gstAmount.toFixed(2)
+//                                             ? pricing.gstOnDiscountedPrice.toFixed(2)
+//                                             : gstAmount.toFixed(2)
 //                                         }
 //                                     </span>
 //                                 </div>
-
-//                                 {/* ✅ Remove old Total line if coupon applied */}
-//                                 {!appliedCoupon && (
-//                                     <div className="flex justify-between text-gray-700">
-//                                         <span>Total:</span>
-//                                         <span>₹{pricing.totalWithGST}</span>
-//                                     </div>
-//                                 )}
 //                             </div>
 
 //                             <div className="border-t pt-4 mb-6">
@@ -483,12 +549,20 @@
 //                             <button
 //                                 onClick={handleProceedToPayment}
 //                                 disabled={isProcessing}
-//                                 className={`w-full py-4 rounded-lg font-semibold text-lg transition-all ${isProcessing
+//                                 className={`w-full py-4 rounded-lg font-semibold text-lg transition-all ${
+//                                     isProcessing
 //                                         ? "bg-gray-300 text-gray-600 cursor-not-allowed"
 //                                         : "bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105"
-//                                     }`}
+//                                 }`}
 //                             >
-//                                 {isProcessing ? "Processing..." : "Proceed to Payment"}
+//                                 {isProcessing ? (
+//                                     <div className="flex items-center justify-center">
+//                                         <Loader2 className="w-5 h-5 animate-spin mr-2" />
+//                                         Processing...
+//                                     </div>
+//                                 ) : (
+//                                     "Proceed to Payment"
+//                                 )}
 //                             </button>
 
 //                             <p className="text-xs text-gray-500 text-center mt-4">
@@ -496,30 +570,38 @@
 //                             </p>
 //                         </motion.div>
 //                     </div>
-
 //                 </div>
 //             </div>
 //         </div>
 //     );
 // };
 
-// export default SubscriptionPaymentSummary;
+// export default PracticeBatchPaymentSummery;
 
 
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { checkoutpaySlice } from "../redux/HomeSlice";
-import { allCouponData, couponApplyData } from "../redux/couponDataSlice";
+import { purchasePracticeBatchSlice } from "../../redux/practiceBatchDataSlice";
+import { allCouponData, couponApplyData } from "../../redux/couponDataSlice";
 import { motion } from "framer-motion";
 import { ArrowLeft, Tag, X, CheckCircle, Loader2 } from "lucide-react";
 
-const SubscriptionPaymentSummary = () => {
+const PracticeBatchPaymentSummery = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { plan, planId, pricing, benefits, userInfo } = location.state || {};
+    // ✅ Get batch data from navigation state
+    const { 
+        batch, 
+        batchId, 
+        batchTitle, 
+        batchAmount, 
+        batchDuration,
+        batchImage,
+        batchDescription 
+    } = location.state || {};
 
     const [couponCode, setCouponCode] = useState("");
     const [appliedCoupon, setAppliedCoupon] = useState(null);
@@ -529,17 +611,31 @@ const SubscriptionPaymentSummary = () => {
     const [availableCoupons, setAvailableCoupons] = useState([]);
     const [couponsLoading, setCouponsLoading] = useState(true);
 
-    // ✅ Base price and GST calculation (for display only)
-    const basePrice = pricing?.basePrice || 0;
+    // ✅ Calculate pricing WITHOUT GST (for payment)
+    const basePrice = batchAmount || 0;
     const gstRate = 0.18;
+    
+    // ✅ For display only
     const gstAmount = basePrice * gstRate;
     const totalWithGST = basePrice + gstAmount;
 
-    // Load Cashfree SDK
+    // ✅ Load Cashfree SDK
     useEffect(() => {
+        console.log('🔄 Loading Cashfree SDK...');
+        
         const script = document.createElement('script');
         script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
         script.async = true;
+        
+        script.onload = () => {
+            console.log('✅ Cashfree SDK loaded successfully');
+            console.log('🔍 Cashfree object available:', !!window.Cashfree);
+        };
+        
+        script.onerror = () => {
+            console.error('❌ Failed to load Cashfree SDK');
+        };
+        
         document.head.appendChild(script);
 
         return () => {
@@ -549,7 +645,7 @@ const SubscriptionPaymentSummary = () => {
         };
     }, []);
 
-    // Fetch coupons from API
+    // ✅ Fetch coupons from API
     useEffect(() => {
         const fetchCoupons = async () => {
             try {
@@ -594,12 +690,13 @@ const SubscriptionPaymentSummary = () => {
         fetchCoupons();
     }, [dispatch]);
 
-    // Redirect if no plan data
+    // ✅ Redirect if no batch data
     useEffect(() => {
-        if (!plan || !pricing) {
-            navigate("/subscription");
+        if (!batch || !batchAmount) {
+            console.warn('⚠️ Missing batch data, redirecting...');
+            navigate("/practice-batch");
         }
-    }, [plan, pricing, navigate]);
+    }, [batch, batchAmount, navigate]);
 
     // ✅ Calculate amounts for display AND payment
     const calculatePricing = () => {
@@ -637,21 +734,21 @@ const SubscriptionPaymentSummary = () => {
             priceAfterDiscount,
             gstOnDiscountedPrice,
             displayFinalAmount,
-            // ✅ For payment (WITHOUT GST)
+            // ✅ For payment (WITHOUT GST) - Just base price after discount
             paymentAmount: priceAfterDiscount,
         };
     };
 
-    const pricingCalc = calculatePricing();
+    const pricing = calculatePricing();
     
     // ✅ Amount to send to Cashfree (WITHOUT GST)
-    const amountToPay = pricingCalc.paymentAmount;
+    const amountToPay = pricing.paymentAmount;
     
     // ✅ Amount to show to user (WITH GST)
-    const displayFinalAmount = appliedCoupon ? pricingCalc.displayFinalAmount : totalWithGST;
+    const displayFinalAmount = appliedCoupon ? pricing.displayFinalAmount : totalWithGST;
     const savedAmount = appliedCoupon ? totalWithGST - displayFinalAmount : 0;
 
-    // Apply coupon
+    // ✅ Apply coupon
     const handleApplyCoupon = async () => {
         if (!couponCode.trim()) {
             setCouponError("Please enter a coupon code");
@@ -667,7 +764,6 @@ const SubscriptionPaymentSummary = () => {
             formData.append('cart_amount', basePrice.toString());
 
             const response = await dispatch(couponApplyData(formData)).unwrap();
-            console.log("Apply Coupon Response:", response);
 
             if (response.status === true || response.status === 200) {
                 const apiCouponData = {
@@ -692,7 +788,7 @@ const SubscriptionPaymentSummary = () => {
         }
     };
 
-    // Remove coupon
+    // ✅ Remove coupon
     const handleRemoveCoupon = () => {
         setAppliedCoupon(null);
         setCouponError("");
@@ -700,40 +796,82 @@ const SubscriptionPaymentSummary = () => {
 
     // ✅ Process payment - Send amount WITHOUT GST
     const handleProceedToPayment = async () => {
-        if (!plan || !planId) return;
+        if (!batch || !batchId) {
+            console.error('❌ Missing batch data:', { batch, batchId });
+            alert('Batch information is missing. Please try again.');
+            return;
+        }
 
         setIsProcessing(true);
 
-        // ✅ Send amount WITHOUT GST
+        // ✅ Send amount WITHOUT GST to Cashfree
         const paymentData = {
             amount: parseFloat(amountToPay.toFixed(2)), // WITHOUT GST
-            subscription_id: planId,
+            practice_batch_id: parseInt(batchId),
             coupon_code: appliedCoupon?.code || null,
-            coupon_id: appliedCoupon?.id || null,
         };
 
         console.log('💰 Payment Data (WITHOUT GST):', paymentData);
         console.log('📊 Display Amount (WITH GST):', displayFinalAmount.toFixed(2));
+        console.log('🔍 Cashfree SDK Available:', !!window.Cashfree);
 
         try {
-            const res = await dispatch(checkoutpaySlice(paymentData)).unwrap();
+            const res = await dispatch(purchasePracticeBatchSlice(paymentData)).unwrap();
+            console.log('✅ API Response:', res);
+            console.log('📋 Response Structure:', {
+                status_code: res.status_code,
+                payment_session_id: res.payment_session_id,
+                order_id: res.order_id,
+                message: res.message
+            });
 
-            if (window.Cashfree) {
-                const cashfree = window.Cashfree({ mode: "production" });
-                cashfree.checkout({
-                    paymentSessionId: res.payment_session_id,
-                    redirectTarget: "_self",
-                });
+            // ✅ Check multiple possible locations for session ID
+            const sessionId = res.payment_session_id || 
+                             res.data?.payment_session_id || 
+                             res.paymentSessionId;
+
+            if (!sessionId) {
+                console.error('❌ No payment session ID found in response:', res);
+                throw new Error('Payment session ID not received from server');
             }
+
+            console.log('🔑 Payment Session ID:', sessionId);
+
+            if (!window.Cashfree) {
+                console.error('❌ Cashfree SDK not loaded');
+                throw new Error('Cashfree payment gateway not available. Please refresh and try again.');
+            }
+
+            console.log('🚀 Initializing Cashfree...');
+            
+            const cashfree = window.Cashfree({ mode: "production" });
+            
+            console.log('📱 Opening Cashfree checkout...');
+            
+            const checkoutOptions = {
+                paymentSessionId: sessionId,
+                redirectTarget: "_self",
+            };
+            
+            console.log('⚙️ Cashfree Options:', checkoutOptions);
+            
+            cashfree.checkout(checkoutOptions);
+            
         } catch (error) {
-            console.error("Payment error:", error);
-            alert("Payment failed. Please try again.");
+            console.error("❌ Payment Error:", error);
+            console.error("Error Details:", {
+                message: error.message,
+                response: error.response,
+                data: error.data
+            });
+            
+            alert(error.message || "Payment failed. Please try again.");
         } finally {
             setIsProcessing(false);
         }
     };
 
-    if (!plan || !pricing) {
+    if (!batch || !batchAmount) {
         return null;
     }
 
@@ -756,26 +894,42 @@ const SubscriptionPaymentSummary = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-6">
-                        {/* Plan Details */}
+                        {/* Batch Details */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="bg-white rounded-lg shadow-lg p-6"
                         >
                             <h2 className="text-xl font-semibold mb-4 text-gray-800">
-                                Selected Plan
+                                Selected Batch
                             </h2>
-                            <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg border border-blue-200">
-                                <div>
+                            <div className="flex gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                {batchImage && (
+                                    <img 
+                                        src={batchImage} 
+                                        alt={batchTitle}
+                                        className="w-24 h-24 object-contain rounded-lg"
+                                        onError={(e) => {
+                                            e.target.src = 'https://via.placeholder.com/96x96/3B82F6/FFFFFF?text=Batch';
+                                        }}
+                                    />
+                                )}
+                                <div className="flex-1">
                                     <p className="font-semibold text-lg text-gray-800">
-                                        {plan.subscription_name}
+                                        {batchTitle}
                                     </p>
-                                    <p className="text-sm text-gray-600">{plan.duration} months</p>
+                                    <p className="text-sm text-gray-600 mt-1">
+                                        Duration: {batchDuration} {parseInt(batchDuration) === 1 ? 'Month' : 'Months'}
+                                    </p>
+                                    {batchDescription && (
+                                        <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                                            {batchDescription}
+                                        </p>
+                                    )}
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-gray-400 line-through text-sm">₹{plan.price}</p>
                                     <p className="text-xl font-bold text-green-600">
-                                        ₹{plan.offer_price}
+                                        ₹{basePrice.toFixed(2)}
                                     </p>
                                 </div>
                             </div>
@@ -925,21 +1079,21 @@ const SubscriptionPaymentSummary = () => {
 
                             <div className="space-y-3 mb-4">
                                 <div className="flex justify-between text-gray-700">
-                                    <span>Plan Price:</span>
+                                    <span>Batch Price:</span>
                                     <span>₹{basePrice.toFixed(2)}</span>
                                 </div>
 
                                 {appliedCoupon && (
                                     <div className="flex justify-between text-red-600">
                                         <span>Coupon Discount:</span>
-                                        <span>- ₹{pricingCalc.discountAmount.toFixed(2)}</span>
+                                        <span>- ₹{pricing.discountAmount.toFixed(2)}</span>
                                     </div>
                                 )}
 
                                 {appliedCoupon && (
                                     <div className="flex justify-between text-gray-700 font-medium">
                                         <span>Price After Discount:</span>
-                                        <span>₹{pricingCalc.priceAfterDiscount.toFixed(2)}</span>
+                                        <span>₹{pricing.priceAfterDiscount.toFixed(2)}</span>
                                     </div>
                                 )}
 
@@ -947,7 +1101,7 @@ const SubscriptionPaymentSummary = () => {
                                     <span>GST (18%):</span>
                                     <span>
                                         ₹{appliedCoupon
-                                            ? pricingCalc.gstOnDiscountedPrice.toFixed(2)
+                                            ? pricing.gstOnDiscountedPrice.toFixed(2)
                                             : gstAmount.toFixed(2)
                                         }
                                     </span>
@@ -1004,4 +1158,4 @@ const SubscriptionPaymentSummary = () => {
     );
 };
 
-export default SubscriptionPaymentSummary;
+export default PracticeBatchPaymentSummery;
