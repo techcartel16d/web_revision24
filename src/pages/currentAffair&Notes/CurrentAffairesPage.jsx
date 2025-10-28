@@ -1249,7 +1249,7 @@ const CurrentAffairesPage = () => {
                 <motion.img
                   src={item.image || "https://via.placeholder.com/300x200?text=Current+Affairs"}
                   alt={item.title}
-                  className="w-full h-32 object-cover"
+                  className="w-full h-46 object-cover"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.3 }}
                 />

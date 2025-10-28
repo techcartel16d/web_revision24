@@ -105,32 +105,138 @@ const HomeProvider = {
 
 
     // GET USER RANK
-    getUserTestSeriesRank: async (test_id) => {
-        try {
-            const token = localStorage.getItem('token');
-            const res = await api.get(`/user-attend-test-series-rank-get?test_id=${test_id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return res.data;
-        } catch (error) {
-            console.error('Error TEST SERIES RANK:', error);
-            throw error;
-        }
-    },
+    // getUserTestSeriesRank: async (test_id) => {
+    //     try {
+    //         const token = localStorage.getItem('token');
+    //         const res = await api.get(`/user-attend-test-series-rank-get?test_id=${test_id}`, {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
+    //         return res.data;
+    //     } catch (error) {
+    //         console.error('Error TEST SERIES RANK:', error);
+    //         throw error;
+    //     }
+    // },
 
-    getUserTestSeriesSolution: async (test_id) => {
-        // console.log("test id ", test_id)
+    // getUserTestSeriesSolution: async (test_id) => {
+    //     // console.log("test id ", test_id)
+    //     try {
+    //         const token = localStorage.getItem('token');
+    //         const res = await api.get(`/user-attend-test-series-question-solution?test_id=${test_id}`, {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
+    //         return res.data;
+    //     } catch (error) {
+    //         console.error('Error fetching solution:', error);
+    //         throw error;
+    //     }
+    // },
+
+    // getUserTestSeriesRank: async ({ test_id, attend_id }) => {
+    //     try {
+    //         const token = localStorage.getItem('token');
+
+    //         const res = await api.post(
+    //             `/user-attend-test-series-rank-get?test_id=${test_id}`,
+    //             { attend_id },
+    //             {
+    //                 headers: { Authorization: `Bearer ${token}` }
+    //             }
+    //         );
+
+    //         return res.data;
+    //     } catch (error) {
+    //         console.error('Error TEST SERIES RANK:', error);
+    //         throw error;
+    //     }
+    // },
+//     getUserTestSeriesRank: async ({ test_id, attend_id }) => {
+//     try {
+//         const token = localStorage.getItem('token');
+
+//         // ✅ Debug: Log what's being sent
+//         console.log('🔍 API Request:', {
+//             url: `/user-attend-test-series-rank-get?test_id=${test_id}`,
+//             body: { attend_id },
+//             attend_id_value: attend_id,
+//             attend_id_type: typeof attend_id
+//         });
+
+//         const res = await api.post(
+//             `/user-attend-test-series-rank-get?test_id=${test_id}`,
+//             { attend_id },
+//             {
+//                 headers: { Authorization: `Bearer ${token}` }
+//             }
+//         );
+
+//         // ✅ Debug: Log the response
+//         console.log('🔍 API Response:', res.data);
+
+//         return res.data;
+//     } catch (error) {
+//         console.error('Error TEST SERIES RANK:', error);
+//         throw error;
+//     }
+// },
+
+getUserTestSeriesRank: async ({ test_id, attend_id }) => {
+    try {
+        const token = localStorage.getItem('token');
+
+        console.log('🔍 API Request Being Made:', {
+            url: `/user-attend-test-series-rank-get?test_id=${test_id}`,
+            body: { attend_id },
+            attend_id_value: attend_id,
+            attend_id_type: typeof attend_id
+        });
+
+        const res = await api.post(
+            `/user-attend-test-series-rank-get?test_id=${test_id}`,
+            { attend_id },
+            {
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Cache-Control': 'no-cache',  // ✅ Prevent caching
+                    'Pragma': 'no-cache'
+                }
+            }
+        );
+
+        console.log('🔍 API Response Received:', {
+            status: res.status,
+            attend_id_sent: attend_id,
+            my_detail_id: res.data?.data?.my_detail?.id
+        });
+
+        return res.data;
+    } catch (error) {
+        console.error('❌ API Error:', error);
+        throw error;
+    }
+},
+
+
+
+    getUserTestSeriesSolution: async ({ test_id, attend_id }) => {
         try {
             const token = localStorage.getItem('token');
-            const res = await api.get(`/user-attend-test-series-question-solution?test_id=${test_id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+
+            const res = await api.post(
+                `/user-attend-test-series-question-solution?test_id=${test_id}`,
+                { attend_id },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
             return res.data;
         } catch (error) {
             console.error('Error fetching solution:', error);
             throw error;
         }
     },
+
 
     getSubscriptionData: async () => {
         try {

@@ -112,6 +112,61 @@ const TestPagesPage = () => {
     //     }
     // };
 
+    // const getSigleCategoryData = async (page = 1, query = '') => {
+    //     if (state) {
+    //         try {
+    //             setPageLoading(true);
+    //             const res = await dispatch(
+    //                 getSingleCategoryPackageTestseriesSlice({
+    //                     testId: state.testId,
+    //                     page,
+    //                     search: query
+    //                 })
+    //             ).unwrap();
+
+    //             console.log("Single Category Test Series Data", res.data.package_detail);
+    //             setExamCategoryTitle(res?.data?.package_detail?.exam_category.title);
+
+    //             if (res.status_code == 200) {
+    //                 // ✅ Get test series data from API
+    //                 const rawTestData = res.data.test_series.data || [];
+
+    //                 // ✅ Sort test series by sequence (ascending)
+    //                 const sortedTestData = rawTestData.sort((a, b) => {
+    //                     const seqA = a.sequence ? Number(a.sequence) : Infinity;
+    //                     const seqB = b.sequence ? Number(b.sequence) : Infinity;
+    //                     return seqA - seqB;
+    //                 });
+
+    //                 // ✅ Update test data (paginated + sorted)
+    //                 setTestData(prev =>
+    //                     page === 1
+    //                         ? sortedTestData
+    //                         : [...prev, ...sortedTestData]
+    //                 );
+
+    //                 console.log('Sorted test data for page', page, sortedTestData);
+
+    //                 // ✅ Set pagination info
+    //                 setPagination({
+    //                     current_page: res.data.test_series.current_page,
+    //                     last_page: res.data.test_series.last_page,
+    //                 });
+
+    //                 setTestId(res.data.package_detail.id);
+    //             } else if (res.status_code === 401) {
+    //                 await clearUserData();
+    //             }
+    //         } catch (error) {
+    //             setShowAlert(true);
+    //             setMessage('Login token has expired. Please sign in again to continue.');
+    //             await clearUserData();
+    //         } finally {
+    //             setPageLoading(false);
+    //         }
+    //     }
+    // };
+
     const getSigleCategoryData = async (page = 1, query = '') => {
         if (state) {
             try {
@@ -124,48 +179,50 @@ const TestPagesPage = () => {
                     })
                 ).unwrap();
 
-                console.log("Single Category Test Series Data", res.data.package_detail);
-                setExamCategoryTitle(res?.data?.package_detail?.exam_category.title);
+                // ✅ FIX: Change packagedetail to package_detail
+                console.log('Single Category Test Series Data', res.data?.package_detail);
+                setExamCategoryTitle(res?.data?.package_detail?.exam_category?.title ||
+                    res?.data?.package_detail?.category_name ||
+                    'General');
 
-                if (res.status_code == 200) {
-                    // ✅ Get test series data from API
-                    const rawTestData = res.data.test_series.data || [];
+                if (res.status_code === 200) {
+                    // ✅ FIX: Change testseries to test_series
+                    const rawTestData = res.data?.test_series?.data || [];
 
-                    // ✅ Sort test series by sequence (ascending)
                     const sortedTestData = rawTestData.sort((a, b) => {
                         const seqA = a.sequence ? Number(a.sequence) : Infinity;
                         const seqB = b.sequence ? Number(b.sequence) : Infinity;
                         return seqA - seqB;
                     });
 
-                    // ✅ Update test data (paginated + sorted)
-                    setTestData(prev =>
-                        page === 1
-                            ? sortedTestData
-                            : [...prev, ...sortedTestData]
-                    );
-
+                    setTestData(prev => page === 1 ? sortedTestData : [...prev, ...sortedTestData]);
                     console.log('Sorted test data for page', page, sortedTestData);
 
-                    // ✅ Set pagination info
+                    // ✅ FIX: Update pagination structure
                     setPagination({
-                        current_page: res.data.test_series.current_page,
-                        last_page: res.data.test_series.last_page,
+                        currentpage: res.data?.test_series?.current_page || 1,
+                        lastpage: res.data?.test_series?.last_page || 1,
                     });
 
-                    setTestId(res.data.package_detail.id);
-                } else if (res.status_code === 401) {
-                    await clearUserData();
+                    // ✅ FIX: Get package id from package_detail
+                    setTestId(res.data?.package_detail?.id);
                 }
             } catch (error) {
+                console.error('❌ API Error:', error);
                 setShowAlert(true);
-                setMessage('Login token has expired. Please sign in again to continue.');
-                await clearUserData();
+
+                if (error.status === 401 || error.response?.status === 401) {
+                    setMessage('Login token has expired. Please sign in again to continue.');
+                } else {
+                    setMessage('Failed to load tests. Please try again.');
+                }
             } finally {
                 setPageLoading(false);
             }
         }
     };
+
+
 
     const fetchTestSeriesDetails = async (item) => {
         try {
@@ -178,7 +235,7 @@ const TestPagesPage = () => {
                         testId: state?.testId,
                         testDetail: res.data.details,
                         userInfo: userData,
-                        packageDetail: res.data.packageDetail,
+                        packageDetail: res.data?.package_detail,
                     }
                 });
             } else {

@@ -28,7 +28,7 @@ export const homePageSlice = createAsyncThunk(
 export const getSingleCategoryPackageTestseriesSlice = createAsyncThunk(
     'home/getSingleCategoryPackageTestseriesSlice',
     async ({ testId, page, search }, { rejectWithValue }) => {
-        // // console.log('getSingleCategoryPackageTestseriesSlice', testId, page, search);
+        // console.log('getSingleCategoryPackageTestseriesSlice', testId, page, search);
         try {
             const data = await HomeProvider.getSingleCategoryPackageTestseries(
                 testId,
@@ -90,33 +90,73 @@ export const attendQuestionSubmitSlice = createAsyncThunk(
 );
 
 
-// FETCH USER TEST SERIES RANK
+// // FETCH USER TEST SERIES RANK
+// export const fetchUserTestSeriesRankSlice = createAsyncThunk(
+//     'home/fetchUserTestSeriesRankSlice',
+//     async (test_id, { rejectWithValue }) => {
+//         try {
+//             const data = await HomeProvider.getUserTestSeriesRank(test_id);
+
+//             return data;
+//         } catch (error) {
+//             return rejectWithValue(error.response?.data || error.message);
+//         }
+//     },
+// );
+
+
+
+// export const fetchUserTestSeriesSolution = createAsyncThunk(
+//     'home/fetchUserTestSeriesSolution',
+//     async (test_id, { rejectWithValue }) => {
+//         try {
+//             const data = await HomeProvider.getUserTestSeriesSolution(test_id);
+//             return data;
+//         } catch (error) {
+//             return rejectWithValue(error.response?.data || error.message);
+//         }
+//     },
+// );
+
+// export const fetchUserTestSeriesRankSlice = createAsyncThunk(
+//     'home/fetchUserTestSeriesRankSlice',
+//     async ({ test_id, attend_id }, { rejectWithValue }) => {  // ✅ Accept object
+//         try {
+//             const data = await HomeProvider.getUserTestSeriesRank({ test_id, attend_id });
+//             return data;
+//         } catch (error) {
+//             return rejectWithValue(error.response?.data || error.message);
+//         }
+//     },
+// );
 export const fetchUserTestSeriesRankSlice = createAsyncThunk(
     'home/fetchUserTestSeriesRankSlice',
-    async (test_id, { rejectWithValue }) => {
+    async ({ test_id, attend_id }, { rejectWithValue }) => {
         try {
-            const data = await HomeProvider.getUserTestSeriesRank(test_id);
-
+            console.log('🚀 Redux Thunk Called With:', { test_id, attend_id });
+            const data = await HomeProvider.getUserTestSeriesRank({ test_id, attend_id });
+            console.log('🚀 Redux Thunk Response:', data);
             return data;
         } catch (error) {
+            console.error('🚀 Redux Thunk Error:', error);
             return rejectWithValue(error.response?.data || error.message);
         }
     },
 );
-
 
 
 export const fetchUserTestSeriesSolution = createAsyncThunk(
     'home/fetchUserTestSeriesSolution',
-    async (test_id, { rejectWithValue }) => {
+    async ({ test_id, attend_id }, { rejectWithValue }) => {  // ✅ Accept object
         try {
-            const data = await HomeProvider.getUserTestSeriesSolution(test_id);
+            const data = await HomeProvider.getUserTestSeriesSolution({ test_id, attend_id });
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
         }
     },
 );
+
 
 
 // Async Thunks getSubscriptionSlice

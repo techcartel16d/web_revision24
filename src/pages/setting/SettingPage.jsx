@@ -170,12 +170,12 @@ const SettingPage = () => {
                   <span>💰</span>
                   <span>₹{userInfo.walletBalance} Wallet</span>
                 </div>
-                {userInfo.referralCode && (
+                {/* {userInfo.referralCode && (
                   <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold flex items-center space-x-2">
                     <span>🎯</span>
                     <span>Code: {userInfo.referralCode}</span>
                   </div>
-                )}
+                )} */}
                 {userInfo.subscriptionStatus && (
                   <div className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold flex items-center space-x-2">
                     <span>⭐</span>
