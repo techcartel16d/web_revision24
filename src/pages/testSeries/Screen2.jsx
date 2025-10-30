@@ -148,7 +148,7 @@ const Screen2 = () => {
                             testInfo: state?.testInfo,
                             testId: state?.testId,
                             testDetail: state?.testDetail,
-                            packageDetail: state?.packageDetail,
+                            packageDetail: state,
                         }
                     });
                 }}

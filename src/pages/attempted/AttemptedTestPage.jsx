@@ -431,7 +431,7 @@ const AttemptedTestPage = () => {
                                         <span>|</span>
                                         <span>Unattempted: {testData.total_not_answer_question}</span>
                                       </div>
-                                      <div>Status: {testData.status}</div>
+                                      {/* <div>Status: {testData.status}</div> */}
                                     </div>
                                   </div>
 

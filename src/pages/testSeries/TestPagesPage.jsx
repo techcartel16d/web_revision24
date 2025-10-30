@@ -12,7 +12,7 @@ import {
     // ✅ Added
 } from "../../redux/HomeSlice";
 import ResumeTestModal from "../../components/ResumeTestModal";
-import { clearAllEncryptedTestData, secureGetTestData } from "../../helpers/testStorage";
+import { clearAllEncryptedTestData, secureGetTestData, secureSaveTestData } from "../../helpers/testStorage";
 import { clearUserData, getUserDataDecrypted } from "../../helpers/userStorage";
 import SuccessModal from "../../components/SuccessModal";
 import ConfirmModal from "../../components/ConfirmModal";
@@ -62,17 +62,41 @@ const TestPagesPage = () => {
         loadUserData();
     }, []);
 
+    // useEffect(() => {
+    //     const loadPauseStatus = async () => {
+    //         try {
+    //             const data = await secureGetTestData('pause_status', 'pause_status_array');
+    //             setPauseStatusArray(data || []);
+    //         } catch (error) {
+    //             setPauseStatusArray([]);
+    //         }
+    //     };
+    //     loadPauseStatus();
+    // }, []);
+
     useEffect(() => {
         const loadPauseStatus = async () => {
             try {
                 const data = await secureGetTestData('pause_status', 'pause_status_array');
+                console.log('📦 Loaded Pause Status Array:', data);
                 setPauseStatusArray(data || []);
             } catch (error) {
+                console.error('❌ Error loading pause status:', error);
                 setPauseStatusArray([]);
             }
         };
         loadPauseStatus();
+
+        // ✅ Reload when window gains focus (user comes back from test)
+        const handleFocus = () => {
+            console.log('🔄 Window focused - reloading pause status');
+            loadPauseStatus();
+        };
+
+        window.addEventListener('focus', handleFocus);
+        return () => window.removeEventListener('focus', handleFocus);
     }, []);
+
 
     // const getSigleCategoryData = async (page = 1, query = '') => {
     //     if (state) {
@@ -167,6 +191,62 @@ const TestPagesPage = () => {
     //     }
     // };
 
+    // const getSigleCategoryData = async (page = 1, query = '') => {
+    //     if (state) {
+    //         try {
+    //             setPageLoading(true);
+    //             const res = await dispatch(
+    //                 getSingleCategoryPackageTestseriesSlice({
+    //                     testId: state.testId,
+    //                     page,
+    //                     search: query
+    //                 })
+    //             ).unwrap();
+
+    //             // ✅ FIX: Change packagedetail to package_detail
+    //             console.log('Single Category Test Series Data', res.data?.package_detail);
+    //             setExamCategoryTitle(res?.data?.package_detail?.exam_category?.title ||
+    //                 res?.data?.package_detail?.category_name ||
+    //                 'General');
+
+    //             if (res.status_code === 200) {
+    //                 // ✅ FIX: Change testseries to test_series
+    //                 const rawTestData = res.data?.test_series?.data || [];
+
+    //                 const sortedTestData = rawTestData.sort((a, b) => {
+    //                     const seqA = a.sequence ? Number(a.sequence) : Infinity;
+    //                     const seqB = b.sequence ? Number(b.sequence) : Infinity;
+    //                     return seqA - seqB;
+    //                 });
+
+    //                 setTestData(prev => page === 1 ? sortedTestData : [...prev, ...sortedTestData]);
+    //                 console.log('Sorted test data for page', page, sortedTestData);
+
+    //                 // ✅ FIX: Update pagination structure
+    //                 setPagination({
+    //                     currentpage: res.data?.test_series?.current_page || 1,
+    //                     lastpage: res.data?.test_series?.last_page || 1,
+    //                 });
+
+    //                 // ✅ FIX: Get package id from package_detail
+    //                 setTestId(res.data?.package_detail?.id);
+    //             }
+    //         } catch (error) {
+    //             console.error('❌ API Error:', error);
+    //             setShowAlert(true);
+
+    //             if (error.status === 401 || error.response?.status === 401) {
+    //                 setMessage('Login token has expired. Please sign in again to continue.');
+    //             } else {
+    //                 setMessage('Failed to load tests. Please try again.');
+    //             }
+    //         } finally {
+    //             setPageLoading(false);
+    //         }
+    //     }
+    // };
+
+
     const getSigleCategoryData = async (page = 1, query = '') => {
         if (state) {
             try {
@@ -179,14 +259,12 @@ const TestPagesPage = () => {
                     })
                 ).unwrap();
 
-                // ✅ FIX: Change packagedetail to package_detail
                 console.log('Single Category Test Series Data', res.data?.package_detail);
                 setExamCategoryTitle(res?.data?.package_detail?.exam_category?.title ||
                     res?.data?.package_detail?.category_name ||
                     'General');
 
                 if (res.status_code === 200) {
-                    // ✅ FIX: Change testseries to test_series
                     const rawTestData = res.data?.test_series?.data || [];
 
                     const sortedTestData = rawTestData.sort((a, b) => {
@@ -198,13 +276,12 @@ const TestPagesPage = () => {
                     setTestData(prev => page === 1 ? sortedTestData : [...prev, ...sortedTestData]);
                     console.log('Sorted test data for page', page, sortedTestData);
 
-                    // ✅ FIX: Update pagination structure
+                    // ✅✅✅ FIX: Correct property names
                     setPagination({
-                        currentpage: res.data?.test_series?.current_page || 1,
-                        lastpage: res.data?.test_series?.last_page || 1,
+                        current_page: res.data?.test_series?.current_page || 1,
+                        last_page: res.data?.test_series?.last_page || 1,
                     });
 
-                    // ✅ FIX: Get package id from package_detail
                     setTestId(res.data?.package_detail?.id);
                 }
             } catch (error) {
@@ -221,7 +298,6 @@ const TestPagesPage = () => {
             }
         }
     };
-
 
 
     const fetchTestSeriesDetails = async (item) => {
@@ -254,22 +330,102 @@ const TestPagesPage = () => {
         }
     };
 
+    // const handleResume = async () => {
+    //     try {
+    //         const res = await dispatch(getSingleCategoryPackageTestseriesDetailSlice(resumeData?.id)).unwrap();
+    //         nav('/scc-mock-test', {
+    //             state: {
+    //                 testInfo: res.data.test_series_info,
+    //                 testId: state?.testId,
+    //                 testDetail: res.data.details,
+    //                 packageDetail: res.data.package_detail,
+    //             }
+    //         });
+    //         setShowModal(false);
+    //     } catch (error) {
+    //         console.log("ERROR ===>", error);
+    //     }
+    // };
+
+    // const handleResume = async () => {
+    //     try {
+    //         // ✅ Clear pause status
+    //         const updatedPauseArray = pauseStatusArray.filter(item => item.test_id !== resumeData?.id);
+    //         await secureSaveTestData('pause_status', 'pause_status_array', updatedPauseArray);
+    //         setPauseStatusArray(updatedPauseArray);
+
+    //         console.log('✅ Resume Test:', resumeData.id);
+
+    //         const res = await dispatch(getSingleCategoryPackageTestseriesDetailSlice(resumeData?.id)).unwrap();
+
+    //         if (examCategoryTitle === 'SSC') {
+    //             nav('/scc-mock-test', {
+    //                 state: {
+    //                     testInfo: res.data.test_series_info,
+    //                     testId: state?.testId,
+    //                     testDetail: res.data.details,
+    //                     packageDetail: res.data.package_detail,
+    //                     isResuming: true,
+    //                 }
+    //             });
+    //         } else {
+    //             nav('/online-exam', {
+    //                 state: {
+    //                     testInfo: res.data.test_series_info,
+    //                     testId: state?.testId,
+    //                     testDetail: res.data.details,
+    //                     packageDetail: res.data.package_detail,
+    //                     isResuming: true,
+    //                 }
+    //             });
+    //         }
+
+    //         setShowModal(false);
+    //     } catch (error) {
+    //         console.error("❌ Resume Error:", error);
+    //         setShowAlert(true);
+    //         setMessage('Failed to resume test. Please try again.');
+    //     }
+    // };
     const handleResume = async () => {
         try {
+            console.log('▶️ Resuming test:', resumeData.id);
+
+            // ✅ DON'T clear pause status yet - do it in Screen5 after restoration
+            // Just navigate with isPaused flag
+
             const res = await dispatch(getSingleCategoryPackageTestseriesDetailSlice(resumeData?.id)).unwrap();
-            nav('/scc-mock-test', {
-                state: {
-                    testInfo: res.data.test_series_info,
-                    testId: state?.testId,
-                    testDetail: res.data.details,
-                    packageDetail: res.data.package_detail,
-                }
-            });
+
+            if (examCategoryTitle === 'SSC') {
+                nav('/scc-mock-test', {  // ✅ Changed to /screen5
+                    state: {
+                        testInfo: res.data.test_series_info,
+                        testId: state?.testId,
+                        testDetail: res.data.details,
+                        packageDetail: res.data.package_detail,
+                        isResuming: true,  // ✅ Add flag
+                    }
+                });
+            } else {
+                nav('/online-exam', {  // ✅ Changed to /screen5
+                    state: {
+                        testInfo: res.data.test_series_info,
+                        testId: state?.testId,
+                        testDetail: res.data.details,
+                        packageDetail: res.data.package_detail,
+                        isResuming: true,  // ✅ Add flag
+                    }
+                });
+            }
+
             setShowModal(false);
         } catch (error) {
-            console.log("ERROR ===>", error);
+            console.error("❌ Resume Error:", error);
+            setShowAlert(true);
+            setMessage('Failed to resume test. Please try again.');
         }
     };
+
 
     // ✅ With Confirmation but No Reset
     const handleReattemptClick = (test) => {
@@ -307,7 +463,7 @@ const TestPagesPage = () => {
                         userInfo: userData,
                         isReattempt: true,  // ✅ Important flag
                         createNewAttempt: true, // ✅ Tell backend to create new attempt
-                        packageDetail: PackageDataRes,
+                        packageDetail: testDetailsRes?.data?.package_detail,
                     }
                 });
             } else {
@@ -319,7 +475,7 @@ const TestPagesPage = () => {
                         userInfo: userData,
                         isReattempt: true,  // ✅ Important flag
                         createNewAttempt: true,
-                        packageDetail: testDetailsRes?.data,  // ✅ Tell backend to create new attempt
+                        packageDetail: testDetailsRes?.data?.packageDetail,  // ✅ Tell backend to create new attempt
                     }
                 });
             }
@@ -365,33 +521,103 @@ const TestPagesPage = () => {
         await getSigleCategoryData(1, query);
     };
 
+    // const getButtonConfig = (test) => {
+    //     const isPaused = pauseStatusArray.some(item => item.test_id === test.id && item.isPaused);
+
+    //     if (subscribe || (!subscribe && test.purchase_type === 'free')) {
+    //         if (test.attend_status === '' && isPaused) {
+    //             return {
+    //                 text: "Resume Test",
+    //                 className: "bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-orange-500/25",
+    //                 icon: <AiOutlineReload size={18} />,
+    //                 onClick: () => {
+    //                     setShowModal(true);
+    //                     setResumeData(test);
+    //                 }
+    //             };
+    //         } else if (isQuizStartAvailable(test.start_date_time) && !test.attend && !isPaused && test.attend_status === '') {
+    //             return {
+    //                 text: "Start Now",
+    //                 className: "bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-blue-500/25",
+    //                 icon: <HiOutlineLightningBolt size={18} />,
+    //                 onClick: () => fetchTestSeriesDetails(test)
+    //             };
+    //         } else if (test.attend && test.attend_status === 'done') {
+    //             return {
+    //                 isCompleted: true,
+    //                 test: test
+    //             };
+    //         } else {
+    //             return {
+    //                 text: `Available ${formatStartDateTime(test.start_date_time)}`,
+    //                 className: "bg-gradient-to-r from-gray-400 to-gray-500 text-white cursor-not-allowed opacity-70",
+    //                 icon: <MdAccessTime size={18} />,
+    //                 onClick: () => {
+    //                     setShowAlert(true);
+    //                     setMessage("Test not available at this time");
+    //                 }
+    //             };
+    //         }
+    //     } else {
+    //         return {
+    //             text: "Upgrade Now",
+    //             className: "bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 hover:from-purple-600 hover:via-indigo-600 hover:to-blue-600 text-white shadow-lg hover:shadow-purple-500/25",
+    //             icon: <FaGraduationCap size={18} />,
+    //             onClick: () => {
+    //                 setShowAlert(true);
+    //                 setMessage("Upgrade to premium to access this test");
+    //             }
+    //         };
+    //     }
+    // };
+
     const getButtonConfig = (test) => {
         const isPaused = pauseStatusArray.some(item => item.test_id === test.id && item.isPaused);
 
+        // console.log(`🔍 Test ${test.id} - Status:`, {
+        //     attend_status: test.attend_status,
+        //     isPaused,
+        //     attend: test.attend
+        // });
+
         if (subscribe || (!subscribe && test.purchase_type === 'free')) {
-            if (test.attend_status === '' && isPaused) {
+            // ✅ PRIORITY 1: Show Resume if paused (IGNORE attend_status)
+            if (isPaused) {
                 return {
                     text: "Resume Test",
-                    className: "bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-orange-500/25",
-                    icon: <AiOutlineReload size={18} />,
+                    className: "bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-orange-500/25 transform hover:scale-105 transition-all duration-200",
+                    icon: <MdPlayArrow size={18} />,
                     onClick: () => {
+                        console.log('▶️ Resume clicked for test:', test.id);
                         setShowModal(true);
                         setResumeData(test);
                     }
                 };
-            } else if (isQuizStartAvailable(test.start_date_time) && !test.attend && !isPaused && test.attend_status === '') {
+            }
+
+            // ✅ Check if not started (for Start Now button)
+            const isNotStarted = !test.attend_status || test.attend_status === '' || test.attend_status === 'not_started';
+
+            // ✅ PRIORITY 2: Show Start Now
+            if (isQuizStartAvailable(test.start_date_time) && !test.attend && isNotStarted) {
                 return {
                     text: "Start Now",
-                    className: "bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-blue-500/25",
+                    className: "bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-200",
                     icon: <HiOutlineLightningBolt size={18} />,
                     onClick: () => fetchTestSeriesDetails(test)
                 };
-            } else if (test.attend && test.attend_status === 'done') {
+            }
+
+            // ✅ PRIORITY 3: Show completed buttons
+            else if (test.attend && test.attend_status === 'done') {
                 return {
                     isCompleted: true,
                     test: test
                 };
-            } else {
+            }
+
+            // ✅ PRIORITY 4: Not available yet
+            else {
                 return {
                     text: `Available ${formatStartDateTime(test.start_date_time)}`,
                     className: "bg-gradient-to-r from-gray-400 to-gray-500 text-white cursor-not-allowed opacity-70",
@@ -405,7 +631,7 @@ const TestPagesPage = () => {
         } else {
             return {
                 text: "Upgrade Now",
-                className: "bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 hover:from-purple-600 hover:via-indigo-600 hover:to-blue-600 text-white shadow-lg hover:shadow-purple-500/25",
+                className: "bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 hover:from-purple-600 hover:via-indigo-600 hover:to-blue-600 text-white shadow-lg hover:shadow-purple-500/25 transform hover:scale-105 transition-all duration-200",
                 icon: <FaGraduationCap size={18} />,
                 onClick: () => {
                     setShowAlert(true);
@@ -414,6 +640,7 @@ const TestPagesPage = () => {
             };
         }
     };
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">

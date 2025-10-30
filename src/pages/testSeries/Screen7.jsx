@@ -741,6 +741,8 @@ const Screen7 = () => {
   const [wrongQuestions, setWrongQuestions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({});
 
+  const [correctCount, setCorrectCount] = useState(0);
+  const [incorrectCount, setIncorrectCount] = useState(0);
   // ✅ Full Screen Functions
   const enterFullScreen = () => {
     const elem = document.documentElement;
@@ -770,6 +772,325 @@ const Screen7 = () => {
   };
 
   // ✅ Fetch Solution Data with attend_id
+  // const fetchUserSolution = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const res = await dispatch(fetchUserTestSeriesSolution({
+  //       test_id: state?.testData?.my_detail?.test_id,
+  //       attend_id: state?.attend_id || state?.testData?.my_detail?.attend_id
+  //     })).unwrap();
+
+  //     // console.log('🔍 Full API Response:', res.data);
+
+  //     // if (res.status_code === 200) {
+  //     //   setQuestionsState(res.data.all_question_list);
+  //     //   setSkippedQuestions(res.data.skip_question || []);
+  //     //   setMarkedForReview(res.data.mark_for_review || []);
+  //     //   setOptionSelected(res.data.attend_question || []);
+
+  //     //   // ✅ Calculate wrong answers by checking BOTH language answers
+  //     //   const attemptedQuestionIds = res.data.attend_question || [];
+
+  //     //   const wrong = res.data.all_question_list
+  //     //     ?.filter(q => {
+  //     //       if (!attemptedQuestionIds.includes(q.id)) return false;
+
+  //     //       const userAns = q.user_selected_ans?.toLowerCase().trim();
+  //     //       if (!userAns) return false;
+
+  //     //       const correctAnsEn = q.english_ans?.toLowerCase().trim();
+  //     //       const correctAnsHi = q.hindi_ans?.toLowerCase().trim();
+
+  //     //       const isWrong = userAns !== correctAnsEn && userAns !== correctAnsHi;
+
+  //     //       console.log(`Question ${q.id}:`, {
+  //     //         userAns,
+  //     //         correctAnsEn,
+  //     //         correctAnsHi,
+  //     //         isWrong
+  //     //       });
+
+  //     //       return isWrong;
+  //     //     })
+  //     //     .map(q => q.id);
+
+  //     //   console.log('✅ Wrong Questions:', wrong);
+  //     //   console.log('✅ Wrong Count:', wrong.length);
+  //     //   console.log('✅ Correct Count:', attemptedQuestionIds.length - wrong.length);
+  //     //   console.log('✅ Expected from API - Correct:', res.data.attend_detail?.correct, 'Wrong:', res.data.attend_detail?.in_correct);
+
+  //     //   setWrongQuestions(wrong);
+  //     // }
+
+  //     console.log('🔍 Full API Response:', res.data);
+
+  //     if (res.status_code === 200) {
+  //       setQuestionsState(res.data.all_question_list);
+
+  //       // ✅ Parse string arrays to actual arrays
+  //       const parseToArray = (data) => {
+  //         if (Array.isArray(data)) return data;
+  //         if (typeof data === 'string') {
+  //           try {
+  //             // Remove quotes and brackets, then split
+  //             const cleaned = data.replace(/[$$$$"]/g, '');
+  //             return cleaned ? cleaned.split(',').map(id => parseInt(id.trim())) : [];
+  //           } catch (e) {
+  //             console.error('Error parsing array:', e);
+  //             return [];
+  //           }
+  //         }
+  //         return [];
+  //       };
+
+  //       const skipQuestions = parseToArray(res.data.skip_question);
+  //       const markForReview = parseToArray(res.data.mark_for_review);
+  //       const attendQuestion = parseToArray(res.data.attend_question);
+
+  //       console.log('📊 Parsed Data:', {
+  //         skipQuestions,
+  //         markForReview,
+  //         attendQuestion
+  //       });
+
+  //       setSkippedQuestions(skipQuestions);
+  //       setMarkedForReview(markForReview);
+  //       setOptionSelected(attendQuestion);
+
+  //       // ✅ Calculate wrong answers
+  //       const wrong = res.data.all_question_list
+  //         ?.filter(q => {
+  //           // ✅ Only check attempted questions
+  //           if (!attemptedQuestionIds.includes(q.id)) {
+  //             console.log(`⏭️ Skipping Q${q.id} - Not attempted`);
+  //             return false;
+  //           }
+
+  //           const userAns = q.user_selected_ans?.toLowerCase().trim();
+  //           const correctAnsEn = q.english_ans?.toLowerCase().trim();
+  //           const correctAnsHi = q.hindi_ans?.toLowerCase().trim();
+
+  //           // ✅ Detailed logging for each question
+  //           console.log(`\n🔍 Question ${q.id}:`, {
+  //             userAns: `"${userAns}"`,
+  //             correctAnsEn: `"${correctAnsEn}"`,
+  //             correctAnsHi: `"${correctAnsHi}"`,
+  //             matchEn: userAns === correctAnsEn,
+  //             matchHi: userAns === correctAnsHi,
+  //           });
+
+  //           if (!userAns) {
+  //             console.log(`⚠️ Q${q.id} - No user answer`);
+  //             return false;
+  //           }
+
+  //           // ✅ Check if answer is WRONG (not matching either language)
+  //           const isWrong = userAns !== correctAnsEn && userAns !== correctAnsHi;
+
+  //           console.log(`${isWrong ? '❌ WRONG' : '✅ CORRECT'} - Q${q.id}`);
+
+  //           return isWrong;
+  //         })
+  //         .map(q => q.id);
+
+
+  //       console.log('✅ Wrong Questions:', wrong);
+  //       console.log('✅ Wrong Count:', wrong.length);
+  //       console.log('✅ Correct Count:', attendQuestion.length - wrong.length);
+  //       console.log('✅ Expected from API - Correct:', res.data.attend_detail?.correct, 'Incorrect:', res.data.attend_detail?.in_correct);
+
+  //       setWrongQuestions(wrong);
+  //     }
+
+  //   } catch (error) {
+  //     console.error("Error fetching solution:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // ✅ Fetch Solution Data with attend_id
+  // const fetchUserSolution = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const res = await dispatch(fetchUserTestSeriesSolution({
+  //       test_id: state?.testData?.my_detail?.test_id,
+  //       attend_id: state?.attend_id || state?.testData?.my_detail?.attend_id
+  //     })).unwrap();
+
+  //     console.log('🔍 Full API Response:', res.data);
+
+  //     if (res.status_code === 200) {
+  //       setQuestionsState(res.data.all_question_list);
+
+  //       // ✅ Parse string arrays to actual arrays
+  //       const parseToArray = (data) => {
+  //         if (Array.isArray(data)) return data;
+  //         if (typeof data === 'string') {
+  //           try {
+  //             const cleaned = data.replace(/[\[\]"]/g, '');
+  //             return cleaned ? cleaned.split(',').map(id => parseInt(id.trim())) : [];
+  //           } catch (e) {
+  //             console.error('Error parsing array:', e);
+  //             return [];
+  //           }
+  //         }
+  //         return [];
+  //       };
+
+  //       const skipQuestions = parseToArray(res.data.skip_question);
+  //       const markForReview = parseToArray(res.data.mark_for_review);
+  //       const attendQuestion = parseToArray(res.data.attend_question);  // ✅ This is the variable
+
+  //       console.log('📊 Parsed Data:', {
+  //         skipQuestions,
+  //         markForReview,
+  //         attendQuestion
+  //       });
+
+  //       setSkippedQuestions(skipQuestions);
+  //       setMarkedForReview(markForReview);
+  //       setOptionSelected(attendQuestion);
+
+  //       // ✅ Calculate wrong answers with detailed logging
+  //       const wrong = res.data.all_question_list
+  //         ?.filter(q => {
+  //           // ✅ Only check attempted questions
+  //           if (!attendQuestion.includes(q.id)) {  // ✅ Use attendQuestion here
+  //             console.log(`⏭️ Skipping Q${q.id} - Not attempted`);
+  //             return false;
+  //           }
+
+  //           const userAns = q.user_selected_ans?.toLowerCase().trim();
+  //           const correctAnsEn = q.english_ans?.toLowerCase().trim();
+  //           const correctAnsHi = q.hindi_ans?.toLowerCase().trim();
+
+  //           // ✅ Detailed logging for each question
+  //           console.log(`\n🔍 Question ${q.id}:`, {
+  //             userAns: `"${userAns}"`,
+  //             correctAnsEn: `"${correctAnsEn}"`,
+  //             correctAnsHi: `"${correctAnsHi}"`,
+  //             matchEn: userAns === correctAnsEn,
+  //             matchHi: userAns === correctAnsHi,
+  //           });
+
+  //           if (!userAns) {
+  //             console.log(`⚠️ Q${q.id} - No user answer`);
+  //             return false;
+  //           }
+
+  //           // ✅ Check if answer is WRONG (not matching either language)
+  //           const isWrong = userAns !== correctAnsEn && userAns !== correctAnsHi;
+
+  //           console.log(`${isWrong ? '❌ WRONG' : '✅ CORRECT'} - Q${q.id}`);
+
+  //           return isWrong;
+  //         })
+  //         .map(q => q.id);
+
+  //       console.log('✅ Wrong Questions:', wrong);
+  //       console.log('✅ Wrong Count:', wrong.length);
+  //       console.log('✅ Correct Count:', attendQuestion.length - wrong.length);
+  //       console.log('✅ Expected from API - Correct:', res.data.attend_detail?.correct, 'Incorrect:', res.data.attend_detail?.in_correct);
+
+  //       setWrongQuestions(wrong);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching solution:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const fetchUserSolution = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const res = await dispatch(fetchUserTestSeriesSolution({
+  //       test_id: state?.testData?.my_detail?.test_id,
+  //       attend_id: state?.attend_id || state?.testData?.my_detail?.attend_id
+  //     })).unwrap();
+
+  //     console.log('🔍 Full API Response:', res.data);
+
+  //     if (res.status_code === 200) {
+  //       setQuestionsState(res.data.all_question_list);
+
+  //       const parseToArray = (data) => {
+  //         if (Array.isArray(data)) return data;
+  //         if (typeof data === 'string') {
+  //           try {
+  //             const cleaned = data.replace(/[\[\]"]/g, '');
+  //             return cleaned ? cleaned.split(',').map(id => parseInt(id.trim())) : [];
+  //           } catch (e) {
+  //             console.error('Error parsing array:', e);
+  //             return [];
+  //           }
+  //         }
+  //         return [];
+  //       };
+
+
+
+  //       const skipQuestions = parseToArray(res.data.skip_question);
+  //       const markForReview = parseToArray(res.data.mark_for_review);
+  //       const attendQuestion = parseToArray(res.data.attend_question);
+
+  //       console.log('📊 Parsed Data:', {
+  //         skipQuestions,
+  //         markForReview,
+  //         attendQuestion
+  //       });
+
+  //       setSkippedQuestions(skipQuestions);
+  //       setMarkedForReview(markForReview);
+  //       setOptionSelected(attendQuestion);
+
+  //       // ✅ SIMPLE DEBUG: Log first 3 attempted questions
+  //       console.log('\n🔬 DEBUGGING FIRST 3 QUESTIONS:');
+  //       const firstThree = res.data.all_question_list.slice(0, 3);
+
+  //       firstThree.forEach(q => {
+  //         const isAttempted = attendQuestion.includes(q.id);
+  //         console.log(`\nQuestion ${q.id}:`, {
+  //           isAttempted,
+  //           user_selected_ans: q.user_selected_ans,
+  //           english_ans: q.english_ans,
+  //           hindi_ans: q.hindi_ans,
+  //         });
+  //       });
+
+  //       // ✅ Calculate wrong answers
+  //       const wrong = res.data.all_question_list
+  //         ?.filter(q => {
+  //           if (!attendQuestion.includes(q.id)) return false;
+
+  //           const userAns = q.user_selected_ans?.toLowerCase().trim();
+  //           if (!userAns) return false;
+
+  //           const correctAnsEn = q.english_ans?.toLowerCase().trim();
+  //           const correctAnsHi = q.hindi_ans?.toLowerCase().trim();
+
+  //           // ✅ This is where it checks
+  //           const isWrong = userAns !== correctAnsEn && userAns !== correctAnsHi;
+
+  //           return isWrong;
+  //         })
+  //         .map(q => q.id);
+
+  //       console.log('✅ Wrong Questions:', wrong);
+  //       console.log('✅ Wrong Count:', wrong.length);
+  //       console.log('✅ Correct Count:', attendQuestion.length - wrong.length);
+  //       console.log('✅ Expected from API - Correct:', res.data.attend_detail?.correct, 'Incorrect:', res.data.attend_detail?.in_correct);
+
+  //       setWrongQuestions(wrong);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching solution:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchUserSolution = async () => {
     try {
       setLoading(true);
@@ -782,16 +1103,48 @@ const Screen7 = () => {
 
       if (res.status_code === 200) {
         setQuestionsState(res.data.all_question_list);
-        setSkippedQuestions(res.data.skip_question || []);
-        setMarkedForReview(res.data.mark_for_review || []);
-        setOptionSelected(res.data.attend_question || []);
 
-        // ✅ Calculate wrong answers by checking BOTH language answers
-        const attemptedQuestionIds = res.data.attend_question || [];
+        // ✅ Helper function to parse string arrays to actual arrays
+        const parseToArray = (data) => {
+          if (Array.isArray(data)) return data;
+          if (typeof data === 'string') {
+            try {
+              const cleaned = data.replace(/[\[\]"]/g, '');
+              return cleaned ? cleaned.split(',').map(id => parseInt(id.trim())) : [];
+            } catch (e) {
+              console.error('Error parsing array:', e);
+              return [];
+            }
+          }
+          return [];
+        };
 
+        const skipQuestions = parseToArray(res.data.skip_question);
+        const markForReview = parseToArray(res.data.mark_for_review);
+
+        // ✅ Get attended questions from attend_question OR spent_time
+        let attendQuestion = parseToArray(res.data.attend_question);
+
+        if (attendQuestion.length === 0 && res.data.spent_time) {
+          // Extract question IDs from spent_time array
+          attendQuestion = res.data.spent_time.map(item => item.questionId);
+          console.log('✅ Using spent_time for attended questions:', attendQuestion);
+        }
+
+        console.log('📊 Parsed Data:', {
+          skipQuestions,
+          markForReview,
+          attendQuestion
+        });
+
+        setSkippedQuestions(skipQuestions);
+        setMarkedForReview(markForReview);
+        setOptionSelected(attendQuestion);
+
+        // ✅ Calculate wrong answers (for highlighting wrong questions)
         const wrong = res.data.all_question_list
           ?.filter(q => {
-            if (!attemptedQuestionIds.includes(q.id)) return false;
+            if (!attendQuestion.includes(q.id)) return false;
 
             const userAns = q.user_selected_ans?.toLowerCase().trim();
             if (!userAns) return false;
@@ -801,23 +1154,20 @@ const Screen7 = () => {
 
             const isWrong = userAns !== correctAnsEn && userAns !== correctAnsHi;
 
-            console.log(`Question ${q.id}:`, {
-              userAns,
-              correctAnsEn,
-              correctAnsHi,
-              isWrong
-            });
-
             return isWrong;
           })
           .map(q => q.id);
 
         console.log('✅ Wrong Questions:', wrong);
         console.log('✅ Wrong Count:', wrong.length);
-        console.log('✅ Correct Count:', attemptedQuestionIds.length - wrong.length);
-        console.log('✅ Expected from API - Correct:', res.data.attend_detail?.correct, 'Wrong:', res.data.attend_detail?.in_correct);
+        console.log('✅ Correct Count:', attendQuestion.length - wrong.length);
+        console.log('✅ Expected from API - Correct:', res.data.attend_detail?.correct, 'Incorrect:', res.data.attend_detail?.in_correct);
 
         setWrongQuestions(wrong);
+
+        // ✅✅✅ SET CORRECT/INCORRECT COUNTS DIRECTLY FROM API ✅✅✅
+        setCorrectCount(res.data.attend_detail?.correct || 0);
+        setIncorrectCount(res.data.attend_detail?.in_correct || 0);
       }
     } catch (error) {
       console.error("Error fetching solution:", error);
@@ -825,6 +1175,8 @@ const Screen7 = () => {
       setLoading(false);
     }
   };
+
+
 
   // ✅ Load User Info
   const loadUserData = async () => {
@@ -917,7 +1269,10 @@ const Screen7 = () => {
     );
   }
 
+
   return (
+
+
     <div className="flex flex-col p-4 text-sm font-sans overflow-hidden">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
@@ -981,7 +1336,7 @@ const Screen7 = () => {
       {/* Main Body */}
       <div className="flex flex-col lg:flex-row gap-4 w-full">
         {/* Solution Modal */}
-        <SolutionsGrideModal
+        {/* <SolutionsGrideModal
           wrongQuestion={wrongQuestions}
           question={questionsState}
           groupedQuestions={groupedQuestions}
@@ -993,7 +1348,24 @@ const Screen7 = () => {
           setCurrentQuestion={(index) => setCurrentQuestion(index)}
           onClose={() => setShowModal(false)}
           onProceed={() => { }}
+        /> */}
+
+        <SolutionsGrideModal
+          wrongQuestion={wrongQuestions}
+          question={questionsState}
+          groupedQuestions={groupedQuestions}
+          currentQuestion={currentQuestion}
+          optionSelected={optionSelected}
+          markedForReview={markedForReview}
+          markedForReviewAns={markedWithAns}
+          skippedQuestions={skippedQuestions}
+          correctCount={correctCount}        // ✅ ADD
+          incorrectCount={incorrectCount}    // ✅ ADD
+          setCurrentQuestion={(index) => setCurrentQuestion(index)}
+          onClose={() => setShowModal(false)}
+          onProceed={() => { }}
         />
+
 
         {/* Right Side - Question Panel */}
         <div className="flex-1 border rounded-lg px-4 py-3" id="testBg">
